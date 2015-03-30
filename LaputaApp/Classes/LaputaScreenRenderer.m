@@ -46,7 +46,7 @@
  
  */
 
-#import "LaputaOpenGLRenderer.h"
+#import "LaputaScreenRenderer.h"
 #import <OpenGLES/EAGL.h>
 #import "ShaderUtilities.h"
 #import "matrix.h"
@@ -57,7 +57,7 @@ enum {
     NUM_ATTRIBUTES
 };
 
-@interface LaputaOpenGLRenderer ()
+@interface LaputaScreenRenderer ()
 {
     /* EGL assets */
 	EAGLContext *_oglContext; //egl context
@@ -75,7 +75,7 @@ enum {
 
 @end
 
-@implementation LaputaOpenGLRenderer
+@implementation LaputaScreenRenderer
 
 #pragma mark API
 
@@ -331,8 +331,8 @@ bail:
         "position", "texturecoordinate",
     };
     
-    const GLchar *vertSrc = [LaputaOpenGLRenderer readFile:@"myFilter.vsh"];
-    const GLchar *fragSrc = [LaputaOpenGLRenderer readFile:@"myFilter.fsh"];
+    const GLchar *vertSrc = [LaputaScreenRenderer readFile:@"myFilter.vsh"];
+    const GLchar *fragSrc = [LaputaScreenRenderer readFile:@"myFilter.fsh"];
     
     // shader program
 	glueCreateProgram( vertSrc, fragSrc,  

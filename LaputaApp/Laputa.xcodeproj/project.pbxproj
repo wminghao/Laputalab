@@ -28,7 +28,7 @@
 		6F90DE091395CCEA00125BDA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F90DE081395CCEA00125BDA /* QuartzCore.framework */; };
 		6F90DE0B1395CCF500125BDA /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F90DE0A1395CCF500125BDA /* CoreMedia.framework */; };
 		6F90DE141395CD9C00125BDA /* LaputaCapturePipeline.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F90DE0F1395CD9C00125BDA /* LaputaCapturePipeline.m */; };
-		6FE5A735160BAC8000F6DB2B /* LaputaOpenGLRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE5A734160BAC8000F6DB2B /* LaputaOpenGLRenderer.m */; };
+		6FE5A735160BAC8000F6DB2B /* LaputaScreenRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE5A734160BAC8000F6DB2B /* LaputaScreenRenderer.m */; };
 		6FF11C8E16A8779D00E14D71 /* MovieRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FF11C8A16A8779D00E14D71 /* MovieRecorder.m */; };
 		6FF11C8F16A8779D00E14D71 /* OpenGLPixelBufferView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FF11C8C16A8779D00E14D71 /* OpenGLPixelBufferView.m */; };
 		6FF11C9516A877B100E14D71 /* matrix.c in Sources */ = {isa = PBXBuildFile; fileRef = 6FF11C9116A877B100E14D71 /* matrix.c */; };
@@ -66,8 +66,8 @@
 		6F90DE0A1395CCF500125BDA /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		6F90DE0E1395CD9C00125BDA /* LaputaCapturePipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = LaputaCapturePipeline.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		6F90DE0F1395CD9C00125BDA /* LaputaCapturePipeline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = LaputaCapturePipeline.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		6FE5A733160BAC8000F6DB2B /* LaputaOpenGLRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LaputaOpenGLRenderer.h; sourceTree = "<group>"; };
-		6FE5A734160BAC8000F6DB2B /* LaputaOpenGLRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LaputaOpenGLRenderer.m; sourceTree = "<group>"; };
+		6FE5A733160BAC8000F6DB2B /* LaputaScreenRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LaputaScreenRenderer.h; sourceTree = "<group>"; };
+		6FE5A734160BAC8000F6DB2B /* LaputaScreenRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LaputaScreenRenderer.m; sourceTree = "<group>"; };
 		6FF11C8916A8779D00E14D71 /* MovieRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MovieRecorder.h; path = Utilities/MovieRecorder.h; sourceTree = "<group>"; };
 		6FF11C8A16A8779D00E14D71 /* MovieRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = MovieRecorder.m; path = Utilities/MovieRecorder.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		6FF11C8B16A8779D00E14D71 /* OpenGLPixelBufferView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OpenGLPixelBufferView.h; path = Utilities/OpenGLPixelBufferView.h; sourceTree = "<group>"; };
@@ -116,8 +116,8 @@
 			isa = PBXGroup;
 			children = (
 				5DC09BED19B7F1A70025A16E /* LaputaRenderer.h */,
-				6FE5A733160BAC8000F6DB2B /* LaputaOpenGLRenderer.h */,
-				6FE5A734160BAC8000F6DB2B /* LaputaOpenGLRenderer.m */,
+				6FE5A733160BAC8000F6DB2B /* LaputaScreenRenderer.h */,
+				6FE5A734160BAC8000F6DB2B /* LaputaScreenRenderer.m */,
 			);
 			name = Renderers;
 			sourceTree = "<group>";
@@ -297,7 +297,7 @@
 				6F90DDEA1395CAAA00125BDA /* LaputaAppDelegate.m in Sources */,
 				6F90DDEE1395CAAA00125BDA /* LaputaViewController.m in Sources */,
 				6F90DE141395CD9C00125BDA /* LaputaCapturePipeline.m in Sources */,
-				6FE5A735160BAC8000F6DB2B /* LaputaOpenGLRenderer.m in Sources */,
+				6FE5A735160BAC8000F6DB2B /* LaputaScreenRenderer.m in Sources */,
 				6FF11C8E16A8779D00E14D71 /* MovieRecorder.m in Sources */,
 				6FF11C8F16A8779D00E14D71 /* OpenGLPixelBufferView.m in Sources */,
 				6FF11C9516A877B100E14D71 /* matrix.c in Sources */,

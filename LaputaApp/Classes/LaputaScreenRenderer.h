@@ -49,6 +49,6 @@
 
 #import "LaputaRenderer.h"
 
-@interface LaputaOpenGLRenderer : NSObject <LaputaRenderer>
+@interface LaputaScreenRenderer : NSObject <LaputaRenderer>
 
 @end
