@@ -34,6 +34,7 @@
 		6FF11C9516A877B100E14D71 /* matrix.c in Sources */ = {isa = PBXBuildFile; fileRef = 6FF11C9116A877B100E14D71 /* matrix.c */; };
 		6FF11C9616A877B100E14D71 /* ShaderUtilities.c in Sources */ = {isa = PBXBuildFile; fileRef = 6FF11C9316A877B100E14D71 /* ShaderUtilities.c */; };
 		7214DBCE182AEF8900EA3F99 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7214DBCD182AEF8900EA3F99 /* Images.xcassets */; };
+		89120A211AC9CE5E0086174B /* libassimp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 89120A201AC9CE5E0086174B /* libassimp.a */; };
 		89F003FD1AC9C7F500D8EC6D /* LaputaApp-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 89F003FC1AC9C7F500D8EC6D /* LaputaApp-Info.plist */; };
 /* End PBXBuildFile section */
 
@@ -76,6 +77,7 @@
 		6FF11C9316A877B100E14D71 /* ShaderUtilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ShaderUtilities.c; path = Utilities/GL/ShaderUtilities.c; sourceTree = "<group>"; };
 		6FF11C9416A877B100E14D71 /* ShaderUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShaderUtilities.h; path = Utilities/GL/ShaderUtilities.h; sourceTree = "<group>"; };
 		7214DBCD182AEF8900EA3F99 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Resources/Images.xcassets; sourceTree = SOURCE_ROOT; };
+		89120A201AC9CE5E0086174B /* libassimp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libassimp.a; path = thirdpartylib/libassimp.a; sourceTree = "<group>"; };
 		89F003FC1AC9C7F500D8EC6D /* LaputaApp-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "LaputaApp-Info.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -84,6 +86,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				89120A211AC9CE5E0086174B /* libassimp.a in Frameworks */,
 				6F096BFA157ED5110075E328 /* ImageIO.framework in Frameworks */,
 				6F90DE0B1395CCF500125BDA /* CoreMedia.framework in Frameworks */,
 				6F90DE091395CCEA00125BDA /* QuartzCore.framework in Frameworks */,
@@ -143,6 +146,7 @@
 		6F90DDD81395CAAA00125BDA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				89120A201AC9CE5E0086174B /* libassimp.a */,
 				171999D919C7695800A719B5 /* CoreImage.framework */,
 				6F90DE001395CCBE00125BDA /* AssetsLibrary.framework */,
 				6F90DDFE1395CCB600125BDA /* AVFoundation.framework */,
@@ -420,6 +424,10 @@
 				GCC_PREFIX_HEADER = "LaputaApp-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/LaputaApp-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/thirdpartylib",
+				);
 				OTHER_CFLAGS = "-DUSE_OPENGL_RENDERER=1";
 				PRODUCT_NAME = LaputaOpenGL;
 				PROVISIONING_PROFILE = "1f3d3630-68cf-4acb-8461-d422b51f094f";
@@ -439,6 +447,10 @@
 				GCC_PREFIX_HEADER = "LaputaApp-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/LaputaApp-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/thirdpartylib",
+				);
 				OTHER_CFLAGS = "-DUSE_OPENGL_RENDERER=1";
 				PRODUCT_NAME = LaputaOpenGL;
 				PROVISIONING_PROFILE = "1f3d3630-68cf-4acb-8461-d422b51f094f";
