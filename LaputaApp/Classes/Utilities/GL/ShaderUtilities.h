@@ -53,6 +53,10 @@
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 
+#if defined __cplusplus
+extern "C" {
+#endif
+
 GLint glueCompileShader(GLenum target, GLsizei count, const GLchar **sources, GLuint *shader);
 GLint glueLinkProgram(GLuint program);
 GLint glueValidateProgram(GLuint program);
@@ -64,5 +68,9 @@ GLint glueCreateProgram(const GLchar *vertSource, const GLchar *fragSource,
                         GLsizei uniformNameCt, const GLchar **uniformNames,
                         GLint *uniformLocations,
                         GLuint *program);
+    
+#if defined __cplusplus
+};
+#endif
 
 #endif
