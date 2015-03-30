@@ -342,6 +342,7 @@ bail:
 	
 	glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
 	
+    //output to the core animation layer for the UIView.
 	glBindRenderbuffer( GL_RENDERBUFFER, _colorBufferHandle );
     [_oglContext presentRenderbuffer:GL_RENDERBUFFER];
 	

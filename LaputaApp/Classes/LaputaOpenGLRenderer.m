@@ -52,22 +52,25 @@
 #import "matrix.h"
 
 enum {
-    ATTRIB_VERTEX,
-    ATTRIB_TEXTUREPOSITON,
+    ATTRIB_VERTEX, // "position" in vertext shader
+    ATTRIB_TEXTUREPOSITON, //"texturecoordinate" in vertex shader
     NUM_ATTRIBUTES
 };
 
 @interface LaputaOpenGLRenderer ()
 {
-	EAGLContext *_oglContext;
-	CVOpenGLESTextureCacheRef _textureCache;
-	CVOpenGLESTextureCacheRef _renderTextureCache;
+    /* EGL assets */
+	EAGLContext *_oglContext; //egl context
+    CVOpenGLESTextureCacheRef _textureCache; //source pixelbuffer texture
+	CVOpenGLESTextureCacheRef _renderTextureCache; //destination pixelbuffer texture
+    /* pixelbuffer pool */
 	CVPixelBufferPoolRef _bufferPool;
 	CFDictionaryRef _bufferPoolAuxAttributes;
 	CMFormatDescriptionRef _outputFormatDescription;
-    GLuint _program;
-    GLint _frame;
-	GLuint _offscreenBufferHandle;
+    /* Opengles assets */
+    GLuint _program; //compiled shader program
+    GLint _frame; //videoframe, sampler2D in fragment shader
+	GLuint _offscreenBufferHandle; //offscreen buffer
 }
 
 @end
@@ -128,12 +131,16 @@ enum {
 
 - (CVPixelBufferRef)copyRenderedPixelBuffer:(CVPixelBufferRef)pixelBuffer
 {
+    //MAP between Vertext Shader position coorindate 2 FragmentShader texture coorindate
+    //positions in Vertext shader
     static const GLfloat squareVertices[] = {
         -1.0f, -1.0f, // bottom left
         1.0f, -1.0f, // bottom right
         -1.0f,  1.0f, // top left
         1.0f,  1.0f, // top right
     };
+    
+    //texturecoordinates in vertext shader, as input to fragment shader
 	static const float textureVertices[] = {
         0.0f, 0.0f, // bottom left
         1.0f, 0.0f, // bottom right
@@ -240,21 +247,20 @@ enum {
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
     glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, CVOpenGLESTextureGetTarget( dstTexture ), CVOpenGLESTextureGetName( dstTexture ), 0 );
-	
-	
+    
+    
 	// Render our source pixel buffer.
     glActiveTexture( GL_TEXTURE1 );
 	glBindTexture( CVOpenGLESTextureGetTarget( srcTexture ), CVOpenGLESTextureGetName( srcTexture ) );
     glUniform1i( _frame, 1 );
-	
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
     
-	glVertexAttribPointer( ATTRIB_VERTEX, 2, GL_FLOAT, 0, 0, squareVertices );
+	glVertexAttribPointer( ATTRIB_VERTEX, 2, GL_FLOAT, 0, 0, squareVertices ); //"position" in vertex shader
 	glEnableVertexAttribArray( ATTRIB_VERTEX );
-	glVertexAttribPointer( ATTRIB_TEXTUREPOSITON, 2, GL_FLOAT, 0, 0, textureVertices );
+	glVertexAttribPointer( ATTRIB_TEXTUREPOSITON, 2, GL_FLOAT, 0, 0, textureVertices );//"texturecoordinate" in vertext shader
 	glEnableVertexAttribArray( ATTRIB_TEXTUREPOSITON );
     
     glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );

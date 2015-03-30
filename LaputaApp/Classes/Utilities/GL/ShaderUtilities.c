@@ -182,10 +182,10 @@ GLint glueCreateProgram(const GLchar *vertSource, const GLchar *fragSource,
 	
     // Bind attribute locations
     // This needs to be done prior to linking
-	for (i = 0; i < attribNameCt; i++)
-	{
-		if(strlen(attribNames[i]))
+	for (i = 0; i < attribNameCt; i++) {
+        if(strlen(attribNames[i])) {
 			glBindAttribLocation(prog, attribLocations[i], attribNames[i]);
+        }
 	}
 	
     // Link program
