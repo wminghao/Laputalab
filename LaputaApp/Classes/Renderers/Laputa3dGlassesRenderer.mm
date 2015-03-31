@@ -318,10 +318,12 @@ bail:
     //Load model with ASSIMP
     ////////////////////////
     Assimp::Importer importer;
-    
-    const aiScene* scene = importer.ReadFile( "Glasses.obj",
-                                             aiProcess_Triangulate);
-    
+    NSString *glassesFilePath = [[NSBundle mainBundle] pathForResource:@"Glasses" ofType:@"obj"];
+    NSData *glassesData = [NSData dataWithContentsOfFile:glassesFilePath];
+    const aiScene* scene = NULL;
+    if (glassesData) {
+        scene = importer.ReadFileFromMemory([glassesData bytes], [glassesData length], aiProcess_Triangulate);
+    }
     if (!scene){
         NSLog( @"Error at Model loading error");
         success = NO;
