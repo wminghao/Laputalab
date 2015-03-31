@@ -181,6 +181,19 @@ using namespace glm;
     if ( ! dstTexture || err ) {
         NSLog( @"Error at CVOpenGLESTextureCacheCreateTextureFromImage %d", err );
     } else {
+        
+        //TODO below is the test code to do rotation.
+        static float angleInDegree = 0.0f;
+        static int sign = 1;
+        if(angleInDegree >= 180.0) {
+            sign = -1;
+        } else if(angleInDegree <= -180.0) {
+            sign = 1;
+        }
+        angleInDegree += 0.1*sign;
+        
+        glm::mat4 MVP = glm::rotate(_MVP, angleInDegree, glm::vec3(0.1,0.1,0.1)); //matrix for rotation
+        
         //////////////////////
         //Draw the lens
         //////////////////////
@@ -198,7 +211,8 @@ using namespace glm;
         glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, CVOpenGLESTextureGetTarget( dstTexture ), CVOpenGLESTextureGetName( dstTexture ), 0 );
         
         glUseProgram( _programIDL );
-        glUniformMatrix4fv(_matrixIDL, 1, GL_FALSE, &_MVP[0][0]);
+        
+        glUniformMatrix4fv(_matrixIDL, 1, GL_FALSE, &MVP[0][0]);
         
         // 1rst attribute buffer : vertices
         glEnableVertexAttribArray(0);
@@ -220,7 +234,7 @@ using namespace glm;
         //////////////////////
         //bind to frames
         glUseProgram(_programIDF);
-        glUniformMatrix4fv(_matrixIDF, 1, GL_FALSE, &_MVP[0][0]);
+        glUniformMatrix4fv(_matrixIDF, 1, GL_FALSE, &MVP[0][0]);
         // 1rst attribute buffer : vertices
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, _vertexbufferF);
