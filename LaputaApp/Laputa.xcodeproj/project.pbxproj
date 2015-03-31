@@ -39,14 +39,9 @@
 		89120A341ACA01830086174B /* SimpleFragmentShaderL.fragmentshader in Resources */ = {isa = PBXBuildFile; fileRef = 89120A321ACA01830086174B /* SimpleFragmentShaderL.fragmentshader */; };
 		89120A351ACA01830086174B /* SimpleVertexShaderL.vertexshader in Resources */ = {isa = PBXBuildFile; fileRef = 89120A331ACA01830086174B /* SimpleVertexShaderL.vertexshader */; };
 		89120A371ACA04660086174B /* libassimp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 89120A361ACA04660086174B /* libassimp.a */; };
-		89120AD21ACA070F0086174B /* color4.inl in Resources */ = {isa = PBXBuildFile; fileRef = 89120AB11ACA070E0086174B /* color4.inl */; };
-		89120AD31ACA070F0086174B /* material.inl in Resources */ = {isa = PBXBuildFile; fileRef = 89120ABE1ACA070F0086174B /* material.inl */; };
-		89120AD41ACA070F0086174B /* matrix3x3.inl in Resources */ = {isa = PBXBuildFile; fileRef = 89120AC01ACA070F0086174B /* matrix3x3.inl */; };
-		89120AD51ACA070F0086174B /* matrix4x4.inl in Resources */ = {isa = PBXBuildFile; fileRef = 89120AC21ACA070F0086174B /* matrix4x4.inl */; };
-		89120AD61ACA070F0086174B /* quaternion.inl in Resources */ = {isa = PBXBuildFile; fileRef = 89120AC91ACA070F0086174B /* quaternion.inl */; };
-		89120AD71ACA070F0086174B /* vector2.inl in Resources */ = {isa = PBXBuildFile; fileRef = 89120ACE1ACA070F0086174B /* vector2.inl */; };
-		89120AD81ACA070F0086174B /* vector3.inl in Resources */ = {isa = PBXBuildFile; fileRef = 89120AD01ACA070F0086174B /* vector3.inl */; };
 		892DA8C81ACA101B00ABA31E /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 892DA8C71ACA101B00ABA31E /* libz.dylib */; };
+		892DA8CB1ACA11A900ABA31E /* Glasses.obj in Resources */ = {isa = PBXBuildFile; fileRef = 892DA8CA1ACA11A900ABA31E /* Glasses.obj */; };
+		892DA8CD1ACA1A2600ABA31E /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 892DA8CC1ACA1A2600ABA31E /* GLKit.framework */; };
 		89F003FD1AC9C7F500D8EC6D /* LaputaApp-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 89F003FC1AC9C7F500D8EC6D /* LaputaApp-Info.plist */; };
 /* End PBXBuildFile section */
 
@@ -96,47 +91,9 @@
 		89120A321ACA01830086174B /* SimpleFragmentShaderL.fragmentshader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SimpleFragmentShaderL.fragmentshader; path = Resources/Shaders/Glasses/SimpleFragmentShaderL.fragmentshader; sourceTree = SOURCE_ROOT; };
 		89120A331ACA01830086174B /* SimpleVertexShaderL.vertexshader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SimpleVertexShaderL.vertexshader; path = Resources/Shaders/Glasses/SimpleVertexShaderL.vertexshader; sourceTree = SOURCE_ROOT; };
 		89120A361ACA04660086174B /* libassimp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libassimp.a; path = thirdpartylib/libassimp/lib/libassimp.a; sourceTree = "<group>"; };
-		89120AAA1ACA070E0086174B /* ai_assert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ai_assert.h; path = thirdpartylib/libassimp/include/ai_assert.h; sourceTree = "<group>"; };
-		89120AAB1ACA070E0086174B /* anim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = anim.h; path = thirdpartylib/libassimp/include/anim.h; sourceTree = "<group>"; };
-		89120AAC1ACA070E0086174B /* camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = camera.h; path = thirdpartylib/libassimp/include/camera.h; sourceTree = "<group>"; };
-		89120AAD1ACA070E0086174B /* cexport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cexport.h; path = thirdpartylib/libassimp/include/cexport.h; sourceTree = "<group>"; };
-		89120AAE1ACA070E0086174B /* cfileio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cfileio.h; path = thirdpartylib/libassimp/include/cfileio.h; sourceTree = "<group>"; };
-		89120AAF1ACA070E0086174B /* cimport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cimport.h; path = thirdpartylib/libassimp/include/cimport.h; sourceTree = "<group>"; };
-		89120AB01ACA070E0086174B /* color4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = color4.h; path = thirdpartylib/libassimp/include/color4.h; sourceTree = "<group>"; };
-		89120AB11ACA070E0086174B /* color4.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = color4.inl; path = thirdpartylib/libassimp/include/color4.inl; sourceTree = "<group>"; };
-		89120AB21ACA070E0086174B /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = config.h; path = thirdpartylib/libassimp/include/config.h; sourceTree = "<group>"; };
-		89120AB31ACA070E0086174B /* DefaultLogger.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = DefaultLogger.hpp; path = thirdpartylib/libassimp/include/DefaultLogger.hpp; sourceTree = "<group>"; };
-		89120AB41ACA070E0086174B /* defs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = defs.h; path = thirdpartylib/libassimp/include/defs.h; sourceTree = "<group>"; };
-		89120AB51ACA070E0086174B /* Exporter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Exporter.hpp; path = thirdpartylib/libassimp/include/Exporter.hpp; sourceTree = "<group>"; };
-		89120AB61ACA070E0086174B /* Importer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Importer.hpp; path = thirdpartylib/libassimp/include/Importer.hpp; sourceTree = "<group>"; };
-		89120AB71ACA070E0086174B /* importerdesc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = importerdesc.h; path = thirdpartylib/libassimp/include/importerdesc.h; sourceTree = "<group>"; };
-		89120AB81ACA070E0086174B /* IOStream.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = IOStream.hpp; path = thirdpartylib/libassimp/include/IOStream.hpp; sourceTree = "<group>"; };
-		89120AB91ACA070E0086174B /* IOSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = IOSystem.hpp; path = thirdpartylib/libassimp/include/IOSystem.hpp; sourceTree = "<group>"; };
-		89120ABA1ACA070F0086174B /* light.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = light.h; path = thirdpartylib/libassimp/include/light.h; sourceTree = "<group>"; };
-		89120ABB1ACA070F0086174B /* Logger.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Logger.hpp; path = thirdpartylib/libassimp/include/Logger.hpp; sourceTree = "<group>"; };
-		89120ABC1ACA070F0086174B /* LogStream.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = LogStream.hpp; path = thirdpartylib/libassimp/include/LogStream.hpp; sourceTree = "<group>"; };
-		89120ABD1ACA070F0086174B /* material.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = material.h; path = thirdpartylib/libassimp/include/material.h; sourceTree = "<group>"; };
-		89120ABE1ACA070F0086174B /* material.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = material.inl; path = thirdpartylib/libassimp/include/material.inl; sourceTree = "<group>"; };
-		89120ABF1ACA070F0086174B /* matrix3x3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = matrix3x3.h; path = thirdpartylib/libassimp/include/matrix3x3.h; sourceTree = "<group>"; };
-		89120AC01ACA070F0086174B /* matrix3x3.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = matrix3x3.inl; path = thirdpartylib/libassimp/include/matrix3x3.inl; sourceTree = "<group>"; };
-		89120AC11ACA070F0086174B /* matrix4x4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = matrix4x4.h; path = thirdpartylib/libassimp/include/matrix4x4.h; sourceTree = "<group>"; };
-		89120AC21ACA070F0086174B /* matrix4x4.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = matrix4x4.inl; path = thirdpartylib/libassimp/include/matrix4x4.inl; sourceTree = "<group>"; };
-		89120AC31ACA070F0086174B /* mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mesh.h; path = thirdpartylib/libassimp/include/mesh.h; sourceTree = "<group>"; };
-		89120AC41ACA070F0086174B /* metadata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = metadata.h; path = thirdpartylib/libassimp/include/metadata.h; sourceTree = "<group>"; };
-		89120AC51ACA070F0086174B /* NullLogger.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = NullLogger.hpp; path = thirdpartylib/libassimp/include/NullLogger.hpp; sourceTree = "<group>"; };
-		89120AC61ACA070F0086174B /* postprocess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = postprocess.h; path = thirdpartylib/libassimp/include/postprocess.h; sourceTree = "<group>"; };
-		89120AC71ACA070F0086174B /* ProgressHandler.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ProgressHandler.hpp; path = thirdpartylib/libassimp/include/ProgressHandler.hpp; sourceTree = "<group>"; };
-		89120AC81ACA070F0086174B /* quaternion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = quaternion.h; path = thirdpartylib/libassimp/include/quaternion.h; sourceTree = "<group>"; };
-		89120AC91ACA070F0086174B /* quaternion.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = quaternion.inl; path = thirdpartylib/libassimp/include/quaternion.inl; sourceTree = "<group>"; };
-		89120ACA1ACA070F0086174B /* scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = scene.h; path = thirdpartylib/libassimp/include/scene.h; sourceTree = "<group>"; };
-		89120ACB1ACA070F0086174B /* texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = texture.h; path = thirdpartylib/libassimp/include/texture.h; sourceTree = "<group>"; };
-		89120ACC1ACA070F0086174B /* types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = types.h; path = thirdpartylib/libassimp/include/types.h; sourceTree = "<group>"; };
-		89120ACD1ACA070F0086174B /* vector2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vector2.h; path = thirdpartylib/libassimp/include/vector2.h; sourceTree = "<group>"; };
-		89120ACE1ACA070F0086174B /* vector2.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = vector2.inl; path = thirdpartylib/libassimp/include/vector2.inl; sourceTree = "<group>"; };
-		89120ACF1ACA070F0086174B /* vector3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = vector3.h; path = thirdpartylib/libassimp/include/vector3.h; sourceTree = "<group>"; };
-		89120AD01ACA070F0086174B /* vector3.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = vector3.inl; path = thirdpartylib/libassimp/include/vector3.inl; sourceTree = "<group>"; };
-		89120AD11ACA070F0086174B /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = version.h; path = thirdpartylib/libassimp/include/version.h; sourceTree = "<group>"; };
 		892DA8C71ACA101B00ABA31E /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		892DA8CA1ACA11A900ABA31E /* Glasses.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Glasses.obj; path = Resources/3dmodels/Glasses.obj; sourceTree = SOURCE_ROOT; };
+		892DA8CC1ACA1A2600ABA31E /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		89F003FC1AC9C7F500D8EC6D /* LaputaApp-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "LaputaApp-Info.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -145,6 +102,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				892DA8CD1ACA1A2600ABA31E /* GLKit.framework in Frameworks */,
 				892DA8C81ACA101B00ABA31E /* libz.dylib in Frameworks */,
 				89120A371ACA04660086174B /* libassimp.a in Frameworks */,
 				6F096BFA157ED5110075E328 /* ImageIO.framework in Frameworks */,
@@ -194,7 +152,6 @@
 				6F90DDE01395CAAA00125BDA /* Resources */,
 				6F90DDD81395CAAA00125BDA /* Frameworks */,
 				6F90DDD61395CAAA00125BDA /* Products */,
-				89120AA71ACA06E90086174B /* thirdpartylib */,
 			);
 			sourceTree = "<group>";
 		};
@@ -209,6 +166,7 @@
 		6F90DDD81395CAAA00125BDA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				892DA8CC1ACA1A2600ABA31E /* GLKit.framework */,
 				892DA8C71ACA101B00ABA31E /* libz.dylib */,
 				89120A361ACA04660086174B /* libassimp.a */,
 				171999D919C7695800A719B5 /* CoreImage.framework */,
@@ -244,6 +202,7 @@
 		6F90DDE01395CAAA00125BDA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				892DA8C91ACA119C00ABA31E /* 3dModels */,
 				89F003FC1AC9C7F500D8EC6D /* LaputaApp-Info.plist */,
 				7214DBCD182AEF8900EA3F99 /* Images.xcassets */,
 				5DBA2A9719C232E200530F7A /* Launch.storyboard */,
@@ -299,67 +258,12 @@
 			name = Glasses;
 			sourceTree = "<group>";
 		};
-		89120AA71ACA06E90086174B /* thirdpartylib */ = {
+		892DA8C91ACA119C00ABA31E /* 3dModels */ = {
 			isa = PBXGroup;
 			children = (
-				89120AA81ACA06F40086174B /* libassimp */,
+				892DA8CA1ACA11A900ABA31E /* Glasses.obj */,
 			);
-			name = thirdpartylib;
-			sourceTree = "<group>";
-		};
-		89120AA81ACA06F40086174B /* libassimp */ = {
-			isa = PBXGroup;
-			children = (
-				89120AA91ACA06FE0086174B /* include */,
-			);
-			name = libassimp;
-			sourceTree = "<group>";
-		};
-		89120AA91ACA06FE0086174B /* include */ = {
-			isa = PBXGroup;
-			children = (
-				89120AAA1ACA070E0086174B /* ai_assert.h */,
-				89120AAB1ACA070E0086174B /* anim.h */,
-				89120AAC1ACA070E0086174B /* camera.h */,
-				89120AAD1ACA070E0086174B /* cexport.h */,
-				89120AAE1ACA070E0086174B /* cfileio.h */,
-				89120AAF1ACA070E0086174B /* cimport.h */,
-				89120AB01ACA070E0086174B /* color4.h */,
-				89120AB11ACA070E0086174B /* color4.inl */,
-				89120AB21ACA070E0086174B /* config.h */,
-				89120AB31ACA070E0086174B /* DefaultLogger.hpp */,
-				89120AB41ACA070E0086174B /* defs.h */,
-				89120AB51ACA070E0086174B /* Exporter.hpp */,
-				89120AB61ACA070E0086174B /* Importer.hpp */,
-				89120AB71ACA070E0086174B /* importerdesc.h */,
-				89120AB81ACA070E0086174B /* IOStream.hpp */,
-				89120AB91ACA070E0086174B /* IOSystem.hpp */,
-				89120ABA1ACA070F0086174B /* light.h */,
-				89120ABB1ACA070F0086174B /* Logger.hpp */,
-				89120ABC1ACA070F0086174B /* LogStream.hpp */,
-				89120ABD1ACA070F0086174B /* material.h */,
-				89120ABE1ACA070F0086174B /* material.inl */,
-				89120ABF1ACA070F0086174B /* matrix3x3.h */,
-				89120AC01ACA070F0086174B /* matrix3x3.inl */,
-				89120AC11ACA070F0086174B /* matrix4x4.h */,
-				89120AC21ACA070F0086174B /* matrix4x4.inl */,
-				89120AC31ACA070F0086174B /* mesh.h */,
-				89120AC41ACA070F0086174B /* metadata.h */,
-				89120AC51ACA070F0086174B /* NullLogger.hpp */,
-				89120AC61ACA070F0086174B /* postprocess.h */,
-				89120AC71ACA070F0086174B /* ProgressHandler.hpp */,
-				89120AC81ACA070F0086174B /* quaternion.h */,
-				89120AC91ACA070F0086174B /* quaternion.inl */,
-				89120ACA1ACA070F0086174B /* scene.h */,
-				89120ACB1ACA070F0086174B /* texture.h */,
-				89120ACC1ACA070F0086174B /* types.h */,
-				89120ACD1ACA070F0086174B /* vector2.h */,
-				89120ACE1ACA070F0086174B /* vector2.inl */,
-				89120ACF1ACA070F0086174B /* vector3.h */,
-				89120AD01ACA070F0086174B /* vector3.inl */,
-				89120AD11ACA070F0086174B /* version.h */,
-			);
-			name = include;
+			name = 3dModels;
 			sourceTree = "<group>";
 		};
 		AF052D151422BCEA00CD2D66 /* Other Sources */ = {
@@ -423,22 +327,16 @@
 			files = (
 				6F90DDE41395CAAA00125BDA /* InfoPlist.strings in Resources */,
 				281FB47F176694640071511D /* Main.storyboard in Resources */,
-				89120AD21ACA070F0086174B /* color4.inl in Resources */,
-				89120AD41ACA070F0086174B /* matrix3x3.inl in Resources */,
 				89120A341ACA01830086174B /* SimpleFragmentShaderL.fragmentshader in Resources */,
-				89120AD61ACA070F0086174B /* quaternion.inl in Resources */,
 				5DBA2A9919C232E200530F7A /* Launch.storyboard in Resources */,
 				89120A351ACA01830086174B /* SimpleVertexShaderL.vertexshader in Resources */,
 				6F90DDEC1395CAAA00125BDA /* LaputaViewController.h in Resources */,
 				28365599139FE71B00D09100 /* ReadMe.txt in Resources */,
-				89120AD81ACA070F0086174B /* vector3.inl in Resources */,
 				89F003FD1AC9C7F500D8EC6D /* LaputaApp-Info.plist in Resources */,
-				89120AD51ACA070F0086174B /* matrix4x4.inl in Resources */,
-				89120AD71ACA070F0086174B /* vector2.inl in Resources */,
-				89120AD31ACA070F0086174B /* material.inl in Resources */,
 				7214DBCE182AEF8900EA3F99 /* Images.xcassets in Resources */,
 				89120A301ACA011B0086174B /* myFilter.vsh in Resources */,
 				89120A2F1ACA011B0086174B /* myFilter.fsh in Resources */,
+				892DA8CB1ACA11A900ABA31E /* Glasses.obj in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -580,6 +478,12 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LaputaApp-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					thirdpartylib/glm,
+					thirdpartylib/libassimp/include,
+				);
 				INFOPLIST_FILE = "$(SRCROOT)/LaputaApp-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = (
@@ -604,6 +508,12 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LaputaApp-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					thirdpartylib/glm,
+					thirdpartylib/libassimp/include,
+				);
 				INFOPLIST_FILE = "$(SRCROOT)/LaputaApp-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LIBRARY_SEARCH_PATHS = (

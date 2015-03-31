@@ -145,14 +145,8 @@ int main( void )
     // Get a handle for our "MVP" uniform
 	GLuint MatrixIDL = glGetUniformLocation(programIDL, "MVP");
     
-	// Get a handle for our buffers
-	GLuint vertexPosition_modelspaceIDL = glGetAttribLocation(programIDL, "vertexPosition_modelspace");
-    
     // Get a handle for our "MVP" uniform
 	GLuint MatrixIDF = glGetUniformLocation(programIDF, "MVP");
-    
-	// Get a handle for our buffers
-	GLuint vertexPosition_modelspaceIDF = glGetAttribLocation(programIDF, "vertexPosition_modelspace");
     
     //vector<vec3> vertices;
     //bool res = loadOBJ("/Users/Xavier/CodingProject/3DGlassesRender/3DGlasses/Glasses.obj", vertices);
