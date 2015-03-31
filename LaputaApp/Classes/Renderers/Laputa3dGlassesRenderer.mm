@@ -6,6 +6,7 @@
 //
 //
 
+#import "LaputaScreenRenderer.h"
 #import "Laputa3dGlassesRenderer.hh"
 
 #import <OpenGLES/EAGL.h>
@@ -32,9 +33,11 @@ using namespace glm;
 
 @interface Laputa3dGlassesRenderer ()
 {
+    //it contains a screen renderer
+    LaputaScreenRenderer* _screenRenderer;
+    
     /* EGL assets */
     EAGLContext *_oglContext; //egl context
-    CVOpenGLESTextureCacheRef _textureCache; //source pixelbuffer texture
     CVOpenGLESTextureCacheRef _renderTextureCache; //destination pixelbuffer texture
     
     /* pixelbuffer pool */
@@ -67,6 +70,12 @@ using namespace glm;
     self = [super init];
     if ( self )
     {
+        _screenRenderer = [[LaputaScreenRenderer alloc] init];
+        if ( ! _screenRenderer ) {
+            NSLog( @"Problem with _screenRenderer." );
+            [self release];
+            return nil;
+        }
         _oglContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
         if ( ! _oglContext ) {
             NSLog( @"Problem with OpenGL context." );
@@ -79,6 +88,7 @@ using namespace glm;
 
 - (void)dealloc
 {
+    _screenRenderer = nil;
     [self deleteBuffers];
     [_oglContext release];
     [super dealloc];
@@ -98,6 +108,8 @@ using namespace glm;
 
 - (void)prepareForInputWithFormatDescription:(CMFormatDescriptionRef)inputFormatDescription outputRetainedBufferCountHint:(size_t)outputRetainedBufferCountHint
 {
+    [_screenRenderer prepareForInputWithFormatDescription:inputFormatDescription outputRetainedBufferCountHint:outputRetainedBufferCountHint];
+    
     // The input and output dimensions are the same. This renderer doesn't do any scaling.
     CMVideoDimensions dimensions = CMVideoFormatDescriptionGetDimensions( inputFormatDescription );
     
@@ -109,29 +121,32 @@ using namespace glm;
 
 - (void)reset
 {
+    [_screenRenderer reset];
     [self deleteBuffers];
 }
 
-- (CVPixelBufferRef)copyRenderedPixelBuffer:(CVPixelBufferRef)pixelBuffer
+- (CVPixelBufferRef)copyRenderedPixelBuffer:(CVPixelBufferRef)origPixelBuffer
 {
+    CVPixelBufferRef dstPixelBuffer = [_screenRenderer copyRenderedPixelBuffer:origPixelBuffer];
+    
     if ( _offscreenBufferHandle == 0 ) {
         @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Unintialized buffer" userInfo:nil];
         return NULL;
     }
     
-    if ( pixelBuffer == NULL ) {
+    if ( dstPixelBuffer == NULL ) {
         @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"NULL pixel buffer" userInfo:nil];
         return NULL;
     }
     
-    const CMVideoDimensions srcDimensions = { (int32_t)CVPixelBufferGetWidth(pixelBuffer), (int32_t)CVPixelBufferGetHeight(pixelBuffer) };
+    const CMVideoDimensions srcDimensions = { (int32_t)CVPixelBufferGetWidth(dstPixelBuffer), (int32_t)CVPixelBufferGetHeight(dstPixelBuffer) };
     const CMVideoDimensions dstDimensions = CMVideoFormatDescriptionGetDimensions( _outputFormatDescription );
     if ( srcDimensions.width != dstDimensions.width || srcDimensions.height != dstDimensions.height ) {
         @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Invalid pixel buffer dimensions" userInfo:nil];
         return NULL;
     }
     
-    if ( CVPixelBufferGetPixelFormatType( pixelBuffer ) != kCVPixelFormatType_32BGRA ) {
+    if ( CVPixelBufferGetPixelFormatType( dstPixelBuffer ) != kCVPixelFormatType_32BGRA ) {
         @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Invalid pixel buffer format" userInfo:nil];
         return NULL;
     }
@@ -145,171 +160,95 @@ using namespace glm;
     }
     
     CVReturn err = noErr;
-    CVOpenGLESTextureRef srcTexture = NULL;
     CVOpenGLESTextureRef dstTexture = NULL;
-    CVPixelBufferRef dstPixelBuffer = NULL;
-    
-    ////////////////////////////////////////////
-    //src texture mapped from input pixelbuffer
-    ////////////////////////////////////////////
-    err = CVOpenGLESTextureCacheCreateTextureFromImage( kCFAllocatorDefault,
-                                                       _textureCache,
-                                                       pixelBuffer,
-                                                       NULL,
-                                                       GL_TEXTURE_2D,
-                                                       GL_RGBA,
-                                                       srcDimensions.width,
-                                                       srcDimensions.height,
-                                                       GL_BGRA,
-                                                       GL_UNSIGNED_BYTE,
-                                                       0,
-                                                       &srcTexture );
-    if ( ! srcTexture || err ) {
-        NSLog( @"Error at CVOpenGLESTextureCacheCreateTextureFromImage %d", err );
-        goto bail;
-    }
     
     //////////////////////////////////////////////////
     //destination texture mapped to output pixelbuffer
     //////////////////////////////////////////////////
-    err = CVPixelBufferPoolCreatePixelBufferWithAuxAttributes( kCFAllocatorDefault, _bufferPool, _bufferPoolAuxAttributes, &dstPixelBuffer );
-    if ( err == kCVReturnWouldExceedAllocationThreshold ) {
-        // Flush the texture cache to potentially release the retained buffers and try again to create a pixel buffer
-        CVOpenGLESTextureCacheFlush( _renderTextureCache, 0 );
-        err = CVPixelBufferPoolCreatePixelBufferWithAuxAttributes( kCFAllocatorDefault, _bufferPool, _bufferPoolAuxAttributes, &dstPixelBuffer );
-    }
-    if ( err ) {
-        if ( err == kCVReturnWouldExceedAllocationThreshold ) {
-            NSLog( @"Pool is out of buffers, dropping frame" );
-        }
-        else {
-            NSLog( @"Error at CVPixelBufferPoolCreatePixelBuffer %d", err );
-        }
+    err = CVOpenGLESTextureCacheCreateTextureFromImage( kCFAllocatorDefault,
+                                                       _renderTextureCache,
+                                                       dstPixelBuffer,
+                                                       NULL,
+                                                       GL_TEXTURE_2D,
+                                                       GL_RGBA,
+                                                       dstDimensions.width,
+                                                       dstDimensions.height,
+                                                       GL_BGRA,
+                                                       GL_UNSIGNED_BYTE,
+                                                       0,
+                                                       &dstTexture );
+    
+    if ( ! dstTexture || err ) {
+        NSLog( @"Error at CVOpenGLESTextureCacheCreateTextureFromImage %d", err );
     } else {
-        err = CVOpenGLESTextureCacheCreateTextureFromImage( kCFAllocatorDefault,
-                                                           _renderTextureCache,
-                                                           dstPixelBuffer,
-                                                           NULL,
-                                                           GL_TEXTURE_2D,
-                                                           GL_RGBA,
-                                                           dstDimensions.width,
-                                                           dstDimensions.height,
-                                                           GL_BGRA,
-                                                           GL_UNSIGNED_BYTE,
-                                                           0,
-                                                           &dstTexture );
+        //////////////////////
+        //Draw the lens
+        //////////////////////
+        //bind to lens
+        glBindFramebuffer( GL_FRAMEBUFFER, _offscreenBufferHandle );
+        glViewport( 0, 0, srcDimensions.width, srcDimensions.height );
         
-        if ( ! dstTexture || err ) {
-            NSLog( @"Error at CVOpenGLESTextureCacheCreateTextureFromImage %d", err );
-        } else {
-            GLenum glErr;
-            // bind fbo as read / draw fbo
-            GLuint readFrameBuffer;
-            glGenFramebuffers( 1, &readFrameBuffer );
-            glBindFramebuffer(GL_READ_FRAMEBUFFER, readFrameBuffer);
-            // bind source texture to color attachment
-            glActiveTexture( GL_TEXTURE1 );
-            glBindTexture( CVOpenGLESTextureGetTarget( srcTexture ), CVOpenGLESTextureGetName( srcTexture ) );
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, CVOpenGLESTextureGetTarget( srcTexture ), CVOpenGLESTextureGetName( srcTexture ), 0 );
-            glReadBuffer(GL_COLOR_ATTACHMENT1);
-            
-            GLuint drawFrameBuffer;
-            glGenFramebuffers( 1, &drawFrameBuffer );
-            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFrameBuffer);
+        // Set up our destination pixel buffer as the framebuffer's render target.
+        glActiveTexture( GL_TEXTURE0 );
+        glBindTexture( CVOpenGLESTextureGetTarget( dstTexture ), CVOpenGLESTextureGetName( dstTexture ) );
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+        glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, CVOpenGLESTextureGetTarget( dstTexture ), CVOpenGLESTextureGetName( dstTexture ), 0 );
+        
+        glUseProgram( _programIDL );
+        glUniformMatrix4fv(_matrixIDL, 1, GL_FALSE, &_MVP[0][0]);
+        
+        // 1rst attribute buffer : vertices
+        glEnableVertexAttribArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, _vertexbufferL);
+        glVertexAttribPointer(
+                              0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+                              3,                  // size
+                              GL_FLOAT,           // type
+                              GL_FALSE,           // normalized?
+                              0,                  // stride
+                              (void*)0            // array buffer offset
+                              );
+        // Draw the triangle !
+        glDrawArrays(GL_TRIANGLES, 0, (GLsizei)_verticesL.size()); // 3 indices starting at 0 -> 1 triangle
+        glDisableVertexAttribArray(0);
+        
+        //////////////////////
+        //Draw the frames
+        //////////////////////
+        //bind to frames
+        glUseProgram(_programIDF);
+        glUniformMatrix4fv(_matrixIDF, 1, GL_FALSE, &_MVP[0][0]);
+        // 1rst attribute buffer : vertices
+        glEnableVertexAttribArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, _vertexbufferF);
+        glVertexAttribPointer(
+                              0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+                              3,                  // size
+                              GL_FLOAT,           // type
+                              GL_FALSE,           // normalized?
+                              0,                  // stride
+                              (void*)0            // array buffer offset
+                              );
+        
+        
+        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        // Draw the triangle !
+        glDrawArrays(GL_TRIANGLES, 0, (GLsizei)_verticesF.size()); // 3 indices starting at 0 -> 1 triangle
+        glDisableVertexAttribArray(0);
 
-            // bind destination texture to another color attachment
-            glActiveTexture( GL_TEXTURE2 );
-            glBindTexture( CVOpenGLESTextureGetTarget( dstTexture ), CVOpenGLESTextureGetName( dstTexture ) );
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, CVOpenGLESTextureGetTarget( dstTexture ), CVOpenGLESTextureGetName( dstTexture ), 0 );
-            const GLenum dstBuffers[1] = {GL_COLOR_ATTACHMENT2};
-            glDrawBuffers(1, dstBuffers);
-            
-            glErr = glGetError();
-            if (glErr != GL_NO_ERROR)
-            {
-                NSLog(@"fatal error here!");
-            }
-            // specify source, destination drawing (sub)rectangles.
-            glBlitFramebuffer(0, 0, srcDimensions.width, srcDimensions.height,
-                              0, 0, dstDimensions.width, dstDimensions.height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-            
-            // release state
-            glBindTexture(GL_TEXTURE_2D,0);
-            glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-            glBindFramebuffer(GL_DRAW_FRAMEBUFFER,0);
-            
-            //////////////////////
-            //Draw the lens
-            //////////////////////
-            //bind to lens
-            glBindFramebuffer( GL_FRAMEBUFFER, _offscreenBufferHandle );
-            glViewport( 0, 0, srcDimensions.width, srcDimensions.height );
-            
-            // Set up our destination pixel buffer as the framebuffer's render target.
-            glActiveTexture( GL_TEXTURE0 );
-            glBindTexture( CVOpenGLESTextureGetTarget( srcTexture ), CVOpenGLESTextureGetName( dstTexture ) );
-            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
-            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
-            glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, CVOpenGLESTextureGetTarget( dstTexture ), CVOpenGLESTextureGetName( dstTexture ), 0 );
-            
-            glUseProgram( _programIDL );
-            glUniformMatrix4fv(_matrixIDL, 1, GL_FALSE, &_MVP[0][0]);
-            
-            // 1rst attribute buffer : vertices
-            glEnableVertexAttribArray(0);
-            glBindBuffer(GL_ARRAY_BUFFER, _vertexbufferL);
-            glVertexAttribPointer(
-                                  0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-                                  3,                  // size
-                                  GL_FLOAT,           // type
-                                  GL_FALSE,           // normalized?
-                                  0,                  // stride
-                                  (void*)0            // array buffer offset
-                                  );
-            // Draw the triangle !
-            glDrawArrays(GL_TRIANGLES, 0, (GLsizei)_verticesL.size()); // 3 indices starting at 0 -> 1 triangle
-            glDisableVertexAttribArray(0);
-            
-            //////////////////////
-            //Draw the frames
-            //////////////////////
-            //bind to frames
-            glUseProgram(_programIDF);
-            glUniformMatrix4fv(_matrixIDF, 1, GL_FALSE, &_MVP[0][0]);
-            // 1rst attribute buffer : vertices
-            glEnableVertexAttribArray(0);
-            glBindBuffer(GL_ARRAY_BUFFER, _vertexbufferF);
-            glVertexAttribPointer(
-                                  0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-                                  3,                  // size
-                                  GL_FLOAT,           // type
-                                  GL_FALSE,           // normalized?
-                                  0,                  // stride
-                                  (void*)0            // array buffer offset
-                                  );
-            
-            
-            //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            // Draw the triangle !
-            glDrawArrays(GL_TRIANGLES, 0, (GLsizei)_verticesF.size()); // 3 indices starting at 0 -> 1 triangle
-            glDisableVertexAttribArray(0);
-
-            glBindTexture( CVOpenGLESTextureGetTarget( dstTexture ), 0 );
-            
-            // Make sure that outstanding GL commands which render to the destination pixel buffer have been submitted.
-            // AVAssetWriter, AVSampleBufferDisplayLayer, and GL will block until the rendering is complete when sourcing from this pixel buffer.
-            glFlush();
-        }
+        glBindTexture( CVOpenGLESTextureGetTarget( dstTexture ), 0 );
+        
+        // Make sure that outstanding GL commands which render to the destination pixel buffer have been submitted.
+        // AVAssetWriter, AVSampleBufferDisplayLayer, and GL will block until the rendering is complete when sourcing from this pixel buffer.
+        glFlush();
     }
     
 bail:
     if ( oldContext != _oglContext ) {
         [EAGLContext setCurrentContext:oldContext];
-    }
-    if ( srcTexture ) {
-        CFRelease( srcTexture );
     }
     if ( dstTexture ) {
         CFRelease( dstTexture );
@@ -460,15 +399,7 @@ bail:
     ///////////////////
     //buffer management
     ///////////////////
-    CVReturn err = CVOpenGLESTextureCacheCreate( kCFAllocatorDefault, NULL, _oglContext, NULL, &_textureCache );
-    if ( err ) {
-        NSLog( @"Error at CVOpenGLESTextureCacheCreate %d", err );
-        success = NO;
-        [self cleanup:success oldContext:oldContext];
-        return success;
-    }
-    
-    err = CVOpenGLESTextureCacheCreate( kCFAllocatorDefault, NULL, _oglContext, NULL, &_renderTextureCache );
+    CVReturn err = CVOpenGLESTextureCacheCreate( kCFAllocatorDefault, NULL, _oglContext, NULL, &_renderTextureCache );
     if ( err ) {
         NSLog( @"Error at CVOpenGLESTextureCacheCreate %d", err );
         success = NO;
@@ -534,10 +465,6 @@ bail:
     if( _vertexbufferL ) {
         glDeleteBuffers(1, &_vertexbufferL);
         _vertexbufferL = 0;
-    }
-    if ( _textureCache ) {
-        CFRelease( _textureCache );
-        _textureCache = 0;
     }
     if ( _renderTextureCache ) {
         CFRelease( _renderTextureCache );
