@@ -28,6 +28,11 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+//opencv imports
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include "opencv2/imgproc/imgproc.hpp"
+
 using namespace std;
 using namespace glm;
 
@@ -218,7 +223,7 @@ using namespace glm;
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, _vertexbufferL);
         glVertexAttribPointer(
-                              0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+                              0,                  // attribute 0. No particular reason for 0, but must match the layout(vertexPosition_modelspace) in the shader.
                               3,                  // size
                               GL_FLOAT,           // type
                               GL_FALSE,           // normalized?
@@ -239,7 +244,7 @@ using namespace glm;
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, _vertexbufferF);
         glVertexAttribPointer(
-                              0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+                              0,                  // attribute 0. No particular reason for 0, but must match the layout(vertexPosition_modelspace) in the shader.
                               3,                  // size
                               GL_FLOAT,           // type
                               GL_FALSE,           // normalized?
@@ -298,6 +303,9 @@ bail:
             return NO;
         }
     }
+    
+    //cv::Mat texture_cv = cv::imread("/Users/Xavier/CodingProject/3DGlassesRender/3DGlasses/test.bmp");
+    
     ////////////////////////
     //first step
     //Load model with ASSIMP
