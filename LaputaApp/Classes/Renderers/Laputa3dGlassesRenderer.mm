@@ -10,8 +10,8 @@
 #import "Laputa3dGlassesRenderer.hh"
 
 #import <OpenGLES/EAGL.h>
-#import <OpenGLES/ES3/gl.h>
-#import <OpenGLES/ES3/glext.h>
+#import <OpenGLES/ES2/gl.h>
+#import <OpenGLES/ES2/glext.h>
 
 #import "ShaderUtilities.h"
 #import "matrix.h"
@@ -91,7 +91,7 @@ enum {
             [self release];
             return nil;
         }
-        _oglContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
+        _oglContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
         if ( ! _oglContext ) {
             NSLog( @"Problem with OpenGL context." );
             [self release];

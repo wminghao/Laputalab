@@ -138,7 +138,7 @@ enum {
 		eaglLayer.drawableProperties = @{ kEAGLDrawablePropertyRetainedBacking : @(NO),
 										  kEAGLDrawablePropertyColorFormat : kEAGLColorFormatRGBA8 };
 
-		_oglContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
+		_oglContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
 		if ( ! _oglContext ) {
 			NSLog( @"Problem with OpenGL context." );
 			[self release];
