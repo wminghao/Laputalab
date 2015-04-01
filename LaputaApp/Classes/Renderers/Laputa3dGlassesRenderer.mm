@@ -66,6 +66,16 @@ using namespace glm;
 }
 @end
 
+enum {
+    ATTRIB_VERTEXPOSITION_MODELSPACE, // "vertexPosition_modelspace" in vertext shader
+    NUM_ATTRIBUTES
+};
+
+enum {
+    UNIFORM_MVP, // "MVP" in vertext shader
+    NUM_UNIFORMS
+};
+
 @implementation Laputa3dGlassesRenderer
 
 #pragma mark API
@@ -220,10 +230,10 @@ using namespace glm;
         glUniformMatrix4fv(_matrixIDL, 1, GL_FALSE, &MVP[0][0]);
         
         // 1rst attribute buffer : vertices
-        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(ATTRIB_VERTEXPOSITION_MODELSPACE);
         glBindBuffer(GL_ARRAY_BUFFER, _vertexbufferL);
         glVertexAttribPointer(
-                              0,                  // attribute 0. No particular reason for 0, but must match the layout(vertexPosition_modelspace) in the shader.
+                              ATTRIB_VERTEXPOSITION_MODELSPACE, // match the layout(vertexPosition_modelspace) in the shader.
                               3,                  // size
                               GL_FLOAT,           // type
                               GL_FALSE,           // normalized?
@@ -232,7 +242,7 @@ using namespace glm;
                               );
         // Draw the triangle !
         glDrawArrays(GL_TRIANGLES, 0, (GLsizei)_verticesL.size()); // 3 indices starting at 0 -> 1 triangle
-        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(ATTRIB_VERTEXPOSITION_MODELSPACE);
         
         //////////////////////
         //Draw the frames
@@ -241,22 +251,19 @@ using namespace glm;
         glUseProgram(_programIDF);
         glUniformMatrix4fv(_matrixIDF, 1, GL_FALSE, &MVP[0][0]);
         // 1rst attribute buffer : vertices
-        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(ATTRIB_VERTEXPOSITION_MODELSPACE);
         glBindBuffer(GL_ARRAY_BUFFER, _vertexbufferF);
         glVertexAttribPointer(
-                              0,                  // attribute 0. No particular reason for 0, but must match the layout(vertexPosition_modelspace) in the shader.
+                              ATTRIB_VERTEXPOSITION_MODELSPACE, //match the layout(vertexPosition_modelspace) in the shader.
                               3,                  // size
                               GL_FLOAT,           // type
                               GL_FALSE,           // normalized?
                               0,                  // stride
                               (void*)0            // array buffer offset
                               );
-        
-        
-        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         // Draw the triangle !
         glDrawArrays(GL_TRIANGLES, 0, (GLsizei)_verticesF.size()); // 3 indices starting at 0 -> 1 triangle
-        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(ATTRIB_VERTEXPOSITION_MODELSPACE);
 
         glBindTexture( CVOpenGLESTextureGetTarget( dstTexture ), 0 );
         
@@ -359,13 +366,26 @@ bail:
     // shader program
     /////////////////
     //glasses shaders
+    
+    // Load vertex and fragment shaders
+    GLint attribLocation[NUM_ATTRIBUTES] = {
+        ATTRIB_VERTEXPOSITION_MODELSPACE, //ATTRIB_TEXTUREPOSITON
+    };
+    GLchar *attribName[NUM_ATTRIBUTES] = {
+        (GLchar *)"vertexPosition_modelspace", //"texturecoordinate",
+    };
+    
+    GLint uniformLocation[NUM_UNIFORMS];
+    GLchar *uniformName[NUM_UNIFORMS] = {
+        (GLchar *)"MVP",
+    };
     // Load vertex and fragment shaders for glasses
     const GLchar *vertSrc = [Tools readFile:@"SimpleVertexShaderL.vertexshader"];
     const GLchar *fragSrc = [Tools readFile:@"SimpleFragmentShaderL.fragmentshader"];
     
     glueCreateProgram( vertSrc, fragSrc,
-                      0, NULL, NULL,
-                      0, 0, 0,
+                      NUM_ATTRIBUTES, (const GLchar **)&attribName[0], attribLocation,
+                      NUM_UNIFORMS, (const GLchar **)&uniformName[0], uniformLocation,
                       &_programIDL );
     if ( ! _programIDL ) {
         NSLog( @"Problem initializing the _programIDL." );
@@ -373,11 +393,11 @@ bail:
         [self cleanup:success oldContext:oldContext];
         return success;
     }
-    _matrixIDL = glueGetUniformLocation( _programIDL, "MVP" );
+    _matrixIDL = uniformLocation[UNIFORM_MVP];
     
     glueCreateProgram( vertSrc, fragSrc,
-                      0, NULL, NULL,
-                      0, 0, 0,
+                      NUM_ATTRIBUTES, (const GLchar **)&attribName[0], attribLocation,
+                      NUM_UNIFORMS, (const GLchar **)&uniformName[0], uniformLocation,
                       &_programIDF );
     if ( ! _programIDF ) {
         NSLog( @"Problem initializing the _programIDF." );
@@ -385,7 +405,7 @@ bail:
         [self cleanup:success oldContext:oldContext];
         return success;
     }
-    _matrixIDF = glueGetUniformLocation( _programIDF, "MVP" );
+    _matrixIDF = uniformLocation[UNIFORM_MVP];
     
     glGenBuffers(1, &_vertexbufferF);
     glBindBuffer(GL_ARRAY_BUFFER, _vertexbufferF);
