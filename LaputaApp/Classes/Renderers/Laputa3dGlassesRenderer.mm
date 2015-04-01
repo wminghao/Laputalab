@@ -380,10 +380,10 @@ bail:
         (GLchar *)"MVP",
     };
     // Load vertex and fragment shaders for glasses
-    const GLchar *vertSrc = [Tools readFile:@"SimpleVertexShaderL.vertexshader"];
-    const GLchar *fragSrc = [Tools readFile:@"SimpleFragmentShaderL.fragmentshader"];
+    const GLchar *vertLSrc = [Tools readFile:@"SimpleVertexShaderL.vertexshader"];
+    const GLchar *fragLSrc = [Tools readFile:@"SimpleFragmentShaderL.fragmentshader"];
     
-    glueCreateProgram( vertSrc, fragSrc,
+    glueCreateProgram( vertLSrc, fragLSrc,
                       NUM_ATTRIBUTES, (const GLchar **)&attribName[0], attribLocation,
                       NUM_UNIFORMS, (const GLchar **)&uniformName[0], uniformLocation,
                       &_programIDL );
@@ -395,7 +395,9 @@ bail:
     }
     _matrixIDL = uniformLocation[UNIFORM_MVP];
     
-    glueCreateProgram( vertSrc, fragSrc,
+    const GLchar *vertFSrc = [Tools readFile:@"SimpleVertexShaderF.vertexshader"];
+    const GLchar *fragFSrc = [Tools readFile:@"SimpleFragmentShaderF.fragmentshader"];
+    glueCreateProgram( vertFSrc, fragFSrc,
                       NUM_ATTRIBUTES, (const GLchar **)&attribName[0], attribLocation,
                       NUM_UNIFORMS, (const GLchar **)&uniformName[0], uniformLocation,
                       &_programIDF );
