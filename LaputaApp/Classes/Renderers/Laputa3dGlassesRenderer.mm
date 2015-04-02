@@ -155,10 +155,13 @@ enum {
     [self deleteBuffers];
 }
 
+//#define BEAUTIFICATION_ENABLED
+
 - (CVPixelBufferRef)copyRenderedPixelBuffer:(CVPixelBufferRef)origPixelBuffer
 {
     CVReturn err = noErr;
 #ifdef BEAUTIFICATION_ENABLED
+    //details see https://developer.apple.com/library/ios/documentation/GraphicsImaging/Conceptual/CoreImaging/ci_autoadjustment/ci_autoadjustmentSAVE.html#//apple_ref/doc/uid/TP30001185-CH11-SW1
     CVPixelBufferRef unEnhancedPixelBuffer = [_screenRenderer copyRenderedPixelBuffer:origPixelBuffer];
     CIImage *toBeEnhancedImage = [CIImage imageWithCVPixelBuffer:unEnhancedPixelBuffer];
     NSDictionary *options = nil;
@@ -169,8 +172,12 @@ enum {
     }
     NSArray *adjustments = [toBeEnhancedImage autoAdjustmentFiltersWithOptions:options];
     for (CIFilter *filter in adjustments) {
-        [filter setValue:toBeEnhancedImage forKey:kCIInputImageKey];
-        toBeEnhancedImage = filter.outputImage;
+        NSString * filterName = [filter name];
+        if( [filterName isEqualToString:@"CIFaceBalance"] ) {
+            [filter setValue:toBeEnhancedImage forKey:kCIInputImageKey];
+            toBeEnhancedImage = filter.outputImage;
+            break;
+        }
     }
     CVPixelBufferRef dstPixelBuffer = nil;
     err = CVPixelBufferPoolCreatePixelBufferWithAuxAttributes( kCFAllocatorDefault, _bufferPool, _bufferPoolAuxAttributes, &dstPixelBuffer );
