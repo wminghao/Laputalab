@@ -36,17 +36,26 @@
 		89120A2B1AC9FFA60086174B /* Tools.m in Sources */ = {isa = PBXBuildFile; fileRef = 89120A2A1AC9FFA60086174B /* Tools.m */; };
 		89120A2F1ACA011B0086174B /* myFilter.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 89120A2D1ACA011B0086174B /* myFilter.fsh */; };
 		89120A301ACA011B0086174B /* myFilter.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 89120A2E1ACA011B0086174B /* myFilter.vsh */; };
-		89120A341ACA01830086174B /* SimpleFragmentShaderL.fragmentshader in Resources */ = {isa = PBXBuildFile; fileRef = 89120A321ACA01830086174B /* SimpleFragmentShaderL.fragmentshader */; };
-		89120A351ACA01830086174B /* SimpleVertexShaderL.vertexshader in Resources */ = {isa = PBXBuildFile; fileRef = 89120A331ACA01830086174B /* SimpleVertexShaderL.vertexshader */; };
 		89120A371ACA04660086174B /* libassimp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 89120A361ACA04660086174B /* libassimp.a */; };
 		892DA8C81ACA101B00ABA31E /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 892DA8C71ACA101B00ABA31E /* libz.dylib */; };
-		892DA8CB1ACA11A900ABA31E /* Glasses.obj in Resources */ = {isa = PBXBuildFile; fileRef = 892DA8CA1ACA11A900ABA31E /* Glasses.obj */; };
 		892DA8CD1ACA1A2600ABA31E /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 892DA8CC1ACA1A2600ABA31E /* GLKit.framework */; };
 		892DA8EF1ACB649A00ABA31E /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 892DA8EE1ACB649A00ABA31E /* opencv2.framework */; };
-		892DA8F21ACC757A00ABA31E /* SimpleFragmentShaderF.fragmentshader in Resources */ = {isa = PBXBuildFile; fileRef = 892DA8F01ACC757A00ABA31E /* SimpleFragmentShaderF.fragmentshader */; };
-		892DA8F31ACC757A00ABA31E /* SimpleVertexShaderF.vertexshader in Resources */ = {isa = PBXBuildFile; fileRef = 892DA8F11ACC757A00ABA31E /* SimpleVertexShaderF.vertexshader */; };
 		892DA8F41ACDCECE00ABA31E /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 171999D919C7695800A719B5 /* CoreImage.framework */; };
-		8956569B1ACE03D2004AE70A /* RanGlass.obj in Resources */ = {isa = PBXBuildFile; fileRef = 8956569A1ACE03D2004AE70A /* RanGlass.obj */; };
+		895656A01ACE0551004AE70A /* SimpleFragmentShaderF.fragmentshader in Resources */ = {isa = PBXBuildFile; fileRef = 8956569C1ACE0551004AE70A /* SimpleFragmentShaderF.fragmentshader */; };
+		895656A11ACE0551004AE70A /* SimpleFragmentShaderL.fragmentshader in Resources */ = {isa = PBXBuildFile; fileRef = 8956569D1ACE0551004AE70A /* SimpleFragmentShaderL.fragmentshader */; };
+		895656A21ACE0551004AE70A /* SimpleVertexShaderF.vertexshader in Resources */ = {isa = PBXBuildFile; fileRef = 8956569E1ACE0551004AE70A /* SimpleVertexShaderF.vertexshader */; };
+		895656A31ACE0551004AE70A /* SimpleVertexShaderL.vertexshader in Resources */ = {isa = PBXBuildFile; fileRef = 8956569F1ACE0551004AE70A /* SimpleVertexShaderL.vertexshader */; };
+		895656BC1ACE0672004AE70A /* LaputaSimpleGlassesRenderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 895656BB1ACE0672004AE70A /* LaputaSimpleGlassesRenderer.mm */; };
+		895656D21ACE08A1004AE70A /* SimpleGlasses.obj in Resources */ = {isa = PBXBuildFile; fileRef = 895656D11ACE08A1004AE70A /* SimpleGlasses.obj */; };
+		895656DC1ACE08AC004AE70A /* Brooklyn_Bridge_Planks_small.hdr in Resources */ = {isa = PBXBuildFile; fileRef = 895656D31ACE08AC004AE70A /* Brooklyn_Bridge_Planks_small.hdr */; };
+		895656DD1ACE08AD004AE70A /* glass9.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 895656D41ACE08AC004AE70A /* glass9.jpg */; };
+		895656DE1ACE08AD004AE70A /* logo1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 895656D51ACE08AC004AE70A /* logo1.jpg */; };
+		895656DF1ACE08AD004AE70A /* logo1flipped.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 895656D61ACE08AC004AE70A /* logo1flipped.jpg */; };
+		895656E01ACE08AD004AE70A /* logo1flippedSmall.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 895656D71ACE08AC004AE70A /* logo1flippedSmall.jpg */; };
+		895656E11ACE08AD004AE70A /* logo1small.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 895656D81ACE08AC004AE70A /* logo1small.jpg */; };
+		895656E21ACE08AD004AE70A /* ramp1-nurbsToPoly1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 895656D91ACE08AC004AE70A /* ramp1-nurbsToPoly1.jpg */; };
+		895656E31ACE08AD004AE70A /* RanGlass.dae in Resources */ = {isa = PBXBuildFile; fileRef = 895656DA1ACE08AC004AE70A /* RanGlass.dae */; };
+		895656E41ACE08AD004AE70A /* RanGlass.obj in Resources */ = {isa = PBXBuildFile; fileRef = 895656DB1ACE08AC004AE70A /* RanGlass.obj */; };
 		89F003FD1AC9C7F500D8EC6D /* LaputaApp-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 89F003FC1AC9C7F500D8EC6D /* LaputaApp-Info.plist */; };
 /* End PBXBuildFile section */
 
@@ -93,16 +102,26 @@
 		89120A2A1AC9FFA60086174B /* Tools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Tools.m; path = Utilities/Tools.m; sourceTree = "<group>"; };
 		89120A2D1ACA011B0086174B /* myFilter.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = myFilter.fsh; path = Resources/Shaders/ColorFilters/myFilter.fsh; sourceTree = SOURCE_ROOT; };
 		89120A2E1ACA011B0086174B /* myFilter.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = myFilter.vsh; path = Resources/Shaders/ColorFilters/myFilter.vsh; sourceTree = SOURCE_ROOT; };
-		89120A321ACA01830086174B /* SimpleFragmentShaderL.fragmentshader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SimpleFragmentShaderL.fragmentshader; path = Resources/Shaders/Glasses/SimpleFragmentShaderL.fragmentshader; sourceTree = SOURCE_ROOT; };
-		89120A331ACA01830086174B /* SimpleVertexShaderL.vertexshader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SimpleVertexShaderL.vertexshader; path = Resources/Shaders/Glasses/SimpleVertexShaderL.vertexshader; sourceTree = SOURCE_ROOT; };
 		89120A361ACA04660086174B /* libassimp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libassimp.a; path = thirdpartylib/libassimp/lib/libassimp.a; sourceTree = "<group>"; };
 		892DA8C71ACA101B00ABA31E /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
-		892DA8CA1ACA11A900ABA31E /* Glasses.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Glasses.obj; path = Resources/3dmodels/Glasses.obj; sourceTree = SOURCE_ROOT; };
 		892DA8CC1ACA1A2600ABA31E /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		892DA8EE1ACB649A00ABA31E /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = thirdpartylib/opencv/opencv2.framework; sourceTree = "<group>"; };
-		892DA8F01ACC757A00ABA31E /* SimpleFragmentShaderF.fragmentshader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SimpleFragmentShaderF.fragmentshader; path = Resources/Shaders/Glasses/SimpleFragmentShaderF.fragmentshader; sourceTree = SOURCE_ROOT; };
-		892DA8F11ACC757A00ABA31E /* SimpleVertexShaderF.vertexshader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SimpleVertexShaderF.vertexshader; path = Resources/Shaders/Glasses/SimpleVertexShaderF.vertexshader; sourceTree = SOURCE_ROOT; };
-		8956569A1ACE03D2004AE70A /* RanGlass.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RanGlass.obj; sourceTree = "<group>"; };
+		8956569C1ACE0551004AE70A /* SimpleFragmentShaderF.fragmentshader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SimpleFragmentShaderF.fragmentshader; sourceTree = "<group>"; };
+		8956569D1ACE0551004AE70A /* SimpleFragmentShaderL.fragmentshader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SimpleFragmentShaderL.fragmentshader; sourceTree = "<group>"; };
+		8956569E1ACE0551004AE70A /* SimpleVertexShaderF.vertexshader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SimpleVertexShaderF.vertexshader; sourceTree = "<group>"; };
+		8956569F1ACE0551004AE70A /* SimpleVertexShaderL.vertexshader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SimpleVertexShaderL.vertexshader; sourceTree = "<group>"; };
+		895656BA1ACE0672004AE70A /* LaputaSimpleGlassesRenderer.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = LaputaSimpleGlassesRenderer.hh; path = Renderers/LaputaSimpleGlassesRenderer.hh; sourceTree = "<group>"; };
+		895656BB1ACE0672004AE70A /* LaputaSimpleGlassesRenderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = LaputaSimpleGlassesRenderer.mm; path = Renderers/LaputaSimpleGlassesRenderer.mm; sourceTree = "<group>"; };
+		895656D11ACE08A1004AE70A /* SimpleGlasses.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SimpleGlasses.obj; path = Resources/3dmodels/SimpleGlasses/SimpleGlasses.obj; sourceTree = SOURCE_ROOT; };
+		895656D31ACE08AC004AE70A /* Brooklyn_Bridge_Planks_small.hdr */ = {isa = PBXFileReference; lastKnownFileType = file; name = Brooklyn_Bridge_Planks_small.hdr; path = Resources/3dmodels/3dGlasses/Brooklyn_Bridge_Planks_small.hdr; sourceTree = SOURCE_ROOT; };
+		895656D41ACE08AC004AE70A /* glass9.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = glass9.jpg; path = Resources/3dmodels/3dGlasses/glass9.jpg; sourceTree = SOURCE_ROOT; };
+		895656D51ACE08AC004AE70A /* logo1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = logo1.jpg; path = Resources/3dmodels/3dGlasses/logo1.jpg; sourceTree = SOURCE_ROOT; };
+		895656D61ACE08AC004AE70A /* logo1flipped.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = logo1flipped.jpg; path = Resources/3dmodels/3dGlasses/logo1flipped.jpg; sourceTree = SOURCE_ROOT; };
+		895656D71ACE08AC004AE70A /* logo1flippedSmall.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = logo1flippedSmall.jpg; path = Resources/3dmodels/3dGlasses/logo1flippedSmall.jpg; sourceTree = SOURCE_ROOT; };
+		895656D81ACE08AC004AE70A /* logo1small.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = logo1small.jpg; path = Resources/3dmodels/3dGlasses/logo1small.jpg; sourceTree = SOURCE_ROOT; };
+		895656D91ACE08AC004AE70A /* ramp1-nurbsToPoly1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "ramp1-nurbsToPoly1.jpg"; path = "Resources/3dmodels/3dGlasses/ramp1-nurbsToPoly1.jpg"; sourceTree = SOURCE_ROOT; };
+		895656DA1ACE08AC004AE70A /* RanGlass.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; name = RanGlass.dae; path = Resources/3dmodels/3dGlasses/RanGlass.dae; sourceTree = SOURCE_ROOT; };
+		895656DB1ACE08AC004AE70A /* RanGlass.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = RanGlass.obj; path = Resources/3dmodels/3dGlasses/RanGlass.obj; sourceTree = SOURCE_ROOT; };
 		89F003FC1AC9C7F500D8EC6D /* LaputaApp-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "LaputaApp-Info.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -135,7 +154,7 @@
 		262D247E17177837000E1DBA /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
-				89120A311ACA01750086174B /* Glasses */,
+				89120A311ACA01750086174B /* SimpleGlasses */,
 				89120A2C1ACA010B0086174B /* ColorFilters */,
 			);
 			name = Shaders;
@@ -147,6 +166,8 @@
 				89120A251AC9FED80086174B /* LaputaRenderer.h */,
 				89120A261AC9FED80086174B /* LaputaScreenRenderer.h */,
 				89120A271AC9FED80086174B /* LaputaScreenRenderer.m */,
+				895656BA1ACE0672004AE70A /* LaputaSimpleGlassesRenderer.hh */,
+				895656BB1ACE0672004AE70A /* LaputaSimpleGlassesRenderer.mm */,
 				89120A221AC9FEAD0086174B /* Laputa3dGlassesRenderer.hh */,
 				89120A231AC9FEAD0086174B /* Laputa3dGlassesRenderer.mm */,
 			);
@@ -261,24 +282,48 @@
 			name = ColorFilters;
 			sourceTree = "<group>";
 		};
-		89120A311ACA01750086174B /* Glasses */ = {
+		89120A311ACA01750086174B /* SimpleGlasses */ = {
 			isa = PBXGroup;
 			children = (
-				892DA8F01ACC757A00ABA31E /* SimpleFragmentShaderF.fragmentshader */,
-				892DA8F11ACC757A00ABA31E /* SimpleVertexShaderF.vertexshader */,
-				89120A321ACA01830086174B /* SimpleFragmentShaderL.fragmentshader */,
-				89120A331ACA01830086174B /* SimpleVertexShaderL.vertexshader */,
+				8956569C1ACE0551004AE70A /* SimpleFragmentShaderF.fragmentshader */,
+				8956569D1ACE0551004AE70A /* SimpleFragmentShaderL.fragmentshader */,
+				8956569E1ACE0551004AE70A /* SimpleVertexShaderF.vertexshader */,
+				8956569F1ACE0551004AE70A /* SimpleVertexShaderL.vertexshader */,
 			);
-			name = Glasses;
+			name = SimpleGlasses;
 			sourceTree = "<group>";
 		};
 		892DA8C91ACA119C00ABA31E /* 3dModels */ = {
 			isa = PBXGroup;
 			children = (
-				8956569A1ACE03D2004AE70A /* RanGlass.obj */,
-				892DA8CA1ACA11A900ABA31E /* Glasses.obj */,
+				895656A71ACE0641004AE70A /* 3dGlasses */,
+				895656A41ACE0628004AE70A /* SimpleGlasses */,
 			);
 			name = 3dModels;
+			sourceTree = "<group>";
+		};
+		895656A41ACE0628004AE70A /* SimpleGlasses */ = {
+			isa = PBXGroup;
+			children = (
+				895656D11ACE08A1004AE70A /* SimpleGlasses.obj */,
+			);
+			name = SimpleGlasses;
+			sourceTree = "<group>";
+		};
+		895656A71ACE0641004AE70A /* 3dGlasses */ = {
+			isa = PBXGroup;
+			children = (
+				895656D31ACE08AC004AE70A /* Brooklyn_Bridge_Planks_small.hdr */,
+				895656D41ACE08AC004AE70A /* glass9.jpg */,
+				895656D51ACE08AC004AE70A /* logo1.jpg */,
+				895656D61ACE08AC004AE70A /* logo1flipped.jpg */,
+				895656D71ACE08AC004AE70A /* logo1flippedSmall.jpg */,
+				895656D81ACE08AC004AE70A /* logo1small.jpg */,
+				895656D91ACE08AC004AE70A /* ramp1-nurbsToPoly1.jpg */,
+				895656DA1ACE08AC004AE70A /* RanGlass.dae */,
+				895656DB1ACE08AC004AE70A /* RanGlass.obj */,
+			);
+			name = 3dGlasses;
 			sourceTree = "<group>";
 		};
 		AF052D151422BCEA00CD2D66 /* Other Sources */ = {
@@ -340,21 +385,29 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				892DA8F31ACC757A00ABA31E /* SimpleVertexShaderF.vertexshader in Resources */,
-				8956569B1ACE03D2004AE70A /* RanGlass.obj in Resources */,
-				892DA8F21ACC757A00ABA31E /* SimpleFragmentShaderF.fragmentshader in Resources */,
+				895656E01ACE08AD004AE70A /* logo1flippedSmall.jpg in Resources */,
+				895656DE1ACE08AD004AE70A /* logo1.jpg in Resources */,
+				895656DF1ACE08AD004AE70A /* logo1flipped.jpg in Resources */,
+				895656A21ACE0551004AE70A /* SimpleVertexShaderF.vertexshader in Resources */,
+				895656E21ACE08AD004AE70A /* ramp1-nurbsToPoly1.jpg in Resources */,
 				6F90DDE41395CAAA00125BDA /* InfoPlist.strings in Resources */,
 				281FB47F176694640071511D /* Main.storyboard in Resources */,
-				89120A341ACA01830086174B /* SimpleFragmentShaderL.fragmentshader in Resources */,
 				5DBA2A9919C232E200530F7A /* Launch.storyboard in Resources */,
-				89120A351ACA01830086174B /* SimpleVertexShaderL.vertexshader in Resources */,
+				895656A01ACE0551004AE70A /* SimpleFragmentShaderF.fragmentshader in Resources */,
+				895656A31ACE0551004AE70A /* SimpleVertexShaderL.vertexshader in Resources */,
 				6F90DDEC1395CAAA00125BDA /* LaputaViewController.h in Resources */,
 				28365599139FE71B00D09100 /* ReadMe.txt in Resources */,
+				895656DC1ACE08AC004AE70A /* Brooklyn_Bridge_Planks_small.hdr in Resources */,
+				895656E11ACE08AD004AE70A /* logo1small.jpg in Resources */,
 				89F003FD1AC9C7F500D8EC6D /* LaputaApp-Info.plist in Resources */,
 				7214DBCE182AEF8900EA3F99 /* Images.xcassets in Resources */,
+				895656D21ACE08A1004AE70A /* SimpleGlasses.obj in Resources */,
+				895656E31ACE08AD004AE70A /* RanGlass.dae in Resources */,
+				895656DD1ACE08AD004AE70A /* glass9.jpg in Resources */,
+				895656E41ACE08AD004AE70A /* RanGlass.obj in Resources */,
 				89120A301ACA011B0086174B /* myFilter.vsh in Resources */,
 				89120A2F1ACA011B0086174B /* myFilter.fsh in Resources */,
-				892DA8CB1ACA11A900ABA31E /* Glasses.obj in Resources */,
+				895656A11ACE0551004AE70A /* SimpleFragmentShaderL.fragmentshader in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -365,6 +418,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				895656BC1ACE0672004AE70A /* LaputaSimpleGlassesRenderer.mm in Sources */,
 				6F90DDE61395CAAA00125BDA /* main.m in Sources */,
 				6F90DDEA1395CAAA00125BDA /* LaputaAppDelegate.m in Sources */,
 				6F90DDEE1395CAAA00125BDA /* LaputaViewController.m in Sources */,

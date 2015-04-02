@@ -49,6 +49,7 @@
 #import "LaputaCapturePipeline.h"
 
 #import "LaputaScreenRenderer.h"
+#import "LaputaSimpleGlassesRenderer.hh"
 #import "Laputa3dGlassesRenderer.hh"
 
 #import "MovieRecorder.h"
@@ -148,7 +149,7 @@ typedef NS_ENUM( NSInteger, LaputaRecordingStatus )
 		_videoDataOutputQueue = dispatch_queue_create( "com.apple.sample.capturepipeline.video", DISPATCH_QUEUE_SERIAL );
 		dispatch_set_target_queue( _videoDataOutputQueue, dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_HIGH, 0 ) );
 		
-		_renderer = [[Laputa3dGlassesRenderer alloc] init];
+		_renderer = [[LaputaSimpleGlassesRenderer alloc] init];
 				
 		_pipelineRunningTask = UIBackgroundTaskInvalid;
 	}
