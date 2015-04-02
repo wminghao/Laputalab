@@ -46,6 +46,7 @@
 		892DA8F21ACC757A00ABA31E /* SimpleFragmentShaderF.fragmentshader in Resources */ = {isa = PBXBuildFile; fileRef = 892DA8F01ACC757A00ABA31E /* SimpleFragmentShaderF.fragmentshader */; };
 		892DA8F31ACC757A00ABA31E /* SimpleVertexShaderF.vertexshader in Resources */ = {isa = PBXBuildFile; fileRef = 892DA8F11ACC757A00ABA31E /* SimpleVertexShaderF.vertexshader */; };
 		892DA8F41ACDCECE00ABA31E /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 171999D919C7695800A719B5 /* CoreImage.framework */; };
+		8956569B1ACE03D2004AE70A /* RanGlass.obj in Resources */ = {isa = PBXBuildFile; fileRef = 8956569A1ACE03D2004AE70A /* RanGlass.obj */; };
 		89F003FD1AC9C7F500D8EC6D /* LaputaApp-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 89F003FC1AC9C7F500D8EC6D /* LaputaApp-Info.plist */; };
 /* End PBXBuildFile section */
 
@@ -101,6 +102,7 @@
 		892DA8EE1ACB649A00ABA31E /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = thirdpartylib/opencv/opencv2.framework; sourceTree = "<group>"; };
 		892DA8F01ACC757A00ABA31E /* SimpleFragmentShaderF.fragmentshader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SimpleFragmentShaderF.fragmentshader; path = Resources/Shaders/Glasses/SimpleFragmentShaderF.fragmentshader; sourceTree = SOURCE_ROOT; };
 		892DA8F11ACC757A00ABA31E /* SimpleVertexShaderF.vertexshader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SimpleVertexShaderF.vertexshader; path = Resources/Shaders/Glasses/SimpleVertexShaderF.vertexshader; sourceTree = SOURCE_ROOT; };
+		8956569A1ACE03D2004AE70A /* RanGlass.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RanGlass.obj; sourceTree = "<group>"; };
 		89F003FC1AC9C7F500D8EC6D /* LaputaApp-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "LaputaApp-Info.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -273,6 +275,7 @@
 		892DA8C91ACA119C00ABA31E /* 3dModels */ = {
 			isa = PBXGroup;
 			children = (
+				8956569A1ACE03D2004AE70A /* RanGlass.obj */,
 				892DA8CA1ACA11A900ABA31E /* Glasses.obj */,
 			);
 			name = 3dModels;
@@ -338,6 +341,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				892DA8F31ACC757A00ABA31E /* SimpleVertexShaderF.vertexshader in Resources */,
+				8956569B1ACE03D2004AE70A /* RanGlass.obj in Resources */,
 				892DA8F21ACC757A00ABA31E /* SimpleFragmentShaderF.fragmentshader in Resources */,
 				6F90DDE41395CAAA00125BDA /* InfoPlist.strings in Resources */,
 				281FB47F176694640071511D /* Main.storyboard in Resources */,
@@ -511,7 +515,7 @@
 				);
 				OTHER_CFLAGS = "-DUSE_OPENGL_RENDERER=1";
 				PRODUCT_NAME = LaputaOpenGL;
-				PROVISIONING_PROFILE = "1f3d3630-68cf-4acb-8461-d422b51f094f";
+				PROVISIONING_PROFILE = "ac7a0876-d362-48ad-a20c-2528e22ac23c";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -545,7 +549,7 @@
 				);
 				OTHER_CFLAGS = "-DUSE_OPENGL_RENDERER=1";
 				PRODUCT_NAME = LaputaOpenGL;
-				PROVISIONING_PROFILE = "1f3d3630-68cf-4acb-8461-d422b51f094f";
+				PROVISIONING_PROFILE = "ac7a0876-d362-48ad-a20c-2528e22ac23c";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

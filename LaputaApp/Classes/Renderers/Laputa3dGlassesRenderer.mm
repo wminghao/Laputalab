@@ -385,10 +385,9 @@ bail:
     ////////////////////////
     Assimp::Importer importer;
     NSString *glassesFilePath = [[NSBundle mainBundle] pathForResource:@"Glasses" ofType:@"obj"];
-    NSData *glassesData = [NSData dataWithContentsOfFile:glassesFilePath];
     const aiScene* scene = NULL;
-    if (glassesData) {
-        scene = importer.ReadFileFromMemory([glassesData bytes], [glassesData length], aiProcess_Triangulate);
+    if ( glassesFilePath ) {
+        scene = importer.ReadFile([glassesFilePath UTF8String], aiProcess_Triangulate);
     }
     if (!scene){
         NSLog( @"Error at Model loading error");
