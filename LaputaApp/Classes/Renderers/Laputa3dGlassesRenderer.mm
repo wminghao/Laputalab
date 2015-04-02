@@ -17,6 +17,9 @@
 #import "matrix.h"
 #import "Tools.h"
 
+#import <CoreImage/CoreImage.h>
+#import <ImageIO/CGImageProperties.h>
+
 #include <vector>
 
 //libassimp imports
@@ -63,6 +66,9 @@ using namespace glm;
     /*meshes from glasses object file*/
     vector<vec3> _verticesF; //frame
     vector<vec3> _verticesL; //lens
+    
+    /*core image context*/
+    CIContext* _coreImageContext;
 }
 @end
 
@@ -97,6 +103,14 @@ enum {
             [self release];
             return nil;
         }
+        
+        _coreImageContext = [CIContext contextWithEAGLContext:_oglContext];
+        if ( ! _coreImageContext ) {
+            NSLog( @"Problem with coreimage context." );
+            [self release];
+            return nil;
+        }
+
     }
     return self;
 }
@@ -106,6 +120,7 @@ enum {
     _screenRenderer = nil;
     [self deleteBuffers];
     [_oglContext release];
+    _coreImageContext = nil;
     [super dealloc];
 }
 
@@ -142,14 +157,59 @@ enum {
 
 - (CVPixelBufferRef)copyRenderedPixelBuffer:(CVPixelBufferRef)origPixelBuffer
 {
-    CVPixelBufferRef dstPixelBuffer = [_screenRenderer copyRenderedPixelBuffer:origPixelBuffer];
+    CVReturn err = noErr;
+#ifdef BEAUTIFICATION_ENABLED
+    CVPixelBufferRef unEnhancedPixelBuffer = [_screenRenderer copyRenderedPixelBuffer:origPixelBuffer];
+    CIImage *toBeEnhancedImage = [CIImage imageWithCVPixelBuffer:unEnhancedPixelBuffer];
+    NSDictionary *options = nil;
+    if([[toBeEnhancedImage properties] valueForKey:(NSString *)kCGImagePropertyOrientation] == nil) {
+        options = @{CIDetectorImageOrientation : [NSNumber numberWithInt:1]};
+    } else {
+        options = @{CIDetectorImageOrientation : [[toBeEnhancedImage properties] valueForKey:(NSString *)kCGImagePropertyOrientation]};
+    }
+    NSArray *adjustments = [toBeEnhancedImage autoAdjustmentFiltersWithOptions:options];
+    for (CIFilter *filter in adjustments) {
+        [filter setValue:toBeEnhancedImage forKey:kCIInputImageKey];
+        toBeEnhancedImage = filter.outputImage;
+    }
+    CVPixelBufferRef dstPixelBuffer = nil;
+    err = CVPixelBufferPoolCreatePixelBufferWithAuxAttributes( kCFAllocatorDefault, _bufferPool, _bufferPoolAuxAttributes, &dstPixelBuffer );
+    if ( err == kCVReturnWouldExceedAllocationThreshold ) {
+        // Flush the texture cache to potentially release the retained buffers and try again to create a pixel buffer
+        CVOpenGLESTextureCacheFlush( _renderTextureCache, 0 );
+        err = CVPixelBufferPoolCreatePixelBufferWithAuxAttributes( kCFAllocatorDefault, _bufferPool, _bufferPoolAuxAttributes, &dstPixelBuffer );
+    }
+    if ( err ) {
+        if ( err == kCVReturnWouldExceedAllocationThreshold ) {
+            NSLog( @"Pool is out of buffers, dropping frame" );
+        }
+        else {
+            NSLog( @"Error at CVPixelBufferPoolCreatePixelBuffer %d", err );
+        }
+        @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"Unintialized pixelbuffer" userInfo:nil];
+        return NULL;
+    }
+    
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGRect rect = [toBeEnhancedImage extent];
+    CVPixelBufferLockBaseAddress(dstPixelBuffer, 0);
+    [_coreImageContext render:toBeEnhancedImage
+              toCVPixelBuffer:dstPixelBuffer
+                       bounds:rect
+                   colorSpace:colorSpace];
+    CVPixelBufferUnlockBaseAddress(dstPixelBuffer, 0);
+    CGColorSpaceRelease(colorSpace);
+    CFRelease( origPixelBuffer );
+#else
+    CVPixelBufferRef  dstPixelBuffer = [_screenRenderer copyRenderedPixelBuffer:origPixelBuffer];
+#endif
     
     if ( _offscreenBufferHandle == 0 ) {
         @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"Unintialized buffer" userInfo:nil];
         return NULL;
     }
     
-    if ( dstPixelBuffer == NULL ) {
+    if ( dstPixelBuffer == nil ) {
         @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"NULL pixel buffer" userInfo:nil];
         return NULL;
     }
@@ -174,7 +234,6 @@ enum {
         }
     }
     
-    CVReturn err = noErr;
     CVOpenGLESTextureRef dstTexture = NULL;
     
     //////////////////////////////////////////////////

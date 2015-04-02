@@ -27,8 +27,12 @@ CVPixelBufferPoolRef createPixelBufferPool( int32_t width, int32_t height, FourC
     NSDictionary *sourcePixelBufferOptions = @{ (id)kCVPixelBufferPixelFormatTypeKey : @(pixelFormat),
                                                 (id)kCVPixelBufferWidthKey : @(width),
                                                 (id)kCVPixelBufferHeightKey : @(height),
+                                                (id)kCVPixelBufferCGImageCompatibilityKey: [NSNumber numberWithBool:YES],
+                                                (id)kCVPixelBufferCGBitmapContextCompatibilityKey: [NSNumber numberWithBool:YES],
                                                 (id)kCVPixelFormatOpenGLESCompatibility : @(YES),
-                                                (id)kCVPixelBufferIOSurfacePropertiesKey : @{ /*empty dictionary*/ } };
+                                                @"IOSurfaceOpenGLESFBOCompatibility":[NSNumber numberWithBool:YES],
+                                                @"IOSurfaceOpenGLESTextureCompatibility": [NSNumber numberWithBool:YES],
+                                                (id)kCVPixelBufferIOSurfacePropertiesKey : @{ /*empty dictionary*/ }};
     
     NSDictionary *pixelBufferPoolOptions = @{ (id)kCVPixelBufferPoolMinimumBufferCountKey : @(maxBufferCount) };
     

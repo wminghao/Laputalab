@@ -45,6 +45,7 @@
 		892DA8EF1ACB649A00ABA31E /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 892DA8EE1ACB649A00ABA31E /* opencv2.framework */; };
 		892DA8F21ACC757A00ABA31E /* SimpleFragmentShaderF.fragmentshader in Resources */ = {isa = PBXBuildFile; fileRef = 892DA8F01ACC757A00ABA31E /* SimpleFragmentShaderF.fragmentshader */; };
 		892DA8F31ACC757A00ABA31E /* SimpleVertexShaderF.vertexshader in Resources */ = {isa = PBXBuildFile; fileRef = 892DA8F11ACC757A00ABA31E /* SimpleVertexShaderF.vertexshader */; };
+		892DA8F41ACDCECE00ABA31E /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 171999D919C7695800A719B5 /* CoreImage.framework */; };
 		89F003FD1AC9C7F500D8EC6D /* LaputaApp-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 89F003FC1AC9C7F500D8EC6D /* LaputaApp-Info.plist */; };
 /* End PBXBuildFile section */
 
@@ -108,6 +109,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				892DA8F41ACDCECE00ABA31E /* CoreImage.framework in Frameworks */,
 				892DA8EF1ACB649A00ABA31E /* opencv2.framework in Frameworks */,
 				892DA8CD1ACA1A2600ABA31E /* GLKit.framework in Frameworks */,
 				892DA8C81ACA101B00ABA31E /* libz.dylib in Frameworks */,

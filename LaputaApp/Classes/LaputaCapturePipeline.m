@@ -74,7 +74,7 @@
 
 #define RETAINED_BUFFER_COUNT 6
 
-#define RECORD_AUDIO 0
+#define RECORD_AUDIO 1
 
 #define LOG_STATUS_TRANSITIONS 0
 
@@ -243,6 +243,16 @@ typedef NS_ENUM( NSInteger, LaputaRecordingStatus )
 	} );
 }
 
+// Find a camera with the specified AVCaptureDevicePosition, returning nil if one is not found
+- (AVCaptureDevice *) cameraWithPosition:(AVCaptureDevicePosition) position
+{
+    NSArray *devices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
+    for (AVCaptureDevice *device in devices) {
+        if ([device position] == position) return device;
+    }
+    return nil;
+}
+
 - (void)setupCaptureSession
 {
 	if ( _captureSession ) {
@@ -281,7 +291,7 @@ typedef NS_ENUM( NSInteger, LaputaRecordingStatus )
 #endif // RECORD_AUDIO
 	
 	/* Video */
-	AVCaptureDevice *videoDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    AVCaptureDevice *videoDevice = [self cameraWithPosition:AVCaptureDevicePositionFront];
 	_videoDevice = videoDevice;
 	AVCaptureDeviceInput *videoIn = [[AVCaptureDeviceInput alloc] initWithDevice:videoDevice error:nil];
 	if ( [_captureSession canAddInput:videoIn] ) {
