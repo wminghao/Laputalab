@@ -31,6 +31,15 @@
 		6FF11C9516A877B100E14D71 /* matrix.c in Sources */ = {isa = PBXBuildFile; fileRef = 6FF11C9116A877B100E14D71 /* matrix.c */; };
 		6FF11C9616A877B100E14D71 /* ShaderUtilities.c in Sources */ = {isa = PBXBuildFile; fileRef = 6FF11C9316A877B100E14D71 /* ShaderUtilities.c */; };
 		7214DBCE182AEF8900EA3F99 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7214DBCD182AEF8900EA3F99 /* Images.xcassets */; };
+		891082511ACF0BC300D5314C /* libjpeg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8910824C1ACF0BC300D5314C /* libjpeg.a */; };
+		891082521ACF0BC300D5314C /* libMagickCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8910824D1ACF0BC300D5314C /* libMagickCore.a */; };
+		891082531ACF0BC300D5314C /* libMagickWand.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8910824E1ACF0BC300D5314C /* libMagickWand.a */; };
+		891082541ACF0BC300D5314C /* libpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8910824F1ACF0BC300D5314C /* libpng.a */; };
+		891082551ACF0BC300D5314C /* libtiff.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 891082501ACF0BC300D5314C /* libtiff.a */; };
+		8910825A1ACF114500D5314C /* mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 891082561ACF114500D5314C /* mesh.cpp */; };
+		8910825B1ACF114500D5314C /* texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 891082581ACF114500D5314C /* texture.cpp */; };
+		8910825F1ACF14B800D5314C /* 3dGlassesFragmentShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8910825D1ACF14B800D5314C /* 3dGlassesFragmentShader.fsh */; };
+		891082601ACF14B800D5314C /* 3dGlassesVertexShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 8910825E1ACF14B800D5314C /* 3dGlassesVertexShader.vsh */; };
 		89120A241AC9FEAD0086174B /* Laputa3dGlassesRenderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 89120A231AC9FEAD0086174B /* Laputa3dGlassesRenderer.mm */; };
 		89120A281AC9FED80086174B /* LaputaScreenRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 89120A271AC9FED80086174B /* LaputaScreenRenderer.m */; };
 		89120A2B1AC9FFA60086174B /* Tools.m in Sources */ = {isa = PBXBuildFile; fileRef = 89120A2A1AC9FFA60086174B /* Tools.m */; };
@@ -93,6 +102,17 @@
 		6FF11C9316A877B100E14D71 /* ShaderUtilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ShaderUtilities.c; path = Utilities/GL/ShaderUtilities.c; sourceTree = "<group>"; };
 		6FF11C9416A877B100E14D71 /* ShaderUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShaderUtilities.h; path = Utilities/GL/ShaderUtilities.h; sourceTree = "<group>"; };
 		7214DBCD182AEF8900EA3F99 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Resources/Images.xcassets; sourceTree = SOURCE_ROOT; };
+		8910824C1ACF0BC300D5314C /* libjpeg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjpeg.a; path = "thirdpartylib/iOSMagick-6.8.8-9-libs/libjpeg.a"; sourceTree = "<group>"; };
+		8910824D1ACF0BC300D5314C /* libMagickCore.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMagickCore.a; path = "thirdpartylib/iOSMagick-6.8.8-9-libs/libMagickCore.a"; sourceTree = "<group>"; };
+		8910824E1ACF0BC300D5314C /* libMagickWand.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMagickWand.a; path = "thirdpartylib/iOSMagick-6.8.8-9-libs/libMagickWand.a"; sourceTree = "<group>"; };
+		8910824F1ACF0BC300D5314C /* libpng.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpng.a; path = "thirdpartylib/iOSMagick-6.8.8-9-libs/libpng.a"; sourceTree = "<group>"; };
+		891082501ACF0BC300D5314C /* libtiff.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtiff.a; path = "thirdpartylib/iOSMagick-6.8.8-9-libs/libtiff.a"; sourceTree = "<group>"; };
+		891082561ACF114500D5314C /* mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = mesh.cpp; path = Utilities/GL/mesh.cpp; sourceTree = "<group>"; };
+		891082571ACF114500D5314C /* mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mesh.h; path = Utilities/GL/mesh.h; sourceTree = "<group>"; };
+		891082581ACF114500D5314C /* texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = texture.cpp; path = Utilities/GL/texture.cpp; sourceTree = "<group>"; };
+		891082591ACF114500D5314C /* texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = texture.h; path = Utilities/GL/texture.h; sourceTree = "<group>"; };
+		8910825D1ACF14B800D5314C /* 3dGlassesFragmentShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = 3dGlassesFragmentShader.fsh; path = Resources/Shaders/3dGlasses/3dGlassesFragmentShader.fsh; sourceTree = SOURCE_ROOT; };
+		8910825E1ACF14B800D5314C /* 3dGlassesVertexShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = 3dGlassesVertexShader.vsh; path = Resources/Shaders/3dGlasses/3dGlassesVertexShader.vsh; sourceTree = SOURCE_ROOT; };
 		89120A221AC9FEAD0086174B /* Laputa3dGlassesRenderer.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Laputa3dGlassesRenderer.hh; path = Renderers/Laputa3dGlassesRenderer.hh; sourceTree = "<group>"; };
 		89120A231AC9FEAD0086174B /* Laputa3dGlassesRenderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Laputa3dGlassesRenderer.mm; path = Renderers/Laputa3dGlassesRenderer.mm; sourceTree = "<group>"; };
 		89120A251AC9FED80086174B /* LaputaRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LaputaRenderer.h; path = Renderers/LaputaRenderer.h; sourceTree = "<group>"; };
@@ -130,6 +150,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				891082511ACF0BC300D5314C /* libjpeg.a in Frameworks */,
+				891082521ACF0BC300D5314C /* libMagickCore.a in Frameworks */,
+				891082531ACF0BC300D5314C /* libMagickWand.a in Frameworks */,
+				891082541ACF0BC300D5314C /* libpng.a in Frameworks */,
+				891082551ACF0BC300D5314C /* libtiff.a in Frameworks */,
 				892DA8F41ACDCECE00ABA31E /* CoreImage.framework in Frameworks */,
 				892DA8EF1ACB649A00ABA31E /* opencv2.framework in Frameworks */,
 				892DA8CD1ACA1A2600ABA31E /* GLKit.framework in Frameworks */,
@@ -154,6 +179,7 @@
 		262D247E17177837000E1DBA /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
+				8910825C1ACF144800D5314C /* 3dGlasses */,
 				89120A311ACA01750086174B /* SimpleGlasses */,
 				89120A2C1ACA010B0086174B /* ColorFilters */,
 			);
@@ -198,6 +224,11 @@
 		6F90DDD81395CAAA00125BDA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8910824C1ACF0BC300D5314C /* libjpeg.a */,
+				8910824D1ACF0BC300D5314C /* libMagickCore.a */,
+				8910824E1ACF0BC300D5314C /* libMagickWand.a */,
+				8910824F1ACF0BC300D5314C /* libpng.a */,
+				891082501ACF0BC300D5314C /* libtiff.a */,
 				892DA8EE1ACB649A00ABA31E /* opencv2.framework */,
 				892DA8CC1ACA1A2600ABA31E /* GLKit.framework */,
 				892DA8C71ACA101B00ABA31E /* libz.dylib */,
@@ -265,12 +296,25 @@
 		6FF11C9016A877A100E14D71 /* GL */ = {
 			isa = PBXGroup;
 			children = (
+				891082561ACF114500D5314C /* mesh.cpp */,
+				891082571ACF114500D5314C /* mesh.h */,
+				891082581ACF114500D5314C /* texture.cpp */,
+				891082591ACF114500D5314C /* texture.h */,
 				6FF11C9216A877B100E14D71 /* matrix.h */,
 				6FF11C9116A877B100E14D71 /* matrix.c */,
 				6FF11C9416A877B100E14D71 /* ShaderUtilities.h */,
 				6FF11C9316A877B100E14D71 /* ShaderUtilities.c */,
 			);
 			name = GL;
+			sourceTree = "<group>";
+		};
+		8910825C1ACF144800D5314C /* 3dGlasses */ = {
+			isa = PBXGroup;
+			children = (
+				8910825D1ACF14B800D5314C /* 3dGlassesFragmentShader.fsh */,
+				8910825E1ACF14B800D5314C /* 3dGlassesVertexShader.vsh */,
+			);
+			name = 3dGlasses;
 			sourceTree = "<group>";
 		};
 		89120A2C1ACA010B0086174B /* ColorFilters */ = {
@@ -391,6 +435,7 @@
 				895656A21ACE0551004AE70A /* SimpleVertexShaderF.vertexshader in Resources */,
 				895656E21ACE08AD004AE70A /* ramp1-nurbsToPoly1.jpg in Resources */,
 				6F90DDE41395CAAA00125BDA /* InfoPlist.strings in Resources */,
+				8910825F1ACF14B800D5314C /* 3dGlassesFragmentShader.fsh in Resources */,
 				281FB47F176694640071511D /* Main.storyboard in Resources */,
 				5DBA2A9919C232E200530F7A /* Launch.storyboard in Resources */,
 				895656A01ACE0551004AE70A /* SimpleFragmentShaderF.fragmentshader in Resources */,
@@ -398,6 +443,7 @@
 				6F90DDEC1395CAAA00125BDA /* LaputaViewController.h in Resources */,
 				28365599139FE71B00D09100 /* ReadMe.txt in Resources */,
 				895656DC1ACE08AC004AE70A /* Brooklyn_Bridge_Planks_small.hdr in Resources */,
+				891082601ACF14B800D5314C /* 3dGlassesVertexShader.vsh in Resources */,
 				895656E11ACE08AD004AE70A /* logo1small.jpg in Resources */,
 				89F003FD1AC9C7F500D8EC6D /* LaputaApp-Info.plist in Resources */,
 				7214DBCE182AEF8900EA3F99 /* Images.xcassets in Resources */,
@@ -428,6 +474,8 @@
 				6FF11C8F16A8779D00E14D71 /* OpenGLPixelBufferView.m in Sources */,
 				89120A2B1AC9FFA60086174B /* Tools.m in Sources */,
 				6FF11C9516A877B100E14D71 /* matrix.c in Sources */,
+				8910825A1ACF114500D5314C /* mesh.cpp in Sources */,
+				8910825B1ACF114500D5314C /* texture.cpp in Sources */,
 				6FF11C9616A877B100E14D71 /* ShaderUtilities.c in Sources */,
 				89120A281AC9FED80086174B /* LaputaScreenRenderer.m in Sources */,
 			);
@@ -559,6 +607,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					thirdpartylib/glm,
 					thirdpartylib/libassimp/include,
+					"thirdpartylib/iOSMagick-6.8.8-9-libs/include",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/LaputaApp-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -566,6 +615,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/thirdpartylib",
 					"$(PROJECT_DIR)/thirdpartylib/libassimp/lib",
+					"$(PROJECT_DIR)/thirdpartylib/iOSMagick-6.8.8-9-libs",
 				);
 				OTHER_CFLAGS = "-DUSE_OPENGL_RENDERER=1";
 				PRODUCT_NAME = LaputaOpenGL;
@@ -593,6 +643,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					thirdpartylib/glm,
 					thirdpartylib/libassimp/include,
+					"thirdpartylib/iOSMagick-6.8.8-9-libs/include",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/LaputaApp-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -600,6 +651,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/thirdpartylib",
 					"$(PROJECT_DIR)/thirdpartylib/libassimp/lib",
+					"$(PROJECT_DIR)/thirdpartylib/iOSMagick-6.8.8-9-libs",
 				);
 				OTHER_CFLAGS = "-DUSE_OPENGL_RENDERER=1";
 				PRODUCT_NAME = LaputaOpenGL;

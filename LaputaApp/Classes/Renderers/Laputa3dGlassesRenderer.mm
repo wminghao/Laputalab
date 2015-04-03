@@ -377,8 +377,6 @@ bail:
         }
     }
     
-    //cv::Mat texture_cv = cv::imread("/Users/Xavier/CodingProject/3DGlassesRender/3DGlasses/test.bmp");
-    
     ////////////////////////
     //first step
     //Load model with ASSIMP
