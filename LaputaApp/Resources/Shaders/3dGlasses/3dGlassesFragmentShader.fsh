@@ -48,6 +48,7 @@ uniform vec3 gEyeWorldPos;
 uniform float gMatSpecularIntensity;
 uniform float gSpecularPower;
 
+/*
 vec4 CalcLightInternal(BaseLight Light, vec3 LightDirection, vec3 Normal)
 {
     vec4 AmbientColor = vec4(Light.Color, 1.0f) * Light.AmbientIntensity;
@@ -71,7 +72,6 @@ vec4 CalcLightInternal(BaseLight Light, vec3 LightDirection, vec3 Normal)
     
     return (AmbientColor + DiffuseColor + SpecularColor);
 }
-
 vec4 CalcDirectionalLight(vec3 Normal)
 {
     return CalcLightInternal(gDirectionalLight.Base, gDirectionalLight.Direction, Normal);
@@ -104,9 +104,11 @@ vec4 CalcSpotLight(SpotLight l, vec3 Normal)
         return vec4(0,0,0,0);
     }
 }
+*/
 
 void main()
 {
+    /*
     vec3 Normal = normalize(Normal0);
     vec4 TotalLight = CalcDirectionalLight(Normal);
     
@@ -117,6 +119,8 @@ void main()
     for (int i = 0 ; i < gNumSpotLights ; i++) {
         TotalLight += CalcSpotLight(gSpotLights[i], Normal);
     }
-    
+     
     gl_FragColor = texture2D(gColorMap, TexCoord0.xy) * TotalLight;
+    */
+    gl_FragColor = texture2D(gColorMap, TexCoord0.xy);
 }

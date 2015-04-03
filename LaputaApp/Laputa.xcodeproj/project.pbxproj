@@ -40,6 +40,7 @@
 		8910825B1ACF114500D5314C /* texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 891082581ACF114500D5314C /* texture.cpp */; };
 		8910825F1ACF14B800D5314C /* 3dGlassesFragmentShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8910825D1ACF14B800D5314C /* 3dGlassesFragmentShader.fsh */; };
 		891082601ACF14B800D5314C /* 3dGlassesVertexShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 8910825E1ACF14B800D5314C /* 3dGlassesVertexShader.vsh */; };
+		891082621ACF49C400D5314C /* exportAll.dae in Resources */ = {isa = PBXBuildFile; fileRef = 891082611ACF49C400D5314C /* exportAll.dae */; };
 		89120A241AC9FEAD0086174B /* Laputa3dGlassesRenderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 89120A231AC9FEAD0086174B /* Laputa3dGlassesRenderer.mm */; };
 		89120A281AC9FED80086174B /* LaputaScreenRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 89120A271AC9FED80086174B /* LaputaScreenRenderer.m */; };
 		89120A2B1AC9FFA60086174B /* Tools.m in Sources */ = {isa = PBXBuildFile; fileRef = 89120A2A1AC9FFA60086174B /* Tools.m */; };
@@ -113,6 +114,7 @@
 		891082591ACF114500D5314C /* texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = texture.h; path = Utilities/GL/texture.h; sourceTree = "<group>"; };
 		8910825D1ACF14B800D5314C /* 3dGlassesFragmentShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = 3dGlassesFragmentShader.fsh; path = Resources/Shaders/3dGlasses/3dGlassesFragmentShader.fsh; sourceTree = SOURCE_ROOT; };
 		8910825E1ACF14B800D5314C /* 3dGlassesVertexShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = 3dGlassesVertexShader.vsh; path = Resources/Shaders/3dGlasses/3dGlassesVertexShader.vsh; sourceTree = SOURCE_ROOT; };
+		891082611ACF49C400D5314C /* exportAll.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; name = exportAll.dae; path = Resources/3dmodels/3dGlasses/exportAll.dae; sourceTree = SOURCE_ROOT; };
 		89120A221AC9FEAD0086174B /* Laputa3dGlassesRenderer.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Laputa3dGlassesRenderer.hh; path = Renderers/Laputa3dGlassesRenderer.hh; sourceTree = "<group>"; };
 		89120A231AC9FEAD0086174B /* Laputa3dGlassesRenderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = Laputa3dGlassesRenderer.mm; path = Renderers/Laputa3dGlassesRenderer.mm; sourceTree = "<group>"; };
 		89120A251AC9FED80086174B /* LaputaRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LaputaRenderer.h; path = Renderers/LaputaRenderer.h; sourceTree = "<group>"; };
@@ -357,6 +359,7 @@
 		895656A71ACE0641004AE70A /* 3dGlasses */ = {
 			isa = PBXGroup;
 			children = (
+				891082611ACF49C400D5314C /* exportAll.dae */,
 				895656D31ACE08AC004AE70A /* Brooklyn_Bridge_Planks_small.hdr */,
 				895656D41ACE08AC004AE70A /* glass9.jpg */,
 				895656D51ACE08AC004AE70A /* logo1.jpg */,
@@ -445,6 +448,7 @@
 				895656DC1ACE08AC004AE70A /* Brooklyn_Bridge_Planks_small.hdr in Resources */,
 				891082601ACF14B800D5314C /* 3dGlassesVertexShader.vsh in Resources */,
 				895656E11ACE08AD004AE70A /* logo1small.jpg in Resources */,
+				891082621ACF49C400D5314C /* exportAll.dae in Resources */,
 				89F003FD1AC9C7F500D8EC6D /* LaputaApp-Info.plist in Resources */,
 				7214DBCE182AEF8900EA3F99 /* Images.xcassets in Resources */,
 				895656D21ACE08A1004AE70A /* SimpleGlasses.obj in Resources */,
