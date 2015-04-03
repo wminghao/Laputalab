@@ -36,6 +36,9 @@
 #include <opencv2/highgui/highgui.hpp>
 #include "opencv2/imgproc/imgproc.hpp"
 
+//mesh reader
+#include "mesh.h"
+
 using namespace std;
 using namespace glm;
 
@@ -54,12 +57,8 @@ using namespace glm;
     CMFormatDescriptionRef _outputFormatDescription;
     
     /* Opengles assets */
-    GLuint _programIDL; //compiled shader program for lens
-    GLuint _programIDF; //compiled shader program for frame
-    GLint _matrixIDL; //matrix for lens in fragment shader
-    GLint _matrixIDF; //matrix for frame in fragment shader
-    GLuint _vertexbufferF; //vertex array for frames
-    GLuint _vertexbufferL; //vertex array for lens
+    GLuint _programID; //compiled shader program for glasses
+    GLint _matrixID; //matrix for glasses in vertex shader
     glm::mat4 _MVP; //matrix for rotation
     GLuint _offscreenBufferHandle; //offscreen buffer
     
@@ -69,11 +68,16 @@ using namespace glm;
     
     /*core image context*/
     CIContext* _coreImageContext;
+    
+    /*mesh*/
+    Mesh* _pMesh;
 }
 @end
 
 enum {
-    ATTRIB_VERTEXPOSITION_MODELSPACE, // "vertexPosition_modelspace" in vertext shader
+    ATTRIB_POSITION, // "position" in vertext shader
+    ATTRIB_TEXCOORD, // "TexCoord" in vertext shader
+    ATTRIB_NORMAL, // "normal" in vertext shader
     NUM_ATTRIBUTES
 };
 
@@ -110,6 +114,8 @@ enum {
             [self release];
             return nil;
         }
+        
+        _pMesh = new Mesh();
 
     }
     return self;
@@ -121,6 +127,7 @@ enum {
     [self deleteBuffers];
     [_oglContext release];
     _coreImageContext = nil;
+    delete(_pMesh);
     [super dealloc];
 }
 
@@ -291,45 +298,12 @@ enum {
         glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
         glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, CVOpenGLESTextureGetTarget( dstTexture ), CVOpenGLESTextureGetName( dstTexture ), 0 );
         
-        glUseProgram( _programIDL );
+        glUseProgram( _programID );
         
-        glUniformMatrix4fv(_matrixIDL, 1, GL_FALSE, &MVP[0][0]);
+        glUniformMatrix4fv(_matrixID, 1, GL_FALSE, &MVP[0][0]);
         
-        // 1rst attribute buffer : vertices
-        glEnableVertexAttribArray(ATTRIB_VERTEXPOSITION_MODELSPACE);
-        glBindBuffer(GL_ARRAY_BUFFER, _vertexbufferL);
-        glVertexAttribPointer(
-                              ATTRIB_VERTEXPOSITION_MODELSPACE, // match the layout(vertexPosition_modelspace) in the shader.
-                              3,                  // size
-                              GL_FLOAT,           // type
-                              GL_FALSE,           // normalized?
-                              0,                  // stride
-                              (void*)0            // array buffer offset
-                              );
-        // Draw the triangle !
-        glDrawArrays(GL_TRIANGLES, 0, (GLsizei)_verticesL.size()); // 3 indices starting at 0 -> 1 triangle
-        glDisableVertexAttribArray(ATTRIB_VERTEXPOSITION_MODELSPACE);
-        
-        //////////////////////
-        //Draw the frames
-        //////////////////////
-        //bind to frames
-        glUseProgram(_programIDF);
-        glUniformMatrix4fv(_matrixIDF, 1, GL_FALSE, &MVP[0][0]);
-        // 1rst attribute buffer : vertices
-        glEnableVertexAttribArray(ATTRIB_VERTEXPOSITION_MODELSPACE);
-        glBindBuffer(GL_ARRAY_BUFFER, _vertexbufferF);
-        glVertexAttribPointer(
-                              ATTRIB_VERTEXPOSITION_MODELSPACE, //match the layout(vertexPosition_modelspace) in the shader.
-                              3,                  // size
-                              GL_FLOAT,           // type
-                              GL_FALSE,           // normalized?
-                              0,                  // stride
-                              (void*)0            // array buffer offset
-                              );
-        // Draw the triangle !
-        glDrawArrays(GL_TRIANGLES, 0, (GLsizei)_verticesF.size()); // 3 indices starting at 0 -> 1 triangle
-        glDisableVertexAttribArray(ATTRIB_VERTEXPOSITION_MODELSPACE);
+        //render the meshes
+        _pMesh->Render();
 
         glBindTexture( CVOpenGLESTextureGetTarget( dstTexture ), 0 );
         
@@ -382,40 +356,8 @@ bail:
     //Load model with ASSIMP
     ////////////////////////
     Assimp::Importer importer;
-    NSString *glassesFilePath = [[NSBundle mainBundle] pathForResource:@"Glasses" ofType:@"obj"];
-    const aiScene* scene = NULL;
-    if ( glassesFilePath ) {
-        scene = importer.ReadFile([glassesFilePath UTF8String], aiProcess_Triangulate);
-    }
-    if (!scene){
-        NSLog( @"Error at Model loading error");
-        success = NO;
-        [self cleanup:success oldContext:oldContext];
-        return success;
-    }
-    
-    aiMesh * meshF = scene->mMeshes[0]; //Frame mesh
-    aiMesh * meshL = scene->mMeshes[1]; //Lens mesh
-    
-    for (int i = 0; i < meshF->mNumFaces; i++){
-        const aiFace & face = meshF->mFaces[i];
-        
-        for (int j = 0; j < 3; j++){
-            aiVector3D * pos = &(meshF->mVertices[face.mIndices[j]]);
-            vec3 v(pos->x, pos->y, pos->z);
-            _verticesF.push_back(v);
-        }
-    }
-    
-    for (int i = 0; i < meshL->mNumFaces; i++){
-        const aiFace & face = meshL->mFaces[i];
-        
-        for (int j = 0; j < 3; j++){
-            aiVector3D * pos = &(meshL->mVertices[face.mIndices[j]]);
-            vec3 v(pos->x, pos->y, pos->z);
-            _verticesL.push_back(v);
-        }
-    }
+    NSString *glassesFilePath = [[NSBundle mainBundle] pathForResource:@"RanGlass" ofType:@"obj"];
+    _pMesh->LoadMesh([glassesFilePath UTF8String]);
     
     /////////////////////
     // offscreen buffer
@@ -431,56 +373,21 @@ bail:
     //glasses shaders
     
     // Load vertex and fragment shaders
-    GLint attribLocation[NUM_ATTRIBUTES] = {
-        ATTRIB_VERTEXPOSITION_MODELSPACE, //ATTRIB_TEXTUREPOSITON
-    };
-    GLchar *attribName[NUM_ATTRIBUTES] = {
-        (GLchar *)"vertexPosition_modelspace", //"texturecoordinate",
-    };
-    
-    GLint uniformLocation[NUM_UNIFORMS];
-    GLchar *uniformName[NUM_UNIFORMS] = {
-        (GLchar *)"MVP",
-    };
     // Load vertex and fragment shaders for glasses
-    const GLchar *vertLSrc = [Tools readFile:@"SimpleVertexShaderL.vertexshader"];
-    const GLchar *fragLSrc = [Tools readFile:@"SimpleFragmentShaderL.fragmentshader"];
+    const GLchar *vertLSrc = [Tools readFile:@"3dGlassesVertexShader.vsh"];
+    const GLchar *fragLSrc = [Tools readFile:@"3dGlassesFragmentShader.fsh"];
     
     glueCreateProgram( vertLSrc, fragLSrc,
-                      NUM_ATTRIBUTES, (const GLchar **)&attribName[0], attribLocation,
-                      NUM_UNIFORMS, (const GLchar **)&uniformName[0], uniformLocation,
-                      &_programIDL );
-    if ( ! _programIDL ) {
+                      0, NULL, 0,
+                      0, NULL, 0,
+                      &_programID );
+    if ( ! _programID ) {
         NSLog( @"Problem initializing the _programIDL." );
         success = NO;
         [self cleanup:success oldContext:oldContext];
         return success;
     }
-    _matrixIDL = uniformLocation[UNIFORM_MVP];
-    
-    const GLchar *vertFSrc = [Tools readFile:@"SimpleVertexShaderF.vertexshader"];
-    const GLchar *fragFSrc = [Tools readFile:@"SimpleFragmentShaderF.fragmentshader"];
-    glueCreateProgram( vertFSrc, fragFSrc,
-                      NUM_ATTRIBUTES, (const GLchar **)&attribName[0], attribLocation,
-                      NUM_UNIFORMS, (const GLchar **)&uniformName[0], uniformLocation,
-                      &_programIDF );
-    if ( ! _programIDF ) {
-        NSLog( @"Problem initializing the _programIDF." );
-        success = NO;
-        [self cleanup:success oldContext:oldContext];
-        return success;
-    }
-    _matrixIDF = uniformLocation[UNIFORM_MVP];
-    
-    glGenBuffers(1, &_vertexbufferF);
-    glBindBuffer(GL_ARRAY_BUFFER, _vertexbufferF);
-    //glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
-    glBufferData(GL_ARRAY_BUFFER, _verticesF.size() * sizeof(vec3), &_verticesF[0], GL_STATIC_DRAW);
-    
-    glGenBuffers(1, &_vertexbufferL);
-    glBindBuffer(GL_ARRAY_BUFFER, _vertexbufferL);
-    //glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
-    glBufferData(GL_ARRAY_BUFFER, _verticesL.size() * sizeof(vec3), &_verticesL[0], GL_STATIC_DRAW);
+    _matrixID = glueGetUniformLocation(_programID, "MVP");
     
     // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
     glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
@@ -555,23 +462,9 @@ bail:
         glDeleteFramebuffers( 1, &_offscreenBufferHandle );
         _offscreenBufferHandle = 0;
     }
-    if ( _programIDL ) {
-        glDeleteProgram( _programIDL );
-        _programIDL = 0;
-    }
-    if ( _programIDF ) {
-        glDeleteProgram( _programIDF );
-        _programIDF = 0;
-    }
-    
-    // Cleanup VBO
-    if( _vertexbufferF ) {
-        glDeleteBuffers(1, &_vertexbufferF);
-        _vertexbufferF = 0;
-    }
-    if( _vertexbufferL ) {
-        glDeleteBuffers(1, &_vertexbufferL);
-        _vertexbufferL = 0;
+    if ( _programID ) {
+        glDeleteProgram( _programID );
+        _programID = 0;
     }
     if ( _renderTextureCache ) {
         CFRelease( _renderTextureCache );

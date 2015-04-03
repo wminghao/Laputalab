@@ -32,15 +32,17 @@ bool Texture::Load()
         width = MagickGetImageWidth(wand);
         height = MagickGetImageHeight(wand);
         
-        size_t my_size;
-        unsigned char * my_image = MagickGetImageBlob(wand, &my_size);
+        unsigned char * pixels = (unsigned char*)malloc(sizeof(char) * width * height * 4);
+        MagickGetImagePixels(wand, 0, 0, width, height, "RGBA", CharPixel, pixels);
         
         glGenTextures(1, &m_textureObj);
         glBindTexture(m_textureTarget, m_textureObj);
-        glTexImage2D(m_textureTarget, 0, GL_RGBA, (GLsizei)width, (GLsizei)height, 0, GL_RGBA, GL_UNSIGNED_BYTE, my_image);
+        glTexImage2D(m_textureTarget, 0, GL_RGBA, (GLsizei)width, (GLsizei)height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
         glTexParameterf(m_textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameterf(m_textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glBindTexture(m_textureTarget, 0);
+        
+        free(pixels);
     } else {
         // Handle the error
     }

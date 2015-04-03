@@ -51,8 +51,8 @@ using namespace glm;
     /* Opengles assets */
     GLuint _programIDL; //compiled shader program for lens
     GLuint _programIDF; //compiled shader program for frame
-    GLint _matrixIDL; //matrix for lens in fragment shader
-    GLint _matrixIDF; //matrix for frame in fragment shader
+    GLint _matrixIDL; //matrix for lens in vertex shader
+    GLint _matrixIDF; //matrix for frame in vertex shader
     GLuint _vertexbufferF; //vertex array for frames
     GLuint _vertexbufferL; //vertex array for lens
     glm::mat4 _MVP; //matrix for rotation
@@ -61,9 +61,6 @@ using namespace glm;
     /*meshes from glasses object file*/
     vector<vec3> _verticesF; //frame
     vector<vec3> _verticesL; //lens
-    
-    /*core image context*/
-    CIContext* _coreImageContext;
 }
 @end
 
@@ -98,14 +95,6 @@ enum {
             [self release];
             return nil;
         }
-        
-        _coreImageContext = [CIContext contextWithEAGLContext:_oglContext];
-        if ( ! _coreImageContext ) {
-            NSLog( @"Problem with coreimage context." );
-            [self release];
-            return nil;
-        }
-
     }
     return self;
 }
@@ -115,7 +104,6 @@ enum {
     _screenRenderer = nil;
     [self deleteBuffers];
     [_oglContext release];
-    _coreImageContext = nil;
     [super dealloc];
 }
 
