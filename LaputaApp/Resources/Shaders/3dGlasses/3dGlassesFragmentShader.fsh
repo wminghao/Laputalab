@@ -1,7 +1,6 @@
 precision mediump float;
 
 varying vec2 TexCoord0;
-uniform sampler2D gColorMap;
 
 /*
 varying vec3 Normal0;
@@ -46,7 +45,9 @@ uniform int gNumSpotLights;
 uniform DirectionalLight gDirectionalLight;
 uniform PointLight gPointLights[2];
 uniform SpotLight gSpotLights[2];
+*/
 uniform sampler2D gColorMap;
+/*
 uniform vec3 gEyeWorldPos;
 uniform float gMatSpecularIntensity;
 uniform float gSpecularPower;

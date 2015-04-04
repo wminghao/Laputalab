@@ -165,7 +165,11 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
         const aiMaterial* pMaterial = pScene->mMaterials[i];
 
         m_Textures[i] = NULL;
-
+        
+        aiString name;
+        pMaterial->Get(AI_MATKEY_NAME,name);
+        printf("Loaded texture index:%d, name %s\n", i, name.C_Str());
+        
         if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
             aiString Path;
 
@@ -179,7 +183,7 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
                     m_Textures[i] = NULL;
                     Ret = false;
                 } else {
-                    printf("Loaded texture index:%d, '%s'\n", i, Path.data);
+                    printf("Loaded texture index:%d, %s\n", i, Path.data);
                 }
             }
         }
