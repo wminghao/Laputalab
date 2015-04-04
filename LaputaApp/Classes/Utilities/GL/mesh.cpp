@@ -82,12 +82,11 @@ bool Mesh::LoadMesh(const std::string& Filename)
     bool Ret = false;
     Assimp::Importer Importer;
 
-    const aiScene* pScene = Importer.ReadFile(Filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
-    
+    const aiScene* pScene = Importer.ReadFile(Filename.c_str(), aiProcessPreset_TargetRealtime_Quality);
+    //const aiScene* pScene = Importer.ReadFile(Filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
     if (pScene) {
         Ret = InitFromScene(pScene, Filename);
-    }
-    else {
+    } else {
         printf("Error parsing '%s': '%s'\n", Filename.c_str(), Importer.GetErrorString());
     }
 
@@ -116,6 +115,9 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh)
     std::vector<unsigned int> Indices;
 
     const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
+    
+    printf("Mesh Index=%d, Material Index='%d', vertices=%d, mNumFaces=%d\n", Index,
+           paiMesh->mMaterialIndex, paiMesh->mNumVertices, paiMesh->mNumFaces);
 
     for (unsigned int i = 0 ; i < paiMesh->mNumVertices ; i++) {
         const aiVector3D* pPos      = &(paiMesh->mVertices[i]);
@@ -176,9 +178,8 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
                     delete m_Textures[i];
                     m_Textures[i] = NULL;
                     Ret = false;
-                }
-                else {
-                    printf("Loaded texture '%s'\n", FullPath.c_str());
+                } else {
+                    printf("Loaded texture index:%d, '%s'\n", i, Path.data);
                 }
             }
         }
@@ -186,7 +187,6 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
         // Load a white texture in case the model does not include its own texture
         if (!m_Textures[i]) {
             m_Textures[i] = new Texture(GL_TEXTURE_2D, Dir + "/" + "logo1.jpg");
-
             Ret = m_Textures[i]->Load();
         }
     }

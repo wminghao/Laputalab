@@ -1,6 +1,9 @@
 precision mediump float;
 
 varying vec2 TexCoord0;
+uniform sampler2D gColorMap;
+
+/*
 varying vec3 Normal0;
 varying vec3 WorldPos0;
 
@@ -48,7 +51,6 @@ uniform vec3 gEyeWorldPos;
 uniform float gMatSpecularIntensity;
 uniform float gSpecularPower;
 
-/*
 vec4 CalcLightInternal(BaseLight Light, vec3 LightDirection, vec3 Normal)
 {
     vec4 AmbientColor = vec4(Light.Color, 1.0f) * Light.AmbientIntensity;
