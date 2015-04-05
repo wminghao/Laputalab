@@ -614,7 +614,7 @@
 					"thirdpartylib/iOSMagick-6.8.8-9-libs/include",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/LaputaApp-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/thirdpartylib",
@@ -623,7 +623,7 @@
 				);
 				OTHER_CFLAGS = "-DUSE_OPENGL_RENDERER=1";
 				PRODUCT_NAME = LaputaOpenGL;
-				PROVISIONING_PROFILE = "ac7a0876-d362-48ad-a20c-2528e22ac23c";
+				PROVISIONING_PROFILE = "a847e4ee-2ec5-4d63-a788-4d025323db5e";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -650,7 +650,7 @@
 					"thirdpartylib/iOSMagick-6.8.8-9-libs/include",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/LaputaApp-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/thirdpartylib",
@@ -659,7 +659,7 @@
 				);
 				OTHER_CFLAGS = "-DUSE_OPENGL_RENDERER=1";
 				PRODUCT_NAME = LaputaOpenGL;
-				PROVISIONING_PROFILE = "ac7a0876-d362-48ad-a20c-2528e22ac23c";
+				PROVISIONING_PROFILE = "a847e4ee-2ec5-4d63-a788-4d025323db5e";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
