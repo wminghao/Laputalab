@@ -37,40 +37,7 @@
 
 //include texture
 #include "texture.h"
-
-struct Vector3f
-{
-    Vector3f() {
-        x = 0;
-        y = 0;
-        z = 0;
-    }
-    Vector3f(float xx,
-             float yy,
-             float zz){
-        x = xx;
-        y = yy;
-        z = zz;
-    }
-    float x;
-    float y;
-    float z;
-
-};
-struct Vector2f
-{
-    Vector2f() {
-        x = 0;
-        y = 0;
-    }
-    Vector2f(float xx,
-             float yy){
-        x = xx;
-        y = yy;
-    }
-    float x;
-    float y;
-};
+#include "color.h"
 
 struct Vertex
 {
@@ -88,14 +55,27 @@ struct Vertex
     }
 };
 
-
 class Mesh
 {
 public:
     Mesh();
 
     ~Mesh();
-
+    
+    void setAttrUni(GLint texCountLocation,
+                    GLint diffuseColorLocation,
+                    GLint textureImageLocation,
+                    GLint positionLocation,
+                    GLint texCoordLocation,
+                    GLint normalLocation) {
+        //map to different uniforms and attributes
+        m_texCountLocation = texCountLocation;
+        m_diffuseColorLocation = diffuseColorLocation;
+        m_textureImageLocation = textureImageLocation;
+        m_positionLocation = positionLocation;
+        m_texCoordLocation = texCoordLocation;
+        m_normalLocation = normalLocation;
+    }
     bool LoadMesh(const std::string& Filename);
 
     void Render();
@@ -124,9 +104,16 @@ private:
     };
 
     std::vector<MeshEntry> m_Entries;
-    std::vector<Texture*> m_Textures;
+    std::vector<Material*> m_Materials;
+    
+    //map to different uniforms and attributes
+    GLint m_texCountLocation;
+    GLint m_diffuseColorLocation;
+    GLint m_textureImageLocation;
+    GLint m_positionLocation;
+    GLint m_texCoordLocation;
+    GLint m_normalLocation;
 };
-
 
 #endif	/* MESH_H */
 

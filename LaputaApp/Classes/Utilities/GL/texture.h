@@ -10,19 +10,24 @@
 #define Laputa_texture_h
 
 #include <string>
+#include "material.h"
 
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 
-class Texture
+class Texture: public Material
 {
 public:
-    Texture(GLenum TextureTarget, const std::string& FileName);
+    Texture(GLint texCountLocation,
+            GLint diffuseColorLocation,
+            GLint textureImageLocation,
+            GLenum TextureTarget, const std::string& FileName);
     
-    bool Load();
+    virtual ~Texture() {}
+    bool load();
     
-    void Bind(GLenum TextureUnit);
-    
+    void bind(GLenum textureUnit, GLint textureId);
+    void unbind();
 private:
     std::string m_fileName;
     GLenum m_textureTarget;

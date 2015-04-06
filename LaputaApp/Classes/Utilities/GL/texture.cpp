@@ -13,13 +13,17 @@
 #include <wand/magick-image.h>
 
 
-Texture::Texture(GLenum TextureTarget, const std::string& FileName)
+Texture::Texture(GLint texCountLocation,
+                 GLint diffuseColorLocation,
+                 GLint textureImageLocation,
+                 GLenum TextureTarget,
+                 const std::string& FileName):Material(texCountLocation, diffuseColorLocation, textureImageLocation)
 {
     m_textureTarget = TextureTarget;
     m_fileName      = FileName;
 }
 
-bool Texture::Load()
+bool Texture::load()
 {
     MagickWandGenesis();
     MagickWand *wand = NewMagickWand();
@@ -52,8 +56,14 @@ bool Texture::Load()
     return true;
 }
 
-void Texture::Bind(GLenum TextureUnit)
+void Texture::bind(GLenum textureUnit, GLint textureId)
 {
-    glActiveTexture(TextureUnit);
+    glActiveTexture(textureUnit);
+    glUniform1i(m_texCountLocation, 1);
     glBindTexture(m_textureTarget, m_textureObj);
+    glUniform1i(m_textureImageLocation, textureId); //set the sampler texture to textureId
+}
+
+void Texture::unbind() {
+    glBindTexture(m_textureTarget, 0);
 }

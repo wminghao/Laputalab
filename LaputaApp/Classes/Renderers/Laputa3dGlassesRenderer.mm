@@ -83,6 +83,9 @@ enum {
 
 enum {
     UNIFORM_MVP, // "MVP" in vertext shader
+    UNIFORM_TEXCOUNT,
+    UNIFORM_DIFFUSECOLOR,
+    UNIFORM_TEXTUREIMAGE,
     NUM_UNIFORMS
 };
 
@@ -351,14 +354,6 @@ bail:
         }
     }
     
-    ////////////////////////
-    //first step
-    //Load model with ASSIMP
-    ////////////////////////
-    Assimp::Importer importer;
-    NSString *glassesFilePath = [[NSBundle mainBundle] pathForResource:@"RanGlass" ofType:@"obj"];
-    _pMesh->LoadMesh([glassesFilePath UTF8String]);
-    
     /////////////////////
     // offscreen buffer
     /////////////////////
@@ -371,15 +366,33 @@ bail:
     // shader program
     /////////////////
     //glasses shaders
-    
+    // Load vertex and fragment shaders
+    GLint attribLocation[NUM_ATTRIBUTES] = {
+        ATTRIB_POSITION, // "position" in vertext shader
+        ATTRIB_TEXCOORD, // "TexCoord" in vertext shader
+        ATTRIB_NORMAL, // "normal" in vertext shader,
+    };
+    GLchar *attribName[NUM_ATTRIBUTES] = {
+        (GLchar *)"position",
+        (GLchar *)"texCoord",
+        (GLchar *)"normal",
+    };
+    GLint uniformLocation[NUM_UNIFORMS];
+    GLchar *uniformName[NUM_UNIFORMS] = {
+        (GLchar *)"MVP",
+        (GLchar *)"texCount",
+        (GLchar *)"diffuseColor",
+        (GLchar *)"textureImage",
+    };
+
     // Load vertex and fragment shaders
     // Load vertex and fragment shaders for glasses
     const GLchar *vertLSrc = [Tools readFile:@"3dGlassesVertexShader.vsh"];
     const GLchar *fragLSrc = [Tools readFile:@"3dGlassesFragmentShader.fsh"];
     
     glueCreateProgram( vertLSrc, fragLSrc,
-                      0, NULL, 0,
-                      0, NULL, 0,
+                      NUM_ATTRIBUTES, (const GLchar **)&attribName[0], attribLocation,
+                      NUM_UNIFORMS, (const GLchar **)&uniformName[0], uniformLocation,
                       &_programID );
     if ( ! _programID ) {
         NSLog( @"Problem initializing the _programIDL." );
@@ -387,7 +400,10 @@ bail:
         [self cleanup:success oldContext:oldContext];
         return success;
     }
-    _matrixID = glueGetUniformLocation(_programID, "MVP");
+    _matrixID = uniformLocation[UNIFORM_MVP];
+    
+    _pMesh->setAttrUni(uniformLocation[UNIFORM_TEXCOUNT], uniformLocation[UNIFORM_DIFFUSECOLOR], uniformLocation[UNIFORM_TEXTUREIMAGE],
+                       attribLocation[ATTRIB_POSITION], attribLocation[ATTRIB_TEXCOORD], attribLocation[ATTRIB_NORMAL]);
     
     // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
     glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
@@ -404,11 +420,19 @@ bail:
     //glm::mat4 Model      = glm::mat4(1.0f);
     mat4 Model_translation = translate(mat4(1.0f), vec3(0,0,0));
     mat4 Model_rotate = rotate(mat4(1.0f), 90.0f, vec3(0,1,0));
-    mat4 Model_scale = scale(mat4(1.0f), vec3(0.6,0.6,0.6));
+    mat4 Model_scale = scale(mat4(1.0f), vec3(0.3,0.3,0.3));
     mat4 Model = Model_translation * Model_rotate * Model_scale;
     
     // Our ModelViewProjection : multiplication of our 3 matrices
     _MVP = Projection * View * Model; // Remember, matrix multiplication is the other way around
+    
+    ////////////////////////
+    //Load model with ASSIMP
+    ////////////////////////
+    Assimp::Importer importer;
+    NSString *glassesFilePath = [[NSBundle mainBundle] pathForResource:@"RanGlass" ofType:@"obj"];
+    _pMesh->LoadMesh([glassesFilePath UTF8String]);
+    
     
     ///////////////////
     //buffer management
