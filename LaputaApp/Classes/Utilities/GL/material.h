@@ -87,7 +87,6 @@ public:
     virtual bool load() = 0;
     
     virtual void bind(GLenum textureUnit, GLint textureId) = 0;
-    virtual void unbind() = 0;
     
 protected:
     GLint m_texCountLocation;

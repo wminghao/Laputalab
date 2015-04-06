@@ -23,15 +23,17 @@ public:
             GLint textureImageLocation,
             GLenum TextureTarget, const std::string& FileName);
     
-    virtual ~Texture() {}
+    virtual ~Texture() {
+        // Delete texture object
+        glDeleteTextures ( 1, &m_textureObj );
+    }
     bool load();
     
     void bind(GLenum textureUnit, GLint textureId);
-    void unbind();
 private:
     std::string m_fileName;
-    GLenum m_textureTarget;
-    GLuint m_textureObj;
+    GLenum m_textureTarget; //GL_TEXTURE_2D
+    GLuint m_textureObj; //object id generated
 };
 
 #endif

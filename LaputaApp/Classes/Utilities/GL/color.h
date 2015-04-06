@@ -27,7 +27,6 @@ public:
     bool load();
     
     void bind(GLenum textureUnit, GLint textureId);
-    void unbind(){}
 private:
     Vector4f m_color;
 };

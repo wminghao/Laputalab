@@ -300,6 +300,7 @@ enum {
         glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
         glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
         glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, CVOpenGLESTextureGetTarget( dstTexture ), CVOpenGLESTextureGetName( dstTexture ), 0 );
+        glBindTexture( CVOpenGLESTextureGetTarget( dstTexture ), 0 );
         
         glUseProgram( _programID );
         
@@ -307,8 +308,6 @@ enum {
         
         //render the meshes
         _pMesh->Render();
-
-        glBindTexture( CVOpenGLESTextureGetTarget( dstTexture ), 0 );
         
         // Make sure that outstanding GL commands which render to the destination pixel buffer have been submitted.
         // AVAssetWriter, AVSampleBufferDisplayLayer, and GL will block until the rendering is complete when sourcing from this pixel buffer.
@@ -420,7 +419,7 @@ bail:
     //glm::mat4 Model      = glm::mat4(1.0f);
     mat4 Model_translation = translate(mat4(1.0f), vec3(0,0,0));
     mat4 Model_rotate = rotate(mat4(1.0f), 90.0f, vec3(0,1,0));
-    mat4 Model_scale = scale(mat4(1.0f), vec3(0.3,0.3,0.3));
+    mat4 Model_scale = scale(mat4(1.0f), vec3(0.2,0.2,0.2));
     mat4 Model = Model_translation * Model_rotate * Model_scale;
     
     // Our ModelViewProjection : multiplication of our 3 matrices
@@ -432,7 +431,6 @@ bail:
     Assimp::Importer importer;
     NSString *glassesFilePath = [[NSBundle mainBundle] pathForResource:@"RanGlass" ofType:@"obj"];
     _pMesh->LoadMesh([glassesFilePath UTF8String]);
-    
     
     ///////////////////
     //buffer management

@@ -192,21 +192,22 @@ GLint glueCreateProgram(const GLchar *vertSource, const GLchar *fragSource,
 	status *= glueLinkProgram(prog);
     
     // Get locations of uniforms
-	if (status)
-	{	
-        for(i = 0; i < uniformNameCt; i++)
-		{
-            if(strlen(uniformNames[i]))
+	if (status) {
+        for(i = 0; i < uniformNameCt; i++) {
+            if(strlen(uniformNames[i])) {
 			    uniformLocations[i] = glueGetUniformLocation(prog, uniformNames[i]);
+            }
 		}
 		*program = prog;
 	}
     
     // Release vertex and fragment shaders
-	if (vertShader)
+    if (vertShader) {
 		glDeleteShader(vertShader);
-	if (fragShader)
+    }
+    if (fragShader) {
 		glDeleteShader(fragShader);
+    }
     
 	return status;
 }

@@ -82,8 +82,7 @@ bool Mesh::LoadMesh(const std::string& Filename)
     bool Ret = false;
     Assimp::Importer Importer;
 
-    const aiScene* pScene = Importer.ReadFile(Filename.c_str(), aiProcessPreset_TargetRealtime_Quality);
-    //const aiScene* pScene = Importer.ReadFile(Filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
+    const aiScene* pScene = Importer.ReadFile(Filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
     if (pScene) {
         Ret = InitFromScene(pScene, Filename);
     } else {
@@ -168,7 +167,7 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
         
         aiString name;
         pMaterial->Get(AI_MATKEY_NAME,name);
-        printf("Loaded texture index:%d, name %s\n", i, name.C_Str());
+        printf("Loaded material index:%d, name %s\n", i, name.C_Str());
         
         aiColor4D diffuse;
         
@@ -219,15 +218,10 @@ void Mesh::Render()
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Entries[i].IB);
 
         const unsigned int materialIndex = m_Entries[i].MaterialIndex;
-        bool bCanBind = (materialIndex < m_Materials.size() && m_Materials[materialIndex]);
-        //Don't use GL_TEXTURE0, since it's used as the background
-        if ( bCanBind ) {
-            m_Materials[materialIndex]->bind(GL_TEXTURE1, 1);
+        if( materialIndex < m_Materials.size() && m_Materials[materialIndex] ){
+            m_Materials[materialIndex]->bind(GL_TEXTURE0, 0);
         }
         glDrawElements(GL_TRIANGLES, m_Entries[i].NumIndices, GL_UNSIGNED_INT, 0);
-        if ( bCanBind ) {
-            m_Materials[materialIndex]->unbind();
-        }
     }
 
     glDisableVertexAttribArray(m_positionLocation);
