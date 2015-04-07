@@ -170,7 +170,11 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
         printf("Loaded material index:%d, name %s\n", i, name.C_Str());
         
         aiColor4D diffuse;
-        
+        aiColor4D ambient;
+        if(AI_SUCCESS == aiGetMaterialColor(pMaterial, AI_MATKEY_COLOR_DIFFUSE, &diffuse)) {
+        }
+        if(AI_SUCCESS == aiGetMaterialColor(pMaterial, AI_MATKEY_COLOR_AMBIENT, &ambient)) {
+        }
         if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
             aiString Path;
 
@@ -178,6 +182,7 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
                 std::string FullPath = Dir + "/" + Path.data;
                 m_Materials[i] = new Texture(m_texCountLocation,
                                              m_diffuseColorLocation,
+                                             m_ambientColorLocation,
                                              m_textureImageLocation,
                                              GL_TEXTURE_2D, FullPath.c_str());
 
@@ -190,13 +195,18 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
                     printf("Loaded texture index:%d, %s\n", i, Path.data);
                 }
             }
-        } else if(AI_SUCCESS == aiGetMaterialColor(pMaterial, AI_MATKEY_COLOR_DIFFUSE, &diffuse)) {
-            Vector4f color(diffuse.r, diffuse.g, diffuse.b, diffuse.a);
+        } else {
+            
+            Vector4f diffuseColor(diffuse.r, diffuse.g, diffuse.b, diffuse.a);
+            Vector4f ambientColor(ambient.r, ambient.g, ambient.b, ambient.a);
             m_Materials[i] = new Color(m_texCountLocation,
                                        m_diffuseColorLocation,
+                                       m_ambientColorLocation,
                                        m_textureImageLocation,
-                                       color);
-            printf("Loaded color index:%.2f, %.2f, %.2f, %.2f\n", color.x, color.y, color.z, color.w);
+                                       diffuseColor,
+                                       ambientColor);
+            printf("Loaded color index:%.2f, %.2f, %.2f, %.2f: %.2f, %.2f, %.2f, %.2f\n", diffuseColor.x, diffuseColor.y, diffuseColor.z, diffuseColor.w,
+                   ambientColor.x, ambientColor.y, ambientColor.z, ambientColor.w);
         }
     }
 

@@ -58,8 +58,10 @@ using namespace glm;
     
     /* Opengles assets */
     GLuint _programID; //compiled shader program for glasses
-    GLint _matrixID; //matrix for glasses in vertex shader
-    glm::mat4 _MVP; //matrix for rotation
+    GLint _matrixMVP; //matrix for glasses in vertex shader
+    GLint _matrixWorld; //matrix for glasses in vertex shader
+    glm::mat4 _MVP; //final matrix matrix for rotation
+    glm::mat4 _World; //world matrix matrix for rotation
     GLuint _offscreenBufferHandle; //offscreen buffer
     
     /*meshes from glasses object file*/
@@ -83,8 +85,10 @@ enum {
 
 enum {
     UNIFORM_MVP, // "MVP" in vertext shader
+    UNIFORM_WORLD, // "gWorld" in vertext shader
     UNIFORM_TEXCOUNT,
     UNIFORM_DIFFUSECOLOR,
+    UNIFORM_AMBIENTCOLOR,
     UNIFORM_TEXTUREIMAGE,
     NUM_UNIFORMS
 };
@@ -304,7 +308,8 @@ enum {
         
         glUseProgram( _programID );
         
-        glUniformMatrix4fv(_matrixID, 1, GL_FALSE, &MVP[0][0]);
+        glUniformMatrix4fv(_matrixMVP, 1, GL_FALSE, &MVP[0][0]);
+        glUniformMatrix4fv(_matrixWorld, 1, GL_FALSE, &_World[0][0]);
         
         //render the meshes
         _pMesh->Render();
@@ -379,8 +384,10 @@ bail:
     GLint uniformLocation[NUM_UNIFORMS];
     GLchar *uniformName[NUM_UNIFORMS] = {
         (GLchar *)"MVP",
+        (GLchar *)"World",
         (GLchar *)"texCount",
         (GLchar *)"diffuseColor",
+        (GLchar *)"ambientColor",
         (GLchar *)"textureImage",
     };
 
@@ -399,9 +406,11 @@ bail:
         [self cleanup:success oldContext:oldContext];
         return success;
     }
-    _matrixID = uniformLocation[UNIFORM_MVP];
+    _matrixMVP = uniformLocation[UNIFORM_MVP];
+    _matrixWorld = uniformLocation[UNIFORM_WORLD];
     
-    _pMesh->setAttrUni(uniformLocation[UNIFORM_TEXCOUNT], uniformLocation[UNIFORM_DIFFUSECOLOR], uniformLocation[UNIFORM_TEXTUREIMAGE],
+    _pMesh->setAttrUni(uniformLocation[UNIFORM_TEXCOUNT], uniformLocation[UNIFORM_DIFFUSECOLOR],
+                       uniformLocation[UNIFORM_AMBIENTCOLOR], uniformLocation[UNIFORM_TEXTUREIMAGE],
                        attribLocation[ATTRIB_POSITION], attribLocation[ATTRIB_TEXCOORD], attribLocation[ATTRIB_NORMAL]);
     
     // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
@@ -422,8 +431,10 @@ bail:
     mat4 Model_scale = scale(mat4(1.0f), vec3(0.2,0.2,0.2));
     mat4 Model = Model_translation * Model_rotate * Model_scale;
     
+    _World = View * Model; //world coordinate.
+    
     // Our ModelViewProjection : multiplication of our 3 matrices
-    _MVP = Projection * View * Model; // Remember, matrix multiplication is the other way around
+    _MVP = Projection * _World; // Remember, matrix multiplication is the other way around
     
     ////////////////////////
     //Load model with ASSIMP

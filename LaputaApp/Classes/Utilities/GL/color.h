@@ -20,14 +20,17 @@ class Color: public Material
 public:
     Color(GLint texCountLocation,
           GLint diffuseColorLocation,
+          GLint ambientColorLocation,
           GLint textureImageLocation,
-          const Vector4f& color);
+          const Vector4f& diffuseColor,
+          const Vector4f& ambientColor);
     
     virtual ~Color() {}
     bool load();
     
     void bind(GLenum textureUnit, GLint textureId);
 private:
-    Vector4f m_color;
+    Vector4f m_diffuseColor;
+    Vector4f m_ambientColor;
 };
 #endif /* defined(__Laputa__color__) */

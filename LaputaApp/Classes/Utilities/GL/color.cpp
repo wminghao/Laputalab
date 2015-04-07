@@ -12,10 +12,13 @@
 
 Color::Color(GLint texCountLocation,
              GLint diffuseColorLocation,
+             GLint ambientColorLocation,
              GLint textureImageLocation,
-             const Vector4f& color):Material(texCountLocation, diffuseColorLocation, textureImageLocation)
+             const Vector4f& diffuseColor,
+             const Vector4f& ambientColor):Material(texCountLocation, diffuseColorLocation, ambientColorLocation, textureImageLocation)
 {
-    m_color = color;
+    m_diffuseColor = diffuseColor;
+    m_ambientColor = ambientColor;
 }
 
 bool Color::load()
@@ -26,5 +29,6 @@ bool Color::load()
 void Color::bind(GLenum textureUnit, GLint textureId)
 {
     glUniform1i(m_texCountLocation, 0);
-    glUniform4f(m_diffuseColorLocation, m_color.x, m_color.y, m_color.z, m_color.w);
+    glUniform4f(m_diffuseColorLocation, m_diffuseColor.x, m_diffuseColor.y, m_diffuseColor.z, m_diffuseColor.w);
+    glUniform4f(m_ambientColorLocation, m_ambientColor.x, m_ambientColor.y, m_ambientColor.z, m_ambientColor.w);
 }

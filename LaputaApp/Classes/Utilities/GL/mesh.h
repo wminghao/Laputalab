@@ -64,6 +64,7 @@ public:
     
     void setAttrUni(GLint texCountLocation,
                     GLint diffuseColorLocation,
+                    GLint ambientColorLocation,
                     GLint textureImageLocation,
                     GLint positionLocation,
                     GLint texCoordLocation,
@@ -71,6 +72,7 @@ public:
         //map to different uniforms and attributes
         m_texCountLocation = texCountLocation;
         m_diffuseColorLocation = diffuseColorLocation;
+        m_ambientColorLocation = ambientColorLocation;
         m_textureImageLocation = textureImageLocation;
         m_positionLocation = positionLocation;
         m_texCoordLocation = texCoordLocation;
@@ -109,6 +111,7 @@ private:
     //map to different uniforms and attributes
     GLint m_texCountLocation;
     GLint m_diffuseColorLocation;
+    GLint m_ambientColorLocation;
     GLint m_textureImageLocation;
     GLint m_positionLocation;
     GLint m_texCoordLocation;

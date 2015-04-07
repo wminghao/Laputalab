@@ -78,9 +78,11 @@ class Material
 public:
     Material(GLint texCountLocation,
              GLint diffuseColorLocation,
+             GLint ambientColorLocation,
              GLint textureImageLocation){
         m_texCountLocation = texCountLocation;
         m_diffuseColorLocation = diffuseColorLocation;
+        m_ambientColorLocation = ambientColorLocation;
         m_textureImageLocation = textureImageLocation;
     }
     virtual ~Material(){}
@@ -91,6 +93,7 @@ public:
 protected:
     GLint m_texCountLocation;
     GLint m_diffuseColorLocation;
+    GLint m_ambientColorLocation;
     GLint m_textureImageLocation;
 };
 #endif /* defined(__Laputa__material__) */

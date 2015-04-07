@@ -15,9 +15,10 @@
 
 Texture::Texture(GLint texCountLocation,
                  GLint diffuseColorLocation,
+                 GLint ambientColorLocation,
                  GLint textureImageLocation,
                  GLenum TextureTarget,
-                 const std::string& FileName):Material(texCountLocation, diffuseColorLocation, textureImageLocation)
+                 const std::string& FileName):Material(texCountLocation, diffuseColorLocation, ambientColorLocation, textureImageLocation)
 {
     m_textureTarget = TextureTarget;
     m_fileName      = FileName;
@@ -36,18 +37,22 @@ bool Texture::load()
         width = MagickGetImageWidth(wand);
         height = MagickGetImageHeight(wand);
         
-        unsigned char * pixels = (unsigned char*)malloc(sizeof(char) * width * height * 3);
+        //b/c the input image can be odd width or odd height, mipmap will complain.
+        //it's better not to use odd width/height image for performance reasons.
+        unsigned char * pixels = (unsigned char*)malloc(sizeof(unsigned char) * width * height * 3);
         if( MagickTrue == MagickGetImagePixels(wand, 0, 0, width, height, "RGB", CharPixel, pixels)) {
             glGenTextures(1, &m_textureObj);
             glBindTexture(m_textureTarget, m_textureObj);
             glTexImage2D(m_textureTarget, 0, GL_RGB, (GLsizei)width, (GLsizei)height, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
-            glTexParameterf(m_textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameterf(m_textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameterf(m_textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //no mipmap
+            glTexParameterf(m_textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR); //no mipmap
             glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
             glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
             glBindTexture(m_textureTarget, 0);
-            
-            printf("m_textureObj=%d, width=%d, height=%d\n", m_textureObj, width, height);
+            if( width%2 || height%2 ) {
+                printf("Warning: width or height not multiple of 2");
+                printf("m_textureObj=%d, width=%ld, height=%ld\n", m_textureObj, width, height);
+            }
         }
         free(pixels);
     } else {

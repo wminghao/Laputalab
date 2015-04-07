@@ -20,6 +20,7 @@ class Texture: public Material
 public:
     Texture(GLint texCountLocation,
             GLint diffuseColorLocation,
+            GLint ambientColorLocation,
             GLint textureImageLocation,
             GLenum TextureTarget, const std::string& FileName);
     
