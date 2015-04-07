@@ -63,6 +63,7 @@ using namespace glm;
     glm::mat4 _MVP; //final matrix matrix for rotation
     glm::mat4 _World; //world matrix matrix for rotation
     GLuint _offscreenBufferHandle; //offscreen buffer
+    GLuint _depthRenderbuffer; //depth render buffer
     
     /*meshes from glasses object file*/
     vector<vec3> _verticesF; //frame
@@ -292,8 +293,11 @@ enum {
         //////////////////////
         //Draw the lens
         //////////////////////
-        //bind to lens
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        //Bind a framebuffer
         glBindFramebuffer( GL_FRAMEBUFFER, _offscreenBufferHandle );
+        
         glViewport( 0, 0, srcDimensions.width, srcDimensions.height );
         
         // Set up our destination pixel buffer as the framebuffer's render target.
@@ -305,6 +309,10 @@ enum {
         glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
         glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, CVOpenGLESTextureGetTarget( dstTexture ), CVOpenGLESTextureGetName( dstTexture ), 0 );
         glBindTexture( CVOpenGLESTextureGetTarget( dstTexture ), 0 );
+        
+        glBindRenderbuffer(GL_RENDERBUFFER, _depthRenderbuffer);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, srcDimensions.width, srcDimensions.height);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _depthRenderbuffer);
         
         glUseProgram( _programID );
         
@@ -361,10 +369,13 @@ bail:
     /////////////////////
     // offscreen buffer
     /////////////////////
-    glDisable( GL_DEPTH_TEST );
+    glEnable(GL_DEPTH_TEST); //MUST enable depth buffer
     
     glGenFramebuffers( 1, &_offscreenBufferHandle );
     glBindFramebuffer( GL_FRAMEBUFFER, _offscreenBufferHandle );
+    
+    glGenRenderbuffers(1, &_depthRenderbuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, _depthRenderbuffer);
     
     /////////////////
     // shader program

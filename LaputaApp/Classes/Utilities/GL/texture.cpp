@@ -46,12 +46,11 @@ bool Texture::load()
             glTexImage2D(m_textureTarget, 0, GL_RGB, (GLsizei)width, (GLsizei)height, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
             glTexParameterf(m_textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //no mipmap
             glTexParameterf(m_textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR); //no mipmap
-            glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
-            glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
             glBindTexture(m_textureTarget, 0);
             if( width%2 || height%2 ) {
-                printf("Warning: width or height not multiple of 2");
-                printf("m_textureObj=%d, width=%ld, height=%ld\n", m_textureObj, width, height);
+                printf("Warning: width or height not multiple of 2. m_textureObj=%d, width=%ld, height=%ld\n", m_textureObj, width, height);
+                glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+                glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
             }
         }
         free(pixels);

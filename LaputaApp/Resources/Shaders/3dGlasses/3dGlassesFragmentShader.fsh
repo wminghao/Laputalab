@@ -27,5 +27,6 @@ void main()
         color = diffuseColor;
         amb = ambientColor;
     }
-    gl_FragColor = (color * intensity) + amb;
+    //gl_FragColor = (color * intensity) + amb;
+    gl_FragColor = (color * 1.0) + amb;
 }
