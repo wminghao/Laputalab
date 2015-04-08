@@ -60,7 +60,7 @@ using namespace glm;
     GLuint _programID; //compiled shader program for glasses
     GLint _matrixMVP; //matrix for glasses in vertex shader
     GLint _matrixWorld; //matrix for glasses in vertex shader
-    glm::mat4 _MVP; //final matrix matrix for rotation
+    glm::mat4 _Projection; //projection matrix matrix for rotation
     glm::mat4 _World; //world matrix matrix for rotation
     GLuint _offscreenBufferHandle; //offscreen buffer
     GLuint _depthRenderbuffer; //depth render buffer
@@ -288,7 +288,8 @@ enum {
         }
         angleInDegree += 0.02*sign;
         
-        glm::mat4 MVP = glm::rotate(_MVP, angleInDegree, glm::vec3(0,1,0)); //matrix for rotation on y axis
+        glm::mat4 World = glm::rotate(_World, angleInDegree, glm::vec3(0,1,0)); //matrix for rotation on y axis
+        glm::mat4 MVP = _Projection * World;
         
         //////////////////////
         //Draw the lens
@@ -317,7 +318,7 @@ enum {
         glUseProgram( _programID );
         
         glUniformMatrix4fv(_matrixMVP, 1, GL_FALSE, &MVP[0][0]);
-        glUniformMatrix4fv(_matrixWorld, 1, GL_FALSE, &_World[0][0]);
+        glUniformMatrix4fv(_matrixWorld, 1, GL_FALSE, &World[0][0]);
         
         //render the meshes
         _pMesh->Render();
@@ -370,6 +371,7 @@ bail:
     // offscreen buffer
     /////////////////////
     glEnable(GL_DEPTH_TEST); //MUST enable depth buffer
+    glEnable(GL_DITHER); //enable dithering.
     
     glGenFramebuffers( 1, &_offscreenBufferHandle );
     glBindFramebuffer( GL_FRAMEBUFFER, _offscreenBufferHandle );
@@ -446,7 +448,8 @@ bail:
     _World = View * Model; //world coordinate.
     
     // Our ModelViewProjection : multiplication of our 3 matrices
-    _MVP = Projection * _World; // Remember, matrix multiplication is the other way around
+    // Remember, matrix multiplication is the other way around
+    _Projection = Projection;
     
     ////////////////////////
     //Load model with ASSIMP
