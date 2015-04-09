@@ -431,7 +431,7 @@ bail:
     // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
     //glm::mat4 Projection = glm::perspective(45.0f, 16.0f/9.0f, 0.1f, 100.0f); //for portrait mode, front/back camera, is: 16:9
     // Or, for an ortho camera :
-    glm::mat4 Projection = glm::ortho(-8.0f,8.0f,-4.5f,4.5f,0.0f,100.0f); // In world coordinates, x/y =16/9 ratio, far-near is big enough
+    glm::mat4 Projection = glm::ortho(-8.0f,8.0f,-4.5f,4.5f,-100.0f,100.0f); // In world coordinates, x/y =16/9 ratio, far-near is big enough
     
     // Camera matrix
     glm::mat4 View       = glm::lookAt(glm::vec3(0,0,10), // Camera is at (4,3,3), in World Space
