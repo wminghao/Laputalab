@@ -372,6 +372,8 @@ bail:
     /////////////////////
     glEnable(GL_DEPTH_TEST); //MUST enable depth buffer
     glEnable(GL_DITHER); //enable dithering.
+    glEnable(GL_BLEND); //enable blending
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     glGenFramebuffers( 1, &_offscreenBufferHandle );
     glBindFramebuffer( GL_FRAMEBUFFER, _offscreenBufferHandle );
@@ -427,13 +429,12 @@ bail:
                        attribLocation[ATTRIB_POSITION], attribLocation[ATTRIB_TEXCOORD], attribLocation[ATTRIB_NORMAL]);
     
     // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-    glm::mat4 Projection = glm::perspective(45.0f, 16.0f / 9.0f, 0.1f, 100.0f);
+    glm::mat4 Projection = glm::perspective(45.0f, 16.0f/9.0f, 0.1f, 100.0f); //for portrait mode, front/back camera, is: 16:9
     // Or, for an ortho camera :
     //glm::mat4 Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
     
     // Camera matrix
-    glm::mat4 View       = glm::lookAt(
-                                       glm::vec3(0,0,10), // Camera is at (4,3,3), in World Space
+    glm::mat4 View       = glm::lookAt(glm::vec3(0,0,10), // Camera is at (4,3,3), in World Space
                                        glm::vec3(0,0,0), // and looks at the origin
                                        glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
                                        );
