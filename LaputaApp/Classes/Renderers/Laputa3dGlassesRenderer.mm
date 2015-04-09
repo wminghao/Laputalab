@@ -288,7 +288,7 @@ enum {
         }
         angleInDegree += sign;
         
-        glm::mat4 World = glm::rotate(_World, glm::radians(angleInDegree), glm::vec3(0,1,0)); //matrix for rotation on x axis
+        glm::mat4 World = glm::rotate(_World, glm::radians(angleInDegree), glm::vec3(0,1,0)); //matrix for rotation on y axis
         glm::mat4 MVP = _Projection * World;
         
         //////////////////////
@@ -429,9 +429,9 @@ bail:
                        attribLocation[ATTRIB_POSITION], attribLocation[ATTRIB_TEXCOORD], attribLocation[ATTRIB_NORMAL]);
     
     // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-    glm::mat4 Projection = glm::perspective(45.0f, 16.0f/9.0f, 0.1f, 100.0f); //for portrait mode, front/back camera, is: 16:9
+    //glm::mat4 Projection = glm::perspective(45.0f, 16.0f/9.0f, 0.1f, 100.0f); //for portrait mode, front/back camera, is: 16:9
     // Or, for an ortho camera :
-    //glm::mat4 Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
+    glm::mat4 Projection = glm::ortho(-8.0f,8.0f,-4.5f,4.5f,0.0f,100.0f); // In world coordinates, x/y =16/9 ratio, far-near is big enough
     
     // Camera matrix
     glm::mat4 View       = glm::lookAt(glm::vec3(0,0,10), // Camera is at (4,3,3), in World Space
@@ -439,12 +439,13 @@ bail:
                                        glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
                                        );
     // Model matrix : an identity matrix (model will be at the origin)
-    float scaleFactor = 0.22;
+    float scaleFactor = 0.15;
     //glm::mat4 Model      = glm::mat4(1.0f);
     mat4 Model_translation = translate(mat4(1.0f), vec3(0,0,0));
-    mat4 Model_rotate = rotate(mat4(1.0f), glm::radians(90.0f), vec3(0,0,1));
+    mat4 Model_rotateZ = rotate(mat4(1.0f), glm::radians(90.0f), vec3(0,0,1));
+    mat4 Model_rotateX = rotate(mat4(1.0f), glm::radians(10.0f), vec3(1,0,0));
     mat4 Model_scale = scale(mat4(1.0f), vec3(scaleFactor,scaleFactor,scaleFactor));
-    mat4 Model = Model_translation * Model_rotate * Model_scale;
+    mat4 Model = Model_translation * Model_rotateZ * Model_rotateX * Model_scale;
     
     _World = View * Model; //world coordinate.
     

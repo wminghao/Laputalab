@@ -42,6 +42,13 @@ bool Texture::load()
         unsigned char * pixels = (unsigned char*)malloc(sizeof(unsigned char) * width * height * 4);
         if( MagickTrue == MagickGetImagePixels(wand, 0, 0, width, height, "RGBA", CharPixel, pixels)) {
             glGenTextures(1, &m_textureObj);
+            
+            //TODO must delete after Ran made the asset transparent.
+            if( m_textureObj == 2 ) {
+                for(int i = 3; i< width * height *4; i+=4) {
+                    pixels[i] = 180;
+                }
+            }
             glBindTexture(m_textureTarget, m_textureObj);
             glTexImage2D(m_textureTarget, 0, GL_RGBA, (GLsizei)width, (GLsizei)height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
             glTexParameterf(m_textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //no mipmap
@@ -51,7 +58,7 @@ bool Texture::load()
                 printf("Warning: width or height not multiple of 2. m_textureObj=%d, width=%ld, height=%ld\n", m_textureObj, width, height);
                 glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
                 glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
-            }            
+            }
         }
         free(pixels);
     } else {
