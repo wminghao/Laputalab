@@ -373,7 +373,6 @@
 			isa = PBXGroup;
 			children = (
 				89B2EB7E1AD7488F00D1E27E /* ramp1-nurbsToPoly1.png */,
-				891082631ACF670600D5314C /* RanGlass.mtl */,
 				891082611ACF49C400D5314C /* exportAll.dae */,
 				895656D31ACE08AC004AE70A /* Brooklyn_Bridge_Planks_small.hdr */,
 				895656D51ACE08AC004AE70A /* logo1.jpg */,
@@ -382,6 +381,7 @@
 				895656D81ACE08AC004AE70A /* logo1small.jpg */,
 				895656DA1ACE08AC004AE70A /* RanGlass.dae */,
 				895656DB1ACE08AC004AE70A /* RanGlass.obj */,
+				891082631ACF670600D5314C /* RanGlass.mtl */,
 			);
 			name = 3dGlasses;
 			sourceTree = "<group>";

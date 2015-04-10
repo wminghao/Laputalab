@@ -281,9 +281,9 @@ enum {
         //TODO below is the test code to do rotation.
         static float angleInDegree = 0.0f;
         static int sign = -1;
-        if(angleInDegree >= 90) {
+        if(angleInDegree >= 180) {
             sign = -1;
-        } else if(angleInDegree <= -90) {
+        } else if(angleInDegree <= -180) {
             sign = 1;
         }
         angleInDegree += sign;
@@ -370,10 +370,12 @@ bail:
     /////////////////////
     // offscreen buffer
     /////////////////////
+    glEnable(GL_CULL_FACE);  //enable culling to speed up rendering.
     glEnable(GL_DEPTH_TEST); //MUST enable depth buffer
     glEnable(GL_DITHER); //enable dithering.
     glEnable(GL_BLEND); //enable blending
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
     
     glGenFramebuffers( 1, &_offscreenBufferHandle );
     glBindFramebuffer( GL_FRAMEBUFFER, _offscreenBufferHandle );

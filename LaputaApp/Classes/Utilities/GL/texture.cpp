@@ -57,10 +57,6 @@ bool Texture::load()
                 glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
                 glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
             }
-            
-            if( m_textureObj == 2 ) {
-                printf("pixel =%d, %d\n", pixels[103], pixels[107]);
-            }
         }
         free(pixels);
     } else {
