@@ -172,6 +172,21 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
         aiColor4D ambient;
         aiGetMaterialColor(pMaterial, AI_MATKEY_COLOR_DIFFUSE, &diffuse);
         aiGetMaterialColor(pMaterial, AI_MATKEY_COLOR_AMBIENT, &ambient);
+        /*
+         All other colors are read as default values.
+        aiColor4D specular;
+        aiColor4D emissive;
+        aiColor4D transparent;
+        float shininess = 0.0;
+        unsigned int max;
+        aiGetMaterialFloatArray(pMaterial, AI_MATKEY_SHININESS, &shininess, &max);
+        aiGetMaterialColor(pMaterial, AI_MATKEY_COLOR_SPECULAR, &specular);
+        aiGetMaterialColor(pMaterial, AI_MATKEY_COLOR_EMISSIVE, &emissive);
+        aiGetMaterialColor(pMaterial, AI_MATKEY_COLOR_TRANSPARENT, &transparent);
+        */
+        
+        Vector4f diffuseColor(diffuse.r, diffuse.g, diffuse.b, diffuse.a);
+        Vector4f ambientColor(ambient.r, ambient.g, ambient.b, ambient.a);
         if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
             aiString Path;
 
@@ -181,6 +196,8 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
                                              m_diffuseColorLocation,
                                              m_ambientColorLocation,
                                              m_textureImageLocation,
+                                             diffuseColor,
+                                             ambientColor,
                                              GL_TEXTURE_2D, FullPath.c_str());
 
                 if (!m_Materials[i]->load()) {
@@ -191,13 +208,11 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
                 } else {
                     printf("Loaded texture index:%d, name %s file: %s coord:%.2f, %.2f, %.2f, %.2f: %.2f, %.2f, %.2f, %.2f\n",
                            i, name.C_Str(), Path.data,
-                           diffuse.r, diffuse.g, diffuse.b, diffuse.a,
-                           ambient.r, ambient.g, ambient.b, ambient.a);
+                           diffuseColor.x, diffuseColor.y, diffuseColor.z, diffuseColor.w,
+                           ambientColor.x, ambientColor.y, ambientColor.z, ambientColor.w);
                 }
             }
-        } else {            
-            Vector4f diffuseColor(diffuse.r, diffuse.g, diffuse.b, diffuse.a);
-            Vector4f ambientColor(ambient.r, ambient.g, ambient.b, ambient.a);
+        } else {
             m_Materials[i] = new Color(m_texCountLocation,
                                        m_diffuseColorLocation,
                                        m_ambientColorLocation,

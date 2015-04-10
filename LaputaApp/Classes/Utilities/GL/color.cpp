@@ -9,18 +9,6 @@
 #include "color.h"
 #include <stdio.h>
 
-
-Color::Color(GLint texCountLocation,
-             GLint diffuseColorLocation,
-             GLint ambientColorLocation,
-             GLint textureImageLocation,
-             const Vector4f& diffuseColor,
-             const Vector4f& ambientColor):Material(texCountLocation, diffuseColorLocation, ambientColorLocation, textureImageLocation)
-{
-    m_diffuseColor = diffuseColor;
-    m_ambientColor = ambientColor;
-}
-
 bool Color::load()
 {
     return true;

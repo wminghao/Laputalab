@@ -16,7 +16,7 @@ void main()
     vec3 lightDir;
     vec3 n;
     
-    lightDir = normalize(vec3(0,0,100)); //light direction, 
+    lightDir = normalize(vec3(0,0,10)); //light direction is the same as viewing model direction
     n = normalize(normal0);
     intensity = max(dot(lightDir,n),0.0);
     

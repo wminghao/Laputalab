@@ -23,14 +23,16 @@ public:
           GLint ambientColorLocation,
           GLint textureImageLocation,
           const Vector4f& diffuseColor,
-          const Vector4f& ambientColor);
+          const Vector4f& ambientColor):Material(texCountLocation,
+                                                 diffuseColorLocation, ambientColorLocation, textureImageLocation,
+                                                 diffuseColor, ambientColor)
+    {
+    }
     
     virtual ~Color() {}
     bool load();
     
     void bind(GLenum textureUnit, GLint textureId);
 private:
-    Vector4f m_diffuseColor;
-    Vector4f m_ambientColor;
 };
 #endif /* defined(__Laputa__color__) */

@@ -22,6 +22,8 @@ public:
             GLint diffuseColorLocation,
             GLint ambientColorLocation,
             GLint textureImageLocation,
+            const Vector4f& diffuseColor,
+            const Vector4f& ambientColor,
             GLenum TextureTarget, const std::string& FileName);
     
     virtual ~Texture() {

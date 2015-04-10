@@ -17,8 +17,12 @@ Texture::Texture(GLint texCountLocation,
                  GLint diffuseColorLocation,
                  GLint ambientColorLocation,
                  GLint textureImageLocation,
+                 const Vector4f& diffuseColor,
+                 const Vector4f& ambientColor,
                  GLenum TextureTarget,
-                 const std::string& FileName):Material(texCountLocation, diffuseColorLocation, ambientColorLocation, textureImageLocation)
+                 const std::string& FileName):Material(texCountLocation,
+                                                       diffuseColorLocation, ambientColorLocation, textureImageLocation,
+                                                       diffuseColor, ambientColor)
 {
     m_textureTarget = TextureTarget;
     m_fileName      = FileName;
@@ -42,13 +46,7 @@ bool Texture::load()
         unsigned char * pixels = (unsigned char*)malloc(sizeof(unsigned char) * width * height * 4);
         if( MagickTrue == MagickGetImagePixels(wand, 0, 0, width, height, "RGBA", CharPixel, pixels)) {
             glGenTextures(1, &m_textureObj);
-            
-            //TODO must delete after Ran made the asset transparent.
-            if( m_textureObj == 2 ) {
-                for(int i = 3; i< width * height *4; i+=4) {
-                    pixels[i] = 180;
-                }
-            }
+
             glBindTexture(m_textureTarget, m_textureObj);
             glTexImage2D(m_textureTarget, 0, GL_RGBA, (GLsizei)width, (GLsizei)height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
             glTexParameterf(m_textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //no mipmap
@@ -59,10 +57,22 @@ bool Texture::load()
                 glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
                 glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
             }
+            
+            if( m_textureObj == 2 ) {
+                printf("pixel =%d, %d\n", pixels[103], pixels[107]);
+            }
         }
         free(pixels);
     } else {
         // Handle the error
+        char error_string[256];
+        char *description;
+        ExceptionType severity;
+        
+        description=MagickGetException(wand,&severity);
+        FormatLocaleString(error_string,250,"%s %s %lu %s\n",GetMagickModule(),description);
+        MagickRelinquishMemory(description);
+        printf("Warning: cannot read image. error=%s\n", error_string);
     }
     
     MagickWandTerminus();
@@ -72,8 +82,10 @@ bool Texture::load()
 
 void Texture::bind(GLenum textureUnit, GLint textureId)
 {
-    glActiveTexture(textureUnit);
     glUniform1i(m_texCountLocation, 1);
+    glUniform4f(m_diffuseColorLocation, m_diffuseColor.x, m_diffuseColor.y, m_diffuseColor.z, m_diffuseColor.w);
+    glUniform4f(m_ambientColorLocation, m_ambientColor.x, m_ambientColor.y, m_ambientColor.z, m_ambientColor.w);
+    glActiveTexture(textureUnit);
     glBindTexture(m_textureTarget, m_textureObj);
     glUniform1i(m_textureImageLocation, textureId); //set the sampler texture to textureId
 }

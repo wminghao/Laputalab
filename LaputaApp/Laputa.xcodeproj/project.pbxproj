@@ -63,12 +63,12 @@
 		895656DF1ACE08AD004AE70A /* logo1flipped.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 895656D61ACE08AC004AE70A /* logo1flipped.jpg */; };
 		895656E01ACE08AD004AE70A /* logo1flippedSmall.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 895656D71ACE08AC004AE70A /* logo1flippedSmall.jpg */; };
 		895656E11ACE08AD004AE70A /* logo1small.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 895656D81ACE08AC004AE70A /* logo1small.jpg */; };
-		895656E21ACE08AD004AE70A /* ramp1-nurbsToPoly1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 895656D91ACE08AC004AE70A /* ramp1-nurbsToPoly1.jpg */; };
 		895656E31ACE08AD004AE70A /* RanGlass.dae in Resources */ = {isa = PBXBuildFile; fileRef = 895656DA1ACE08AC004AE70A /* RanGlass.dae */; };
 		895656E41ACE08AD004AE70A /* RanGlass.obj in Resources */ = {isa = PBXBuildFile; fileRef = 895656DB1ACE08AC004AE70A /* RanGlass.obj */; };
 		89B2EB6C1AD2F7D200D1E27E /* ranTry2.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 89B2EB6A1AD2F7D200D1E27E /* ranTry2.mtl */; };
 		89B2EB6D1AD2F7D200D1E27E /* ranTry2.obj in Resources */ = {isa = PBXBuildFile; fileRef = 89B2EB6B1AD2F7D200D1E27E /* ranTry2.obj */; };
 		89B2EB701AD2FF9000D1E27E /* color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89B2EB6E1AD2FF9000D1E27E /* color.cpp */; };
+		89B2EB7F1AD7488F00D1E27E /* ramp1-nurbsToPoly1.png in Resources */ = {isa = PBXBuildFile; fileRef = 89B2EB7E1AD7488F00D1E27E /* ramp1-nurbsToPoly1.png */; };
 		89F003FD1AC9C7F500D8EC6D /* LaputaApp-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 89F003FC1AC9C7F500D8EC6D /* LaputaApp-Info.plist */; };
 /* End PBXBuildFile section */
 
@@ -144,7 +144,6 @@
 		895656D61ACE08AC004AE70A /* logo1flipped.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = logo1flipped.jpg; path = Resources/3dmodels/3dGlasses/logo1flipped.jpg; sourceTree = SOURCE_ROOT; };
 		895656D71ACE08AC004AE70A /* logo1flippedSmall.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = logo1flippedSmall.jpg; path = Resources/3dmodels/3dGlasses/logo1flippedSmall.jpg; sourceTree = SOURCE_ROOT; };
 		895656D81ACE08AC004AE70A /* logo1small.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = logo1small.jpg; path = Resources/3dmodels/3dGlasses/logo1small.jpg; sourceTree = SOURCE_ROOT; };
-		895656D91ACE08AC004AE70A /* ramp1-nurbsToPoly1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = "ramp1-nurbsToPoly1.jpg"; path = "Resources/3dmodels/3dGlasses/ramp1-nurbsToPoly1.jpg"; sourceTree = SOURCE_ROOT; };
 		895656DA1ACE08AC004AE70A /* RanGlass.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; name = RanGlass.dae; path = Resources/3dmodels/3dGlasses/RanGlass.dae; sourceTree = SOURCE_ROOT; };
 		895656DB1ACE08AC004AE70A /* RanGlass.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = RanGlass.obj; path = Resources/3dmodels/3dGlasses/RanGlass.obj; sourceTree = SOURCE_ROOT; };
 		89B2EB6A1AD2F7D200D1E27E /* ranTry2.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ranTry2.mtl; path = Resources/3dmodels/SimpleGlasses/ranTry2.mtl; sourceTree = SOURCE_ROOT; };
@@ -152,6 +151,7 @@
 		89B2EB6E1AD2FF9000D1E27E /* color.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = color.cpp; path = Utilities/GL/color.cpp; sourceTree = "<group>"; };
 		89B2EB6F1AD2FF9000D1E27E /* color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = color.h; path = Utilities/GL/color.h; sourceTree = "<group>"; };
 		89B2EB721AD2FFB900D1E27E /* material.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = material.h; path = Utilities/GL/material.h; sourceTree = "<group>"; };
+		89B2EB7E1AD7488F00D1E27E /* ramp1-nurbsToPoly1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ramp1-nurbsToPoly1.png"; path = "Resources/3dmodels/3dGlasses/ramp1-nurbsToPoly1.png"; sourceTree = SOURCE_ROOT; };
 		89F003FC1AC9C7F500D8EC6D /* LaputaApp-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "LaputaApp-Info.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -372,6 +372,7 @@
 		895656A71ACE0641004AE70A /* 3dGlasses */ = {
 			isa = PBXGroup;
 			children = (
+				89B2EB7E1AD7488F00D1E27E /* ramp1-nurbsToPoly1.png */,
 				891082631ACF670600D5314C /* RanGlass.mtl */,
 				891082611ACF49C400D5314C /* exportAll.dae */,
 				895656D31ACE08AC004AE70A /* Brooklyn_Bridge_Planks_small.hdr */,
@@ -379,7 +380,6 @@
 				895656D61ACE08AC004AE70A /* logo1flipped.jpg */,
 				895656D71ACE08AC004AE70A /* logo1flippedSmall.jpg */,
 				895656D81ACE08AC004AE70A /* logo1small.jpg */,
-				895656D91ACE08AC004AE70A /* ramp1-nurbsToPoly1.jpg */,
 				895656DA1ACE08AC004AE70A /* RanGlass.dae */,
 				895656DB1ACE08AC004AE70A /* RanGlass.obj */,
 			);
@@ -449,7 +449,6 @@
 				895656DE1ACE08AD004AE70A /* logo1.jpg in Resources */,
 				895656DF1ACE08AD004AE70A /* logo1flipped.jpg in Resources */,
 				895656A21ACE0551004AE70A /* SimpleVertexShaderF.vertexshader in Resources */,
-				895656E21ACE08AD004AE70A /* ramp1-nurbsToPoly1.jpg in Resources */,
 				6F90DDE41395CAAA00125BDA /* InfoPlist.strings in Resources */,
 				8910825F1ACF14B800D5314C /* 3dGlassesFragmentShader.fsh in Resources */,
 				281FB47F176694640071511D /* Main.storyboard in Resources */,
@@ -471,6 +470,7 @@
 				89120A301ACA011B0086174B /* myFilter.vsh in Resources */,
 				89120A2F1ACA011B0086174B /* myFilter.fsh in Resources */,
 				895656A11ACE0551004AE70A /* SimpleFragmentShaderL.fragmentshader in Resources */,
+				89B2EB7F1AD7488F00D1E27E /* ramp1-nurbsToPoly1.png in Resources */,
 				89B2EB6D1AD2F7D200D1E27E /* ranTry2.obj in Resources */,
 				89B2EB6C1AD2F7D200D1E27E /* ranTry2.mtl in Resources */,
 			);
@@ -616,6 +616,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COMPRESS_PNG_FILES = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/thirdpartylib/opencv",
@@ -652,6 +653,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COMPRESS_PNG_FILES = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/thirdpartylib/opencv",

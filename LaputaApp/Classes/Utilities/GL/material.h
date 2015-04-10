@@ -79,11 +79,15 @@ public:
     Material(GLint texCountLocation,
              GLint diffuseColorLocation,
              GLint ambientColorLocation,
-             GLint textureImageLocation){
+             GLint textureImageLocation,
+             const Vector4f& diffuseColor,
+             const Vector4f& ambientColor){
         m_texCountLocation = texCountLocation;
         m_diffuseColorLocation = diffuseColorLocation;
         m_ambientColorLocation = ambientColorLocation;
         m_textureImageLocation = textureImageLocation;
+        m_diffuseColor = diffuseColor;
+        m_ambientColor = ambientColor;
     }
     virtual ~Material(){}
     virtual bool load() = 0;
@@ -95,5 +99,7 @@ protected:
     GLint m_diffuseColorLocation;
     GLint m_ambientColorLocation;
     GLint m_textureImageLocation;
+    Vector4f m_diffuseColor;
+    Vector4f m_ambientColor;
 };
 #endif /* defined(__Laputa__material__) */
