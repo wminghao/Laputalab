@@ -24,7 +24,7 @@ public:
             GLint textureImageLocation,
             const Vector4f& diffuseColor,
             const Vector4f& ambientColor,
-            GLenum TextureTarget, const std::string& FileName);
+            const std::string& fileName);
     
     virtual ~Texture() {
         // Delete texture object
@@ -33,9 +33,8 @@ public:
     bool load();
     
     void bind(GLenum textureUnit, GLint textureId);
-private:
+protected:
     std::string m_fileName;
-    GLenum m_textureTarget; //GL_TEXTURE_2D
     GLuint m_textureObj; //object id generated
 };
 

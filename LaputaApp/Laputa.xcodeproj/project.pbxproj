@@ -69,6 +69,7 @@
 		89B2EB6D1AD2F7D200D1E27E /* ranTry2.obj in Resources */ = {isa = PBXBuildFile; fileRef = 89B2EB6B1AD2F7D200D1E27E /* ranTry2.obj */; };
 		89B2EB701AD2FF9000D1E27E /* color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89B2EB6E1AD2FF9000D1E27E /* color.cpp */; };
 		89B2EB7F1AD7488F00D1E27E /* ramp1-nurbsToPoly1.png in Resources */ = {isa = PBXBuildFile; fileRef = 89B2EB7E1AD7488F00D1E27E /* ramp1-nurbsToPoly1.png */; };
+		89B2EB881AD87DDA00D1E27E /* reflectionTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89B2EB861AD87DDA00D1E27E /* reflectionTexture.cpp */; };
 		89F003FD1AC9C7F500D8EC6D /* LaputaApp-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 89F003FC1AC9C7F500D8EC6D /* LaputaApp-Info.plist */; };
 /* End PBXBuildFile section */
 
@@ -152,6 +153,8 @@
 		89B2EB6F1AD2FF9000D1E27E /* color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = color.h; path = Utilities/GL/color.h; sourceTree = "<group>"; };
 		89B2EB721AD2FFB900D1E27E /* material.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = material.h; path = Utilities/GL/material.h; sourceTree = "<group>"; };
 		89B2EB7E1AD7488F00D1E27E /* ramp1-nurbsToPoly1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ramp1-nurbsToPoly1.png"; path = "Resources/3dmodels/3dGlasses/ramp1-nurbsToPoly1.png"; sourceTree = SOURCE_ROOT; };
+		89B2EB861AD87DDA00D1E27E /* reflectionTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = reflectionTexture.cpp; path = Utilities/GL/reflectionTexture.cpp; sourceTree = "<group>"; };
+		89B2EB871AD87DDA00D1E27E /* reflectionTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = reflectionTexture.h; path = Utilities/GL/reflectionTexture.h; sourceTree = "<group>"; };
 		89F003FC1AC9C7F500D8EC6D /* LaputaApp-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "LaputaApp-Info.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -311,6 +314,8 @@
 				89B2EB721AD2FFB900D1E27E /* material.h */,
 				891082591ACF114500D5314C /* texture.h */,
 				891082581ACF114500D5314C /* texture.cpp */,
+				89B2EB871AD87DDA00D1E27E /* reflectionTexture.h */,
+				89B2EB861AD87DDA00D1E27E /* reflectionTexture.cpp */,
 				89B2EB6F1AD2FF9000D1E27E /* color.h */,
 				89B2EB6E1AD2FF9000D1E27E /* color.cpp */,
 				6FF11C9216A877B100E14D71 /* matrix.h */,
@@ -485,6 +490,7 @@
 			files = (
 				89B2EB701AD2FF9000D1E27E /* color.cpp in Sources */,
 				895656BC1ACE0672004AE70A /* LaputaSimpleGlassesRenderer.mm in Sources */,
+				89B2EB881AD87DDA00D1E27E /* reflectionTexture.cpp in Sources */,
 				6F90DDE61395CAAA00125BDA /* main.m in Sources */,
 				6F90DDEA1395CAAA00125BDA /* LaputaAppDelegate.m in Sources */,
 				6F90DDEE1395CAAA00125BDA /* LaputaViewController.m in Sources */,

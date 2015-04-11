@@ -35,9 +35,8 @@
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 
-//include texture
-#include "texture.h"
-#include "color.h"
+//include materials
+#include "material.h"
 
 struct Vertex
 {
@@ -66,6 +65,7 @@ public:
                     GLint diffuseColorLocation,
                     GLint ambientColorLocation,
                     GLint textureImageLocation,
+                    GLint envMapLocation,
                     GLint positionLocation,
                     GLint texCoordLocation,
                     GLint normalLocation) {
@@ -74,6 +74,7 @@ public:
         m_diffuseColorLocation = diffuseColorLocation;
         m_ambientColorLocation = ambientColorLocation;
         m_textureImageLocation = textureImageLocation;
+        m_envMapLocation = envMapLocation;
         m_positionLocation = positionLocation;
         m_texCoordLocation = texCoordLocation;
         m_normalLocation = normalLocation;
@@ -113,6 +114,7 @@ private:
     GLint m_diffuseColorLocation;
     GLint m_ambientColorLocation;
     GLint m_textureImageLocation;
+    GLint m_envMapLocation;
     GLint m_positionLocation;
     GLint m_texCoordLocation;
     GLint m_normalLocation;

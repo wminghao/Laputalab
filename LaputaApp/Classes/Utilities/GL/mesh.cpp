@@ -20,6 +20,11 @@
 
 #include "mesh.h"
 
+//include texture
+#include "texture.h"
+#include "reflectionTexture.h"
+#include "color.h"
+
 Mesh::MeshEntry::MeshEntry()
 {
     VB = INVALID_OGL_VALUE;
@@ -192,13 +197,27 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
 
             if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
                 std::string FullPath = Dir + "/" + Path.data;
-                m_Materials[i] = new Texture(m_texCountLocation,
+                if( !strcmp(Path.data, "ramp1-nurbsToPoly1.png") ) {
+                    std::string reflectionFullPath = Dir + "/Brooklyn_Bridge_Planks_small.hdr";
+                    m_Materials[i] = new ReflectionTexture(m_texCountLocation,
+                                                           m_diffuseColorLocation,
+                                                           m_ambientColorLocation,
+                                                           m_textureImageLocation,
+                                                           diffuseColor,
+                                                           ambientColor,
+                                                           FullPath.c_str(),
+                                                           m_envMapLocation,
+                                                           reflectionFullPath.c_str()
+                                                           );
+                } else {
+                    m_Materials[i] = new Texture(m_texCountLocation,
                                              m_diffuseColorLocation,
                                              m_ambientColorLocation,
                                              m_textureImageLocation,
                                              diffuseColor,
                                              ambientColor,
-                                             GL_TEXTURE_2D, FullPath.c_str());
+                                             FullPath.c_str());
+                }
 
                 if (!m_Materials[i]->load()) {
                     printf("Error loading texture '%s'\n", FullPath.c_str());
@@ -243,9 +262,10 @@ void Mesh::Render()
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Entries[i].IB);
 
+        //starting from GL_TEXTURE1 to avoid conflict with GL_TEXTURE0 in the base texture.
         const unsigned int materialIndex = m_Entries[i].MaterialIndex;
         if( materialIndex < m_Materials.size() && m_Materials[materialIndex] ){
-            m_Materials[materialIndex]->bind(GL_TEXTURE0, 0);
+            m_Materials[materialIndex]->bind(GL_TEXTURE1, 1);
         }
         glDrawElements(GL_TRIANGLES, m_Entries[i].NumIndices, GL_UNSIGNED_INT, 0);
     }

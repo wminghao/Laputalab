@@ -19,12 +19,10 @@ Texture::Texture(GLint texCountLocation,
                  GLint textureImageLocation,
                  const Vector4f& diffuseColor,
                  const Vector4f& ambientColor,
-                 GLenum TextureTarget,
                  const std::string& FileName):Material(texCountLocation,
                                                        diffuseColorLocation, ambientColorLocation, textureImageLocation,
                                                        diffuseColor, ambientColor)
 {
-    m_textureTarget = TextureTarget;
     m_fileName      = FileName;
 }
 
@@ -47,16 +45,16 @@ bool Texture::load()
         if( MagickTrue == MagickGetImagePixels(wand, 0, 0, width, height, "RGBA", CharPixel, pixels)) {
             glGenTextures(1, &m_textureObj);
 
-            glBindTexture(m_textureTarget, m_textureObj);
-            glTexImage2D(m_textureTarget, 0, GL_RGBA, (GLsizei)width, (GLsizei)height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
-            glTexParameterf(m_textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //no mipmap
-            glTexParameterf(m_textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR); //no mipmap
-            glBindTexture(m_textureTarget, 0);
+            glBindTexture(GL_TEXTURE_2D, m_textureObj);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (GLsizei)width, (GLsizei)height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //no mipmap
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); //no mipmap
             if( width%2 || height%2 ) {
                 printf("Warning: width or height not multiple of 2. m_textureObj=%d, width=%ld, height=%ld\n", m_textureObj, width, height);
-                glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
-                glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
             }
+            glBindTexture(GL_TEXTURE_2D, 0);
         }
         free(pixels);
     } else {
@@ -82,6 +80,6 @@ void Texture::bind(GLenum textureUnit, GLint textureId)
     glUniform4f(m_diffuseColorLocation, m_diffuseColor.x, m_diffuseColor.y, m_diffuseColor.z, m_diffuseColor.w);
     glUniform4f(m_ambientColorLocation, m_ambientColor.x, m_ambientColor.y, m_ambientColor.z, m_ambientColor.w);
     glActiveTexture(textureUnit);
-    glBindTexture(m_textureTarget, m_textureObj);
+    glBindTexture(GL_TEXTURE_2D, m_textureObj);
     glUniform1i(m_textureImageLocation, textureId); //set the sampler texture to textureId
 }

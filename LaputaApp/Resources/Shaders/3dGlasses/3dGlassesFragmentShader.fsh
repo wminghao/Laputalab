@@ -4,6 +4,7 @@ uniform int texCount;
 uniform vec4 diffuseColor;
 uniform vec4 ambientColor;
 uniform sampler2D textureImage;
+uniform samplerCube envMap;
 
 varying vec2 texCoord0;
 varying mediump vec3 normal0;
@@ -16,16 +17,28 @@ void main()
     vec3 lightDir;
     vec3 n;
     
+    //calcuate lighting
     lightDir = normalize(vec3(0,0,10)); //light direction is the same as viewing model direction
     n = normalize(normal0);
-    intensity = max(dot(lightDir,n),0.0);
     
-    if( texCount == 1 ) {
+    float nDotL = dot(lightDir,n);
+    intensity = max(nDotL,0.0);
+    
+    if( texCount == 2 ) {
+        color = texture2D(textureImage, texCoord0);
+        
+        //calculate reflection
+        vec3 reflection = (2.0 * n * nDotL) - lightDir;
+        vec4 envColor = textureCube( envMap, reflection);
+        //attenuate the src color plus environment color
+        gl_FragColor = 0.25 * color + envColor;
+    } else if( texCount == 1 ) {
         color = texture2D(textureImage, texCoord0);
         amb = color * 0.33;
+        gl_FragColor = (color * intensity) + amb;
     } else {
         color = diffuseColor;
         amb = ambientColor;
+        gl_FragColor = (color * intensity) + amb;
     }
-    gl_FragColor = (color * intensity) + amb;
 }

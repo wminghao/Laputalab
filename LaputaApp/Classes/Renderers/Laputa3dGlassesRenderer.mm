@@ -91,6 +91,7 @@ enum {
     UNIFORM_DIFFUSECOLOR,
     UNIFORM_AMBIENTCOLOR,
     UNIFORM_TEXTUREIMAGE,
+    UNIFORM_ENVMAP,
     NUM_UNIFORMS
 };
 
@@ -406,6 +407,7 @@ bail:
         (GLchar *)"diffuseColor",
         (GLchar *)"ambientColor",
         (GLchar *)"textureImage",
+        (GLchar *)"envMap",
     };
 
     // Load vertex and fragment shaders
@@ -426,8 +428,8 @@ bail:
     _matrixMVP = uniformLocation[UNIFORM_MVP];
     _matrixWorld = uniformLocation[UNIFORM_WORLD];
     
-    _pMesh->setAttrUni(uniformLocation[UNIFORM_TEXCOUNT], uniformLocation[UNIFORM_DIFFUSECOLOR],
-                       uniformLocation[UNIFORM_AMBIENTCOLOR], uniformLocation[UNIFORM_TEXTUREIMAGE],
+    _pMesh->setAttrUni(uniformLocation[UNIFORM_TEXCOUNT], uniformLocation[UNIFORM_DIFFUSECOLOR], uniformLocation[UNIFORM_AMBIENTCOLOR],
+                       uniformLocation[UNIFORM_TEXTUREIMAGE], uniformLocation[UNIFORM_ENVMAP],
                        attribLocation[ATTRIB_POSITION], attribLocation[ATTRIB_TEXCOORD], attribLocation[ATTRIB_NORMAL]);
     
     // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
