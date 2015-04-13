@@ -198,7 +198,7 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
             if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
                 std::string FullPath = Dir + "/" + Path.data;
                 if( !strcmp(Path.data, "ramp1-nurbsToPoly1.png") ) {
-                    std::string reflectionFullPath = Dir + "/Brooklyn_Bridge_Planks_small.hdr";
+                    std::string reflectionFullPath = Dir + "/Brooklyn_Bridge_Planks_1k.hdr";
                     m_Materials[i] = new ReflectionTexture(m_texCountLocation,
                                                            m_diffuseColorLocation,
                                                            m_ambientColorLocation,

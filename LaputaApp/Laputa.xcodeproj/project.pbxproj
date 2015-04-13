@@ -58,13 +58,13 @@
 		895656A31ACE0551004AE70A /* SimpleVertexShaderL.vertexshader in Resources */ = {isa = PBXBuildFile; fileRef = 8956569F1ACE0551004AE70A /* SimpleVertexShaderL.vertexshader */; };
 		895656BC1ACE0672004AE70A /* LaputaSimpleGlassesRenderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 895656BB1ACE0672004AE70A /* LaputaSimpleGlassesRenderer.mm */; };
 		895656D21ACE08A1004AE70A /* SimpleGlasses.obj in Resources */ = {isa = PBXBuildFile; fileRef = 895656D11ACE08A1004AE70A /* SimpleGlasses.obj */; };
-		895656DC1ACE08AC004AE70A /* Brooklyn_Bridge_Planks_small.hdr in Resources */ = {isa = PBXBuildFile; fileRef = 895656D31ACE08AC004AE70A /* Brooklyn_Bridge_Planks_small.hdr */; };
 		895656DE1ACE08AD004AE70A /* logo1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 895656D51ACE08AC004AE70A /* logo1.jpg */; };
 		895656DF1ACE08AD004AE70A /* logo1flipped.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 895656D61ACE08AC004AE70A /* logo1flipped.jpg */; };
 		895656E01ACE08AD004AE70A /* logo1flippedSmall.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 895656D71ACE08AC004AE70A /* logo1flippedSmall.jpg */; };
 		895656E11ACE08AD004AE70A /* logo1small.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 895656D81ACE08AC004AE70A /* logo1small.jpg */; };
 		895656E31ACE08AD004AE70A /* RanGlass.dae in Resources */ = {isa = PBXBuildFile; fileRef = 895656DA1ACE08AC004AE70A /* RanGlass.dae */; };
 		895656E41ACE08AD004AE70A /* RanGlass.obj in Resources */ = {isa = PBXBuildFile; fileRef = 895656DB1ACE08AC004AE70A /* RanGlass.obj */; };
+		896E7E211ADC789F0002205C /* Brooklyn_Bridge_Planks_1k.hdr in Resources */ = {isa = PBXBuildFile; fileRef = 896E7E201ADC789F0002205C /* Brooklyn_Bridge_Planks_1k.hdr */; };
 		89B2EB6C1AD2F7D200D1E27E /* ranTry2.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 89B2EB6A1AD2F7D200D1E27E /* ranTry2.mtl */; };
 		89B2EB6D1AD2F7D200D1E27E /* ranTry2.obj in Resources */ = {isa = PBXBuildFile; fileRef = 89B2EB6B1AD2F7D200D1E27E /* ranTry2.obj */; };
 		89B2EB701AD2FF9000D1E27E /* color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89B2EB6E1AD2FF9000D1E27E /* color.cpp */; };
@@ -140,13 +140,13 @@
 		895656BA1ACE0672004AE70A /* LaputaSimpleGlassesRenderer.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = LaputaSimpleGlassesRenderer.hh; path = Renderers/LaputaSimpleGlassesRenderer.hh; sourceTree = "<group>"; };
 		895656BB1ACE0672004AE70A /* LaputaSimpleGlassesRenderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = LaputaSimpleGlassesRenderer.mm; path = Renderers/LaputaSimpleGlassesRenderer.mm; sourceTree = "<group>"; };
 		895656D11ACE08A1004AE70A /* SimpleGlasses.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SimpleGlasses.obj; path = Resources/3dmodels/SimpleGlasses/SimpleGlasses.obj; sourceTree = SOURCE_ROOT; };
-		895656D31ACE08AC004AE70A /* Brooklyn_Bridge_Planks_small.hdr */ = {isa = PBXFileReference; lastKnownFileType = file; name = Brooklyn_Bridge_Planks_small.hdr; path = Resources/3dmodels/3dGlasses/Brooklyn_Bridge_Planks_small.hdr; sourceTree = SOURCE_ROOT; };
 		895656D51ACE08AC004AE70A /* logo1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = logo1.jpg; path = Resources/3dmodels/3dGlasses/logo1.jpg; sourceTree = SOURCE_ROOT; };
 		895656D61ACE08AC004AE70A /* logo1flipped.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = logo1flipped.jpg; path = Resources/3dmodels/3dGlasses/logo1flipped.jpg; sourceTree = SOURCE_ROOT; };
 		895656D71ACE08AC004AE70A /* logo1flippedSmall.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = logo1flippedSmall.jpg; path = Resources/3dmodels/3dGlasses/logo1flippedSmall.jpg; sourceTree = SOURCE_ROOT; };
 		895656D81ACE08AC004AE70A /* logo1small.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = logo1small.jpg; path = Resources/3dmodels/3dGlasses/logo1small.jpg; sourceTree = SOURCE_ROOT; };
 		895656DA1ACE08AC004AE70A /* RanGlass.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; name = RanGlass.dae; path = Resources/3dmodels/3dGlasses/RanGlass.dae; sourceTree = SOURCE_ROOT; };
 		895656DB1ACE08AC004AE70A /* RanGlass.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = RanGlass.obj; path = Resources/3dmodels/3dGlasses/RanGlass.obj; sourceTree = SOURCE_ROOT; };
+		896E7E201ADC789F0002205C /* Brooklyn_Bridge_Planks_1k.hdr */ = {isa = PBXFileReference; lastKnownFileType = file; name = Brooklyn_Bridge_Planks_1k.hdr; path = Resources/3dmodels/3dGlasses/Brooklyn_Bridge_Planks_1k.hdr; sourceTree = SOURCE_ROOT; };
 		89B2EB6A1AD2F7D200D1E27E /* ranTry2.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ranTry2.mtl; path = Resources/3dmodels/SimpleGlasses/ranTry2.mtl; sourceTree = SOURCE_ROOT; };
 		89B2EB6B1AD2F7D200D1E27E /* ranTry2.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ranTry2.obj; path = Resources/3dmodels/SimpleGlasses/ranTry2.obj; sourceTree = SOURCE_ROOT; };
 		89B2EB6E1AD2FF9000D1E27E /* color.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = color.cpp; path = Utilities/GL/color.cpp; sourceTree = "<group>"; };
@@ -377,9 +377,9 @@
 		895656A71ACE0641004AE70A /* 3dGlasses */ = {
 			isa = PBXGroup;
 			children = (
+				896E7E201ADC789F0002205C /* Brooklyn_Bridge_Planks_1k.hdr */,
 				89B2EB7E1AD7488F00D1E27E /* ramp1-nurbsToPoly1.png */,
 				891082611ACF49C400D5314C /* exportAll.dae */,
-				895656D31ACE08AC004AE70A /* Brooklyn_Bridge_Planks_small.hdr */,
 				895656D51ACE08AC004AE70A /* logo1.jpg */,
 				895656D61ACE08AC004AE70A /* logo1flipped.jpg */,
 				895656D71ACE08AC004AE70A /* logo1flippedSmall.jpg */,
@@ -463,11 +463,11 @@
 				6F90DDEC1395CAAA00125BDA /* LaputaViewController.h in Resources */,
 				28365599139FE71B00D09100 /* ReadMe.txt in Resources */,
 				891082641ACF670600D5314C /* RanGlass.mtl in Resources */,
-				895656DC1ACE08AC004AE70A /* Brooklyn_Bridge_Planks_small.hdr in Resources */,
 				891082601ACF14B800D5314C /* 3dGlassesVertexShader.vsh in Resources */,
 				895656E11ACE08AD004AE70A /* logo1small.jpg in Resources */,
 				891082621ACF49C400D5314C /* exportAll.dae in Resources */,
 				89F003FD1AC9C7F500D8EC6D /* LaputaApp-Info.plist in Resources */,
+				896E7E211ADC789F0002205C /* Brooklyn_Bridge_Planks_1k.hdr in Resources */,
 				7214DBCE182AEF8900EA3F99 /* Images.xcassets in Resources */,
 				895656D21ACE08A1004AE70A /* SimpleGlasses.obj in Resources */,
 				895656E31ACE08AD004AE70A /* RanGlass.dae in Resources */,

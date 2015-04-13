@@ -29,7 +29,7 @@ ReflectionTexture::ReflectionTexture(GLint texCountLocation,
 }
 
 static int getPixelIndex(int x, int y, size_t width, size_t height) {
-    return (int)((width * (height - 1 - y)) + x) * 3;
+    return (int)(y * width + x ) * 3;
 }
 
 bool ReflectionTexture::load()
@@ -53,9 +53,11 @@ bool ReflectionTexture::load()
         unsigned char * pixels = (unsigned char*)malloc(sizeof(unsigned char) * width * height * 3);
         if( MagickTrue == MagickGetImagePixels(wand, 0, 0, width, height, "RGB", CharPixel, pixels)) {
             //load the hdr file into envMap
-            // cross is 3 faces wide, 4 faces high, MUST be square
-            int face_height = (int)height / 4;
-            int face_width = (int)face_height;//width / 3;
+            // cross is 4 faces wide, 3 faces high, MUST be square
+            int face_height = (int)height / 3;
+            int face_width = (int)width / 4;
+            face_height = face_height > face_width? face_width: face_height;
+            face_width = face_height;
             unsigned char* face = new unsigned char [face_width * face_height * 3];
             
             glGenTextures(1, &m_reflectionTextureObj);
@@ -68,33 +70,35 @@ bool ReflectionTexture::load()
             
             // extract 6 faces
             
-            // positive Y
+            // positive Y, Top
             int ptr = 0;
             for (int j=0; j<face_height; j++) {
                 for (int i=0; i<face_width; i++) {
-                    int src = getPixelIndex(2 * face_width - (i + 1), 3 * face_height + j, width, height);
+                    int src = getPixelIndex(face_width+i, j, width, height);
                     face[ptr++] = pixels[src + 0];
                     face[ptr++] = pixels[src + 1];
                     face[ptr++] = pixels[src + 2];
                 }
             }
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_RGB, face_width, face_height, 0, GL_RGB, GL_UNSIGNED_BYTE, face);
-            // positive X
+            
+            // positive X, right
             ptr = 0;
             for (int j=0; j<face_height; j++) {
                 for (int i=0; i<face_width; i++) {
-                    int src = getPixelIndex(i, (int)height - (face_height + j + 1), width, height);
+                    int src = getPixelIndex(2 * face_width + i, face_height + j,  width, height);
                     face[ptr++] = pixels[src + 0];
                     face[ptr++] = pixels[src + 1];
                     face[ptr++] = pixels[src + 2];
                 }
             }
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGB, face_width, face_height, 0, GL_RGB, GL_UNSIGNED_BYTE, face);
-            // negative Z
+            
+            // negative Z, back
             ptr = 0;
             for (int j=0; j<face_height; j++) {
                 for (int i=0; i<face_width; i++) {
-                    int src = getPixelIndex(face_width + i, (int)height - (face_height + j + 1), width, height);
+                    int src = getPixelIndex(3 * face_width + i, face_height + j, width, height);
                     face[ptr++] = pixels[src + 0];
                     face[ptr++] = pixels[src + 1];
                     face[ptr++] = pixels[src + 2];
@@ -102,11 +106,11 @@ bool ReflectionTexture::load()
             }
             glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, GL_RGB, face_width, face_height, 0, GL_RGB, GL_UNSIGNED_BYTE, face);
             
-            // negative X
+            // negative X, Left
             ptr = 0;
             for (int j=0; j<face_height; j++) {
                 for (int i=0; i<face_width; i++) {
-                    int src = getPixelIndex(2 * face_width + i, (int)height - (face_height + j + 1), width, height);
+                    int src = getPixelIndex(i, face_height + j, width, height);
                     face[ptr++] = pixels[src + 0];
                     face[ptr++] = pixels[src + 1];
                     face[ptr++] = pixels[src + 2];
@@ -114,11 +118,11 @@ bool ReflectionTexture::load()
             }
             glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, GL_RGB, face_width, face_height, 0, GL_RGB, GL_UNSIGNED_BYTE, face);
 
-            // negative Y
+            // negative Y, Bottom
             ptr = 0;
             for (int j=0; j<face_height; j++) {
                 for (int i=0; i<face_width; i++) {
-                    int src = getPixelIndex(2 * face_width - (i + 1), face_height + j, width, height);
+                    int src = getPixelIndex(face_width+i, 2*face_height+j, width, height);
                     face[ptr++] = pixels[src + 0];
                     face[ptr++] = pixels[src + 1];
                     face[ptr++] = pixels[src + 2];
@@ -126,11 +130,11 @@ bool ReflectionTexture::load()
             }
             glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, GL_RGB, face_width, face_height, 0, GL_RGB, GL_UNSIGNED_BYTE, face);
             
-            // positive Z
+            // positive Z, front
             ptr = 0;
             for (int j=0; j<face_height; j++) {
                 for (int i=0; i<face_width; i++) {
-                    int src = getPixelIndex(2 * face_width - (i + 1), j, width, height);
+                    int src = getPixelIndex(face_width+i, face_height+j, width, height);
                     face[ptr++] = pixels[src + 0];
                     face[ptr++] = pixels[src + 1];
                     face[ptr++] = pixels[src + 2];

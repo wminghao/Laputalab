@@ -60,8 +60,10 @@ using namespace glm;
     GLuint _programID; //compiled shader program for glasses
     GLint _matrixMVP; //matrix for glasses in vertex shader
     GLint _matrixWorld; //matrix for glasses in vertex shader
+    GLint _matrixViewInverse; //matrix for glasses in vertex shader
     glm::mat4 _Projection; //projection matrix matrix for rotation
     glm::mat4 _World; //world matrix matrix for rotation
+    glm::mat4 _ViewInverse; //view inverse matrix matrix for rotation
     GLuint _offscreenBufferHandle; //offscreen buffer
     GLuint _depthRenderbuffer; //depth render buffer
     
@@ -87,6 +89,7 @@ enum {
 enum {
     UNIFORM_MVP, // "MVP" in vertext shader
     UNIFORM_WORLD, // "gWorld" in vertext shader
+    UNIFORM_VIEWINVERSE, // "viewInverse" in vertext shader
     UNIFORM_TEXCOUNT,
     UNIFORM_DIFFUSECOLOR,
     UNIFORM_AMBIENTCOLOR,
@@ -282,9 +285,9 @@ enum {
         //TODO below is the test code to do rotation.
         static float angleInDegree = 0.0f;
         static int sign = -1;
-        if(angleInDegree >= 180) {
+        if(angleInDegree >= 90) {
             sign = -1;
-        } else if(angleInDegree <= -180) {
+        } else if(angleInDegree <= -90) {
             sign = 1;
         }
         angleInDegree += sign;
@@ -320,6 +323,7 @@ enum {
         
         glUniformMatrix4fv(_matrixMVP, 1, GL_FALSE, &MVP[0][0]);
         glUniformMatrix4fv(_matrixWorld, 1, GL_FALSE, &World[0][0]);
+        glUniformMatrix4fv(_matrixViewInverse, 1, GL_FALSE, &_ViewInverse[0][0]);
         
         //render the meshes
         _pMesh->Render();
@@ -403,6 +407,7 @@ bail:
     GLchar *uniformName[NUM_UNIFORMS] = {
         (GLchar *)"MVP",
         (GLchar *)"World",
+        (GLchar *)"ViewInverse",
         (GLchar *)"texCount",
         (GLchar *)"diffuseColor",
         (GLchar *)"ambientColor",
@@ -427,6 +432,7 @@ bail:
     }
     _matrixMVP = uniformLocation[UNIFORM_MVP];
     _matrixWorld = uniformLocation[UNIFORM_WORLD];
+    _matrixViewInverse = uniformLocation[UNIFORM_VIEWINVERSE];
     
     _pMesh->setAttrUni(uniformLocation[UNIFORM_TEXCOUNT], uniformLocation[UNIFORM_DIFFUSECOLOR], uniformLocation[UNIFORM_AMBIENTCOLOR],
                        uniformLocation[UNIFORM_TEXTUREIMAGE], uniformLocation[UNIFORM_ENVMAP],
@@ -446,11 +452,12 @@ bail:
     float scaleFactor = 0.15;
     //glm::mat4 Model      = glm::mat4(1.0f);
     mat4 Model_translation = translate(mat4(1.0f), vec3(0,0,0));
-    mat4 Model_rotateZ = rotate(mat4(1.0f), glm::radians(90.0f), vec3(0,0,1));
-    mat4 Model_rotateX = rotate(mat4(1.0f), glm::radians(10.0f), vec3(1,0,0));
+    mat4 Model_rotateZ = rotate(mat4(1.0f), glm::radians(90.0f), vec3(0,0,1)); //rotate z of 90 degree
+    mat4 Model_rotateX = rotate(mat4(1.0f), glm::radians(10.0f), vec3(1,0,0)); //rotate x of 10 degree
     mat4 Model_scale = scale(mat4(1.0f), vec3(scaleFactor,scaleFactor,scaleFactor));
     mat4 Model = Model_translation * Model_rotateZ * Model_rotateX * Model_scale;
     
+    _ViewInverse = glm::inverse(View); //inverse of the view matrix
     _World = View * Model; //world coordinate.
     
     // Our ModelViewProjection : multiplication of our 3 matrices
