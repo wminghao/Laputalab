@@ -285,9 +285,9 @@ enum {
         //TODO below is the test code to do rotation.
         static float angleInDegree = 0.0f;
         static int sign = -1;
-        if(angleInDegree >= 90) {
+        if(angleInDegree >= 45) {
             sign = -1;
-        } else if(angleInDegree <= -90) {
+        } else if(angleInDegree <= -45) {
             sign = 1;
         }
         angleInDegree += sign;
