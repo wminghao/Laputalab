@@ -449,7 +449,7 @@ bail:
                                        glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
                                        );
     // Model matrix : an identity matrix (model will be at the origin)
-    float scaleFactor = 0.15;
+    float scaleFactor = 0.20;
     //glm::mat4 Model      = glm::mat4(1.0f);
     mat4 Model_translation = translate(mat4(1.0f), vec3(0,0,0));
     mat4 Model_rotateZ = rotate(mat4(1.0f), glm::radians(90.0f), vec3(0,0,1)); //rotate z of 90 degree
