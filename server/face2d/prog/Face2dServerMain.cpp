@@ -17,12 +17,16 @@ const int MAX_BUFFER_IN_PER_CLIENT = 4096;
 const int MAX_BUFFER_OUT_PER_CLIENT = 65535;
 
 typedef struct client {
-    int fdSocket;
+    //process pipe
     ProcessPipe* pipe;
     struct event pipe_in_ev;
     struct event pipe_out_ev;
-    
+
+    //http client socket
+    int fdSocket;
     struct bufferevent *buf_ev;
+
+    //temp buffer used when doing I/O.
     unsigned char bufOut[MAX_BUFFER_OUT_PER_CLIENT];
     unsigned char bufIn[MAX_BUFFER_IN_PER_CLIENT];
     int bufOutLen;
@@ -60,8 +64,11 @@ void pipe_write_callback(int fd,
             freeClient(client);
         } else {
             OUTPUT("process pipe write done. total written=%d!\n", client->bufOutLen);
-            client->bufOutLen = 0;
-            //TODO handle partial write
+            int remainingTotal = client->bufOutLen - nbytes;
+            if( remainingTotal > 0 ) {
+                memmove( client->bufOut, client->bufOut+nbytes, remainingTotal);
+            }
+            client->bufOutLen = remainingTotal;
         }
     } 
 
