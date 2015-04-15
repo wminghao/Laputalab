@@ -1,0 +1,18 @@
+Import("*")
+
+face2dCflags = CCFLAGS
+face2dCflags.append( '-Wno-unused' )
+
+#objects
+
+mainObj = env.Object('prog/Face2dServerMain.cpp', CCFLAGS=face2dCflags )
+
+#target
+face2dServerProg = File("prog/face2d_server")
+
+progs.append( face2dServerProg )
+env.Program( face2dServerProg,
+	     [ mainObj],	
+	       LIBS=['event'],
+	       LIBPATH = ['/usr/lib', '/usr/local/lib'],
+	       CCFLAGS=face2dCflags)
