@@ -9,17 +9,26 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include "Output.h"
+#include "ProcessPipe.h"
 
 #define SERVER_PORT 8080
-int debug = 0;
+
+const int MAX_BUFFER_IN_PER_CLIENT = 4096;
+const int MAX_BUFFER_OUT_PER_CLIENT = 65535;
 
 typedef struct client {
     int fdSocket;
+    ProcessPipe* pipe;
+    struct event pipe_in_ev;
+    struct event pipe_out_ev;
+    
     struct bufferevent *buf_ev;
+    unsigned char bufOut[MAX_BUFFER_OUT_PER_CLIENT];
+    unsigned char bufIn[MAX_BUFFER_IN_PER_CLIENT];
+    int bufOutLen;
 } Client;
 
-void setnonblock(int fd)
-{
+void setnonblock(int fd) {
     int flags;
     
     flags = fcntl(fd, F_GETFL);
@@ -29,26 +38,95 @@ void setnonblock(int fd)
 
 void freeClient(Client* client) {
     bufferevent_free(client->buf_ev);
+    if( client->pipe ) {
+        event_del( &client->pipe_in_ev);
+        event_del( &client->pipe_out_ev);
+        delete( client->pipe );
+        client->pipe = NULL;
+    }
     close(client->fdSocket);
     free(client);
+}
+
+void pipe_write_callback(int fd,
+                         short ev,
+                         void *arg)
+{
+    struct client *client = (struct client *)arg;
+    if( client && client->bufOutLen > 0 ) {
+        int nbytes = write(fd, client->bufOut, client->bufOutLen);
+        if( nbytes == -1 ) {
+            OUTPUT("process pipe write error!");
+            freeClient(client);
+        } else {
+            OUTPUT("process pipe write done. total written=%d!\n", client->bufOutLen);
+            client->bufOutLen = 0;
+            //TODO handle partial write
+        }
+    } 
+
+}
+
+void pipe_read_callback(int fd,
+                        short ev,
+                        void *arg)
+{
+    struct client *client = (struct client *)arg;
+    if( client ) {
+        int nRead = read( fd, client->bufIn, MAX_BUFFER_IN_PER_CLIENT);
+        if( nRead == -1 ) {
+            OUTPUT("process pipe read error!");
+            freeClient(client);
+        } else if( nRead > 0 ) {
+            OUTPUT("process pipe read done. total read=%d!\n", nRead);
+            struct evbuffer* evreturn = evbuffer_new();
+            evbuffer_add_printf(evreturn,"You said %s\n", client->bufIn);
+            bufferevent_write_buffer(client->buf_ev, evreturn);
+            evbuffer_free(evreturn);
+        }
+    }
 }
 
 void buf_read_callback(struct bufferevent *incoming,
                        void *arg)
 {
-    struct evbuffer *evreturn;
-    char *req;
-    
-    req = evbuffer_readline(incoming->input);
-    if (req == NULL) {
-        return;
+    struct client *client = (struct client *)arg;
+    if( client ) {
+        int len = evbuffer_get_length(incoming->input);
+        char *req = evbuffer_readline(incoming->input);
+        if (req != NULL) {
+            if( !client->pipe ) {
+                client->pipe = new ProcessPipe();
+            }
+            if( client->pipe ) {
+                //register input
+                event_set(&client->pipe_in_ev,
+                          client->pipe->getInFd(),
+                          EV_WRITE|EV_PERSIST,
+                          pipe_write_callback,
+                          client);
+                event_add(&client->pipe_in_ev,
+                          NULL);                
+                
+                //register output
+                event_set(&client->pipe_out_ev,
+                          client->pipe->getOutFd(),
+                          EV_READ|EV_PERSIST,
+                          pipe_read_callback,
+                          client);
+                event_add(&client->pipe_out_ev,
+                          NULL);                
+                
+                OUTPUT("registered processpipe, inFd=%d, outFd=%d\n", client->pipe->getInFd(), client->pipe->getOutFd());
+
+                //TODO copy partial data
+                //copy data for future write
+                memcpy(client->bufOut, req, len);
+                client->bufOutLen = len;
+            }
+            free(req);
+        }
     }
-    
-    evreturn = evbuffer_new();
-    evbuffer_add_printf(evreturn,"You said %s\n",req);
-    bufferevent_write_buffer(incoming,evreturn);
-    evbuffer_free(evreturn);
-    free(req);
 }
 
 void buf_write_callback(struct bufferevent *bev,
@@ -108,10 +186,10 @@ int main(int argc,
 {
     int socketlisten;
     struct sockaddr_in addresslisten;
-    struct event accept_event;
+    struct event accept_ev;
     int reuse = 1;
 
-    Logger::initLog("Face2ServerMain", true);    
+    Logger::initLog("Face2ServerMain");    
     event_init();
     
     socketlisten = socket(AF_INET, SOCK_STREAM, 0);
@@ -147,13 +225,13 @@ int main(int argc,
         return 1;
     }
     
-    event_set(&accept_event,
+    event_set(&accept_ev,
               socketlisten,
               EV_READ|EV_PERSIST,
               accept_callback,
               NULL);
     
-    event_add(&accept_event,
+    event_add(&accept_ev,
               NULL);
     
     event_dispatch();

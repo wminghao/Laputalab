@@ -54,7 +54,7 @@ bool doWrite( int fd, const char *buf, size_t len ) {
     return true;
 }
 
-#define BUF_SIZE 100
+#define BUF_SIZE 1
 //test example to read input, parse the image data and return immediately
 int main()
 {
@@ -63,14 +63,18 @@ int main()
     signal( SIGBUS, handlesig );
     signal( SIGSYS, handlesig );
 
-    Logger::initLog("dummyProc", true);
+    Logger::initLog("dummyProc");
 
     OUTPUT("------dummy started=%d\r\n");
     char buf[BUF_SIZE]; 
-    bool bWorking = doRead( 0, buf, BUF_SIZE );
-    if ( bWorking ){
-        OUTPUT("------dummy read data, size=%d\r\n", BUF_SIZE);
-        doWrite( 1, buf, BUF_SIZE);
+    bool bWorking = true;
+    while ( bWorking ){
+        bWorking = doRead( 0, buf, BUF_SIZE );
+        if( bWorking ) {
+            OUTPUT("------dummy read data, size=%d\n", BUF_SIZE);
+            doWrite( 1, buf, BUF_SIZE);
+            fsync( 1 ); //flush the buffer
+        }
     }
     OUTPUT("------dummy ended=%d\r\n");
 

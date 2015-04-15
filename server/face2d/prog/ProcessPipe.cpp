@@ -130,5 +130,6 @@ void ProcessPipe::close()
         while ( waitpid( -1, &status, WNOHANG ) > 0 ) {}
         childPid_ = 0;
     }
+    OUTPUT("----Closed process=%s", PROCESS_LOCATION);
     return;
 }
