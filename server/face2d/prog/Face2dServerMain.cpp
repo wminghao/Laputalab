@@ -8,14 +8,15 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include "Output.h"
 
 #define SERVER_PORT 8080
 int debug = 0;
 
 typedef struct client {
-    int fd;
+    int fdSocket;
     struct bufferevent *buf_ev;
-}Client;
+} Client;
 
 void setnonblock(int fd)
 {
@@ -26,9 +27,9 @@ void setnonblock(int fd)
     fcntl(fd, F_SETFL, flags);
 }
 
-void freeClient(Client * client) {
+void freeClient(Client* client) {
     bufferevent_free(client->buf_ev);
-    close(client->fd);
+    close(client->fdSocket);
     free(client);
 }
 
@@ -53,13 +54,15 @@ void buf_read_callback(struct bufferevent *incoming,
 void buf_write_callback(struct bufferevent *bev,
                         void *arg)
 {
+    //Not implemented, not interested in write ready state.
 }
 
 void buf_error_callback(struct bufferevent *bev,
                         short what,
                         void *arg)
 {
-    fprintf(stderr, "---client disconnected and returned\n");
+    //this happens when the client disconnects.
+    OUTPUT("---client disconnected and returned\n");
 
     struct client *client = (struct client *)arg;
     bufferevent_disable(client->buf_ev, EV_READ);
@@ -79,7 +82,7 @@ void accept_callback(int fd,
                        (struct sockaddr *)&client_addr,
                        &client_len);
     if (client_fd < 0) {
-        fprintf(stderr, "Client: accept() failed");
+        OUTPUT("Client: accept() failed");
         return;
     }
     
@@ -87,9 +90,9 @@ void accept_callback(int fd,
     
     client = (struct client*)calloc(1, sizeof(*client));
     if (client == NULL) {
-        fprintf(stderr, "malloc failed");
+        OUTPUT("malloc failed");
     }
-    client->fd = client_fd;
+    client->fdSocket = client_fd;
     
     client->buf_ev = bufferevent_new(client_fd,
                                      buf_read_callback,
@@ -107,13 +110,14 @@ int main(int argc,
     struct sockaddr_in addresslisten;
     struct event accept_event;
     int reuse = 1;
-    
+
+    Logger::initLog("Face2ServerMain", true);    
     event_init();
     
     socketlisten = socket(AF_INET, SOCK_STREAM, 0);
     
     if (socketlisten < 0) {
-        fprintf(stderr,"Failed to create listen socket");
+        OUTPUT("Failed to create listen socket");
         return 1;
     }
     
@@ -134,12 +138,12 @@ int main(int argc,
     if (bind(socketlisten,
              (struct sockaddr *)&addresslisten,
              sizeof(addresslisten)) < 0) {
-        fprintf(stderr,"Failed to bind");
+        OUTPUT("Failed to bind");
         return 1;
     }
     
     if (listen(socketlisten, 5) < 0) {
-        fprintf(stderr,"Failed to listen to socket");
+        OUTPUT("Failed to listen to socket");
         return 1;
     }
     

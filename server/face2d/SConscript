@@ -4,7 +4,8 @@ face2dCflags = CCFLAGS
 face2dCflags.append( '-Wno-unused' )
 
 #objects
-
+LoggerObj = env.Object('prog/Logger.cpp', CCFLAGS=face2dCflags )
+processPipeObj = env.Object('prog/ProcessPipe.cpp', CCFLAGS=face2dCflags )
 mainObj = env.Object('prog/Face2dServerMain.cpp', CCFLAGS=face2dCflags )
 
 #target
@@ -12,7 +13,20 @@ face2dServerProg = File("prog/face2d_server")
 
 progs.append( face2dServerProg )
 env.Program( face2dServerProg,
-	     [ mainObj],	
+	     [ LoggerObj,
+	       processPipeObj,
+	       mainObj],	
 	       LIBS=['event'],
 	       LIBPATH = ['/usr/lib', '/usr/local/lib'],
 	       CCFLAGS=face2dCflags)
+
+#test
+dummyObj = env.Object('prog/dummy.cpp', CCFLAGS=face2dCflags )
+dummyProg = File("prog/dummy")
+
+progs.append( dummyProg ) 
+env.Program( dummyProg,
+	     [dummyObj,
+	     LoggerObj],
+	     LIBPATH = ['/usr/lib', '/usr/local/lib'],
+	     CCFLAGS=face2dCflags)
