@@ -8,43 +8,43 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <errno.h>
 #include "Output.h"
 #include "ProcessPipe.h"
 
 #define SERVER_PORT 8080
 
 const int MAX_BUFFER_IN_PER_CLIENT = 4096;
-const int MAX_BUFFER_OUT_PER_CLIENT = 65535;
+const int MAX_BUFFER_OUT_PER_CLIENT = 4096;
 
 typedef struct client {
     //process pipe
     ProcessPipe* pipe;
-    struct event pipe_in_ev;
-    struct event pipe_out_ev;
+    struct event pipeInEvt;
+    struct event pipeOutEvt;
 
     //http client socket
     int fdSocket;
-    struct bufferevent *buf_ev;
+    struct bufferevent *httpEvt;
 
     //temp buffer used when doing I/O.
     unsigned char bufOut[MAX_BUFFER_OUT_PER_CLIENT];
-    unsigned char bufIn[MAX_BUFFER_IN_PER_CLIENT];
     int bufOutLen;
 } Client;
 
 void setnonblock(int fd) {
-    int flags;
-    
+    int flags;    
     flags = fcntl(fd, F_GETFL);
     flags |= O_NONBLOCK;
     fcntl(fd, F_SETFL, flags);
 }
 
 void freeClient(Client* client) {
-    bufferevent_free(client->buf_ev);
+    bufferevent_disable(client->httpEvt, EV_READ);
+    bufferevent_free(client->httpEvt);
     if( client->pipe ) {
-        event_del( &client->pipe_in_ev);
-        event_del( &client->pipe_out_ev);
+        event_del( &client->pipeInEvt);
+        event_del( &client->pipeOutEvt);
         delete( client->pipe );
         client->pipe = NULL;
     }
@@ -57,21 +57,28 @@ void pipe_write_callback(int fd,
                          void *arg)
 {
     struct client *client = (struct client *)arg;
-    if( client && client->bufOutLen > 0 ) {
-        int nbytes = write(fd, client->bufOut, client->bufOutLen);
-        if( nbytes == -1 ) {
-            OUTPUT("process pipe write error!");
-            freeClient(client);
-        } else {
-            OUTPUT("process pipe write done. total written=%d!\n", client->bufOutLen);
-            int remainingTotal = client->bufOutLen - nbytes;
-            if( remainingTotal > 0 ) {
-                memmove( client->bufOut, client->bufOut+nbytes, remainingTotal);
+    if( client) {
+        while( client->bufOutLen > 0 ) {
+            int nbytes = write(fd, client->bufOut, client->bufOutLen);
+            if( nbytes <= 0 ) {
+                int netErrorNumber = errno;
+                if ( netErrorNumber == EAGAIN) {
+                    OUTPUT("-----write again later----\r\n");
+                } else {
+                    OUTPUT("process pipe write error!");
+                    freeClient(client);
+                }
+                break;
+            } else {
+                OUTPUT("process pipe write done. total written=%d!\n", client->bufOutLen);
+                int remainingTotal = client->bufOutLen - nbytes;
+                if( remainingTotal > 0 ) {
+                    memmove( client->bufOut, client->bufOut+nbytes, remainingTotal);
+                }
+                client->bufOutLen = remainingTotal;
             }
-            client->bufOutLen = remainingTotal;
-        }
-    } 
-
+        } 
+    }
 }
 
 void pipe_read_callback(int fd,
@@ -80,15 +87,21 @@ void pipe_read_callback(int fd,
 {
     struct client *client = (struct client *)arg;
     if( client ) {
-        int nRead = read( fd, client->bufIn, MAX_BUFFER_IN_PER_CLIENT);
-        if( nRead == -1 ) {
-            OUTPUT("process pipe read error!");
-            freeClient(client);
-        } else if( nRead > 0 ) {
+        unsigned char bufIn[MAX_BUFFER_IN_PER_CLIENT];
+        int nRead = read( fd, bufIn, MAX_BUFFER_IN_PER_CLIENT);
+        if( nRead <= 0 ) {
+            if ( errno == EAGAIN ) {
+                //try again
+                OUTPUT("-----read again later----\r\n");
+            } else {
+                OUTPUT("process pipe read error!");
+                freeClient(client);
+            }
+        } else {
             OUTPUT("process pipe read done. total read=%d!\n", nRead);
             struct evbuffer* evreturn = evbuffer_new();
-            evbuffer_add_printf(evreturn,"You said %s\n", client->bufIn);
-            bufferevent_write_buffer(client->buf_ev, evreturn);
+            evbuffer_add_printf(evreturn,"You said %s\n", bufIn);
+            bufferevent_write_buffer(client->httpEvt, evreturn);
             evbuffer_free(evreturn);
         }
     }
@@ -107,21 +120,21 @@ void buf_read_callback(struct bufferevent *incoming,
             }
             if( client->pipe ) {
                 //register input
-                event_set(&client->pipe_in_ev,
+                event_set(&client->pipeInEvt,
                           client->pipe->getInFd(),
                           EV_WRITE|EV_PERSIST,
                           pipe_write_callback,
                           client);
-                event_add(&client->pipe_in_ev,
+                event_add(&client->pipeInEvt,
                           NULL);                
                 
                 //register output
-                event_set(&client->pipe_out_ev,
+                event_set(&client->pipeOutEvt,
                           client->pipe->getOutFd(),
                           EV_READ|EV_PERSIST,
                           pipe_read_callback,
                           client);
-                event_add(&client->pipe_out_ev,
+                event_add(&client->pipeOutEvt,
                           NULL);                
                 
                 OUTPUT("registered processpipe, inFd=%d, outFd=%d\n", client->pipe->getInFd(), client->pipe->getOutFd());
@@ -150,7 +163,6 @@ void buf_error_callback(struct bufferevent *bev,
     OUTPUT("---client disconnected and returned\n");
 
     struct client *client = (struct client *)arg;
-    bufferevent_disable(client->buf_ev, EV_READ);
     freeClient(client);
 }
 
@@ -179,13 +191,13 @@ void accept_callback(int fd,
     }
     client->fdSocket = client_fd;
     
-    client->buf_ev = bufferevent_new(client_fd,
+    client->httpEvt = bufferevent_new(client_fd,
                                      buf_read_callback,
                                      buf_write_callback,
                                      buf_error_callback,
                                      client);
 
-    bufferevent_enable(client->buf_ev, EV_READ);
+    bufferevent_enable(client->httpEvt, EV_READ);
 }
 
 int main(int argc,
