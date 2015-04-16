@@ -27,9 +27,8 @@ typedef struct client {
     int fdSocket;
     struct bufferevent *httpEvt;
 
-    //temp buffer used when doing I/O.
-    unsigned char bufOut[MAX_BUFFER_OUT_PER_CLIENT];
-    int bufOutLen;
+    //temp buffer used when outputing from socket and input to pipe.
+    struct evbuffer* bufOut;
 } Client;
 
 void setnonblock(int fd) {
@@ -49,6 +48,7 @@ void freeClient(Client* client) {
         client->pipe = NULL;
     }
     close(client->fdSocket);
+    evbuffer_free(client->bufOut);
     free(client);
 }
 
@@ -58,26 +58,29 @@ void pipe_write_callback(int fd,
 {
     struct client *client = (struct client *)arg;
     if( client) {
-        while( client->bufOutLen > 0 ) {
-            int nbytes = write(fd, client->bufOut, client->bufOutLen);
-            if( nbytes <= 0 ) {
-                int netErrorNumber = errno;
-                if ( netErrorNumber == EAGAIN) {
-                    OUTPUT("-----write again later----\r\n");
+        int len = evbuffer_get_length(client->bufOut);
+        if( len > 0 ) {
+            event_del( &client->pipeInEvt);
+            while( len > 0 ) {
+                int nbytes = evbuffer_write(client->bufOut, fd);
+                if( nbytes <= 0 ) {
+                    int netErrorNumber = errno;
+                    if ( netErrorNumber == EAGAIN) {
+                        OUTPUT("-----write again later----\r\n");
+                        event_add(&client->pipeInEvt,
+                                  NULL);
+                    } else {
+                        OUTPUT("process pipe write error!");
+                        freeClient(client);
+                    }
+                    break;
                 } else {
-                    OUTPUT("process pipe write error!");
-                    freeClient(client);
+                    OUTPUT("process pipe written=%d!\n", nbytes);
+                    evbuffer_drain(client->bufOut, nbytes);
+                    len -= nbytes;
                 }
-                break;
-            } else {
-                OUTPUT("process pipe write done. total written=%d!\n", client->bufOutLen);
-                int remainingTotal = client->bufOutLen - nbytes;
-                if( remainingTotal > 0 ) {
-                    memmove( client->bufOut, client->bufOut+nbytes, remainingTotal);
-                }
-                client->bufOutLen = remainingTotal;
-            }
-        } 
+            } 
+        }
     }
 }
 
@@ -98,9 +101,9 @@ void pipe_read_callback(int fd,
                 freeClient(client);
             }
         } else {
-            OUTPUT("process pipe read done. total read=%d!\n", nRead);
+            OUTPUT("process pipe read=%d!\n", nRead);
             struct evbuffer* evreturn = evbuffer_new();
-            evbuffer_add_printf(evreturn,"You said %s\n", bufIn);
+            evbuffer_add(evreturn, bufIn, nRead);
             bufferevent_write_buffer(client->httpEvt, evreturn);
             evbuffer_free(evreturn);
         }
@@ -113,8 +116,10 @@ void buf_read_callback(struct bufferevent *incoming,
     struct client *client = (struct client *)arg;
     if( client ) {
         int len = evbuffer_get_length(incoming->input);
-        char *req = evbuffer_readline(incoming->input);
-        if (req != NULL) {
+        char req[len];
+        int ret = evbuffer_remove(incoming->input, req, len);
+        ASSERT(len == ret);
+        if ( ret > 0 ) {
             if( !client->pipe ) {
                 client->pipe = new ProcessPipe();
             }
@@ -126,7 +131,7 @@ void buf_read_callback(struct bufferevent *incoming,
                           pipe_write_callback,
                           client);
                 event_add(&client->pipeInEvt,
-                          NULL);                
+                          NULL);
                 
                 //register output
                 event_set(&client->pipeOutEvt,
@@ -139,12 +144,11 @@ void buf_read_callback(struct bufferevent *incoming,
                 
                 OUTPUT("registered processpipe, inFd=%d, outFd=%d\n", client->pipe->getInFd(), client->pipe->getOutFd());
 
-                //TODO copy partial data
                 //copy data for future write
-                memcpy(client->bufOut, req, len);
-                client->bufOutLen = len;
+                evbuffer_add(client->bufOut, req, len);
             }
-            free(req);
+        } else {
+            OUTPUT("----fatal error!");
         }
     }
 }
@@ -190,6 +194,7 @@ void accept_callback(int fd,
         OUTPUT("malloc failed");
     }
     client->fdSocket = client_fd;
+    client->bufOut = evbuffer_new();
     
     client->httpEvt = bufferevent_new(client_fd,
                                      buf_read_callback,
