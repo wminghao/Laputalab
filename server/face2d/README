@@ -1,1 +1,31 @@
-This is a server to accept request as an http post of image data and return a json response of points inside a face.
+This is a face2d SDK server to accept request as an http post of image data and return a json response of points inside a face.
+
+1. UI for Face2d API
+Nice UI
+
+2. Web server/Node.js page
+Authentication user.
+Accounting(how many requests/charge)
+Forwarding image data to Face2D server cluster
+Save return Json data to database. (Big data)
+Return Json data to client.
+
+3. Face2D server
+Load balanced.
+Receives the data and send it to Face2d Process
+Returns the data from Face2d process and send it back to Node.js page.
+
+4. Face2d Process.
+Each requests launches a new process.
+Input = image
+Output = Json
+json library latest version = 2.7
+http://www.digip.org/jansson/releases/jansson-2.7.tar.gz
+
+Protocol between 2 & 3 is as follows:
+http://stackoverflow.com/questions/20247423/ios-http-post-data-and-image-image-not-getting-posted
+
+Protocol between 3 & 4 is as follows:
+
+Input = 4 bytes image size + image data
+Output = 4 bytes json size + json data
