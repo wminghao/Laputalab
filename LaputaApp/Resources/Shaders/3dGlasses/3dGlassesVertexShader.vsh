@@ -17,5 +17,7 @@ void main(){
     texCoord0   = texCoord;
     normal0     = normal;
     normalWorld = (World * vec4(normal, 0.0)).xyz;
+    
+    //calculate the vector from the light source to the position.
     lightDirWorld   = (ViewInverse * vec4(vec3(0, 0, 10), 1.0)).xyz - position.xyz; //light position is the same as viewing model position
 }

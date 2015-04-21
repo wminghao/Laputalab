@@ -46,6 +46,7 @@
  
  */
 
+#define TAP_TEST
 
 #import <AVFoundation/AVFoundation.h>
 

@@ -44,7 +44,8 @@
  
  Copyright (C) 2014 Apple Inc. All Rights Reserved.
  
- */
+  */
+#define TAP_TEST
 
 #import <Foundation/Foundation.h>
 #import <CoreMedia/CoreMedia.h>
