@@ -915,4 +915,11 @@ static CGFloat angleOffsetFromPortraitOrientationToOrientation(AVCaptureVideoOri
 	}
 }
 
+#ifdef TAP_TEST
+- (void)onTap
+{
+    [_renderer onTap];
+}
+#endif
+
 @end

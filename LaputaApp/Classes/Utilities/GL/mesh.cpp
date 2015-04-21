@@ -62,6 +62,12 @@ void Mesh::MeshEntry::Init(const std::vector<Vertex>& Vertices,
 
 Mesh::Mesh()
 {
+    xMax = 0;
+    yMax = 0;
+    zMax = 0;
+    xMin = 0;
+    yMin = 0;
+    zMin = 0;
 }
 
 
@@ -107,7 +113,12 @@ bool Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename)
         const aiMesh* paiMesh = pScene->mMeshes[i];
         InitMesh(i, paiMesh);
     }
-
+    
+    printf("Max vertex coord:%.2f, %.2f, %.2f\n",
+           xMax, yMax, zMax);
+    
+    printf("Min vertex coord:%.2f, %.2f, %.2f\n",
+           xMin, yMin, zMin);
     return InitMaterials(pScene, Filename);
 }
 
@@ -123,6 +134,7 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh)
     printf("Mesh Index=%d, Material Index='%d', vertices=%d, mNumFaces=%d\n", Index,
            paiMesh->mMaterialIndex, paiMesh->mNumVertices, paiMesh->mNumFaces);
 
+    
     for (unsigned int i = 0 ; i < paiMesh->mNumVertices ; i++) {
         const aiVector3D* pPos      = &(paiMesh->mVertices[i]);
         const aiVector3D* pNormal   = &(paiMesh->mNormals[i]);
@@ -131,6 +143,26 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh)
         Vertex v(Vector3f(pPos->x, pPos->y, pPos->z),
                  Vector2f(pTexCoord->x, pTexCoord->y),
                  Vector3f(pNormal->x, pNormal->y, pNormal->z));
+
+        if( pPos->x > xMax ) {
+            xMax = pPos->x;
+        }
+        if( pPos->y > yMax ) {
+            yMax = pPos->y;
+        }
+        if( pPos->z > zMax ) {
+            zMax = pPos->z;
+        }
+        
+        if( pPos->x < xMin ) {
+            xMin = pPos->x;
+        }
+        if( pPos->y < yMin ) {
+            yMin = pPos->y;
+        }
+        if( pPos->z < zMin ) {
+            zMin = pPos->z;
+        }
 
         Vertices.push_back(v);
     }

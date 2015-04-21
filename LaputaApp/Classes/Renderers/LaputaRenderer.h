@@ -65,6 +65,10 @@
 - (void)prepareForInputWithFormatDescription:(CMFormatDescriptionRef)inputFormatDescription outputRetainedBufferCountHint:(size_t)outputRetainedBufferCountHint;
 - (void)reset;
 
+#ifdef TAP_TEST
+- (void)onTap;
+#endif
+
 /* Rendering */
 // Renderers which operate in place should return the input pixel buffer with a +1 retain count.
 // Renderers which operate out of place should create a pixel buffer to return from a pool they own.

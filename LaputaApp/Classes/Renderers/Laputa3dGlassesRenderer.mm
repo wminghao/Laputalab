@@ -39,6 +39,10 @@
 //mesh reader
 #include "mesh.h"
 
+#ifdef TAP_TEST
+static bool shouldRotate = true;
+#endif
+
 using namespace std;
 using namespace glm;
 
@@ -292,7 +296,15 @@ enum {
         }
         angleInDegree += sign;
         
+        
         glm::mat4 World = glm::rotate(_World, glm::radians(angleInDegree), glm::vec3(0,1,0)); //matrix for rotation on y axis
+        
+#ifdef TAP_TEST
+        if( !shouldRotate ) {
+            World = _World;
+        }
+#endif
+        
         glm::mat4 MVP = _Projection * World;
         
         //////////////////////
@@ -441,10 +453,10 @@ bail:
     // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
     glm::mat4 Projection = glm::perspective(45.0f, 16.0f/9.0f, 0.1f, 100.0f); //for portrait mode, front/back camera, is: 16:9
     // Or, for an ortho camera :
-    //glm::mat4 Projection = glm::ortho(-8.0f,8.0f,-4.5f,4.5f,-100.0f,100.0f); // In world coordinates, x/y =16/9 ratio, far-near is big enough
+    //glm::mat4 Projection = glm::ortho(-8.0f,8.0f,-4.5f,4.5f,0.0f,100.0f); // In world coordinates, x/y =16/9 ratio, far-near is big enough
     
     // Camera matrix
-    glm::mat4 View       = glm::lookAt(glm::vec3(0,0,10), // Camera is at (4,3,3), in World Space
+    glm::mat4 View       = glm::lookAt(glm::vec3(0,0,10), // Camera is at (0, 0, 10), in World Space
                                        glm::vec3(0,0,0), // and looks at the origin
                                        glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
                                        );
@@ -547,4 +559,11 @@ bail:
         [EAGLContext setCurrentContext:oldContext];
     }
 }
+
+#ifdef TAP_TEST
+- (void)onTap
+{
+    shouldRotate = !shouldRotate;
+}
+#endif
 @end

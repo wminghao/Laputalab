@@ -208,6 +208,12 @@
 	_backgroundRecordingID = UIBackgroundTaskInvalid;
 }
 
+#ifdef TAP_TEST
+- (void)handleSingleTap:(UITapGestureRecognizer *)recognizer {
+    [self.capturePipeline onTap];
+}
+#endif
+
 - (void)setupPreviewView
 {
     // Set up GL view
@@ -221,8 +227,18 @@
     CGRect bounds = CGRectZero;
     bounds.size = [self.view convertRect:self.view.bounds toView:self.previewView].size;
     self.previewView.bounds = bounds;
-    self.previewView.center = CGPointMake(self.view.bounds.size.width/2.0, self.view.bounds.size.height/2.0);	
+    self.previewView.center = CGPointMake(self.view.bounds.size.width/2.0, self.view.bounds.size.height/2.0);
+    
+    
+#ifdef TAP_TEST
+    //demo code only handling touch event
+    UITapGestureRecognizer *singleFingerTap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                      action:@selector(handleSingleTap:)];
+    [self.previewView addGestureRecognizer:singleFingerTap];
+    [singleFingerTap release];
+#endif
 }
+
 
 - (void)deviceOrientationDidChange
 {

@@ -19,4 +19,3 @@ void main(){
     normalWorld = (World * vec4(normal, 0.0)).xyz;
     lightDirWorld   = (ViewInverse * vec4(vec3(0, 0, 10), 1.0)).xyz - position.xyz; //light position is the same as viewing model position
 }
-

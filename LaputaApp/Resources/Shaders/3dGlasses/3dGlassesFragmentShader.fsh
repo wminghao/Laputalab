@@ -30,7 +30,7 @@ void main()
         vec3 reflection = (2.0 * normalize(normal0) * nDotL) - lightDir;
         vec4 envColor = textureCube( envMap, reflection);
         //attenuate the src color plus environment color
-        gl_FragColor = 0.5 * (color * intensity) + 0.5 * envColor;
+        gl_FragColor = 0.2 * (color * intensity) + 0.8 * envColor;
     } else if( texCount == 1 ) {
         color = texture2D(textureImage, texCoord0);
         amb = color * 0.33;

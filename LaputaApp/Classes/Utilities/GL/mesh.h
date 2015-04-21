@@ -118,6 +118,14 @@ private:
     GLint m_positionLocation;
     GLint m_texCoordLocation;
     GLint m_normalLocation;
+    
+    //calculate Max and Min
+    float xMax;
+    float yMax;
+    float zMax;
+    float xMin;
+    float yMin;
+    float zMin;
 };
 
 #endif	/* MESH_H */

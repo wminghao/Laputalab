@@ -64,6 +64,10 @@
 - (void)startRecording;
 - (void)stopRecording;
 
+#ifdef TAP_TEST
+- (void)onTap;
+#endif
+
 @property(readwrite) BOOL renderingEnabled; // When set to false the GPU will not be used after the setRenderingEnabled: call returns.
 
 @property(readwrite) AVCaptureVideoOrientation recordingOrientation; // client can set the orientation for the recorded movie
