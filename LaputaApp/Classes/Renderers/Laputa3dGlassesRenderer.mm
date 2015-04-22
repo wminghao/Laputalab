@@ -66,11 +66,11 @@ using namespace glm;
     GLint _matrixWorld; //matrix for glasses in vertex shader
     GLint _matrixViewInverse; //matrix for glasses in vertex shader
     GLint _matrixNormalMatrix; //matrix for glasses in vertex shader
-    glm::mat4 _Projection; //projection matrix matrix for rotation
-    glm::mat4 _World; //world matrix for rotation
-    glm::mat4 _View; //view matrix for rotation
-    glm::mat3 _NormalMatrix; //normal Matrix matrix
-    glm::mat4 _ViewInverse; //view inverse matrix matrix for rotation
+    mat4 _Projection; //projection matrix matrix for rotation
+    mat4 _World; //world matrix for rotation
+    mat4 _View; //view matrix for rotation
+    mat3 _NormalMatrix; //normal Matrix matrix
+    mat4 _ViewInverse; //view inverse matrix matrix for rotation
     GLuint _offscreenBufferHandle; //offscreen buffer
     GLuint _depthRenderbuffer; //depth render buffer
     
@@ -301,7 +301,7 @@ enum {
         angleInDegree += sign;
         
         
-        glm::mat4 World = glm::rotate(_World, glm::radians(angleInDegree), glm::vec3(0,1,0)); //matrix for rotation on y axis
+        mat4 World = rotate(_World, radians(angleInDegree), vec3(0,1,0)); //matrix for rotation on y axis
         
 #ifdef TAP_TEST
         if( !shouldRotate ) {
@@ -309,7 +309,7 @@ enum {
         }
 #endif
         
-        glm::mat4 MVP = _Projection * _View * World;
+        mat4 MVP = _Projection * _View * World;
         
         //////////////////////
         //Draw the lens
@@ -458,26 +458,26 @@ bail:
                        attribLocation[ATTRIB_POSITION], attribLocation[ATTRIB_TEXCOORD], attribLocation[ATTRIB_NORMAL]);
     
     // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-    glm::mat4 Projection = glm::perspective(45.0f, 16.0f/9.0f, 0.5f, 100.0f); //for portrait mode, front/back camera, is: 16:9
+    mat4 Projection = perspective(45.0f, 16.0f/9.0f, 0.5f, 100.0f); //for portrait mode, front/back camera, is: 16:9
     // Or, for an ortho camera :
-    //glm::mat4 Projection = glm::ortho(-8.0f,8.0f,-4.5f,4.5f,0.0f,100.0f); // In world coordinates, x/y =16/9 ratio, far-near is big enough
+    //mat4 Projection = ortho(-8.0f,8.0f,-4.5f,4.5f,0.0f,100.0f); // In world coordinates, x/y =16/9 ratio, far-near is big enough
     
     // Camera matrix
-    glm::mat4 View       = glm::lookAt(glm::vec3(0,0,10), // Camera is at (0, 0, 10), in World Space
-                                       glm::vec3(0,0,0), // and looks at the origin
-                                       glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+    mat4 View       = lookAt(vec3(0,0,10), // Camera is at (0, 0, 10), in World Space
+                                       vec3(0,0,0), // and looks at the origin
+                                       vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
                                        );
     // Model matrix : an identity matrix (model will be at the origin)
     float scaleFactor = 0.20;
-    //glm::mat4 Model      = glm::mat4(1.0f);
+    //mat4 Model      = mat4(1.0f);
     mat4 Model_translation = translate(mat4(1.0f), vec3(0,0,0));
-    mat4 Model_rotateZ = rotate(mat4(1.0f), glm::radians(90.0f), vec3(0,0,1)); //rotate z of 90 degree
-    mat4 Model_rotateX = rotate(mat4(1.0f), glm::radians(10.0f), vec3(1,0,0)); //rotate x of 10 degree
+    mat4 Model_rotateZ = rotate(mat4(1.0f), radians(90.0f), vec3(0,0,1)); //rotate z of 90 degree
+    mat4 Model_rotateX = rotate(mat4(1.0f), radians(10.0f), vec3(1,0,0)); //rotate x of 10 degree
     mat4 Model_scale = scale(mat4(1.0f), vec3(scaleFactor,scaleFactor,scaleFactor));
     mat4 Model = Model_translation * Model_rotateZ * Model_rotateX * Model_scale;
     
-    _ViewInverse = glm::inverse(View); //inverse of the view matrix
-    _NormalMatrix = glm::transpose(glm::inverse(glm::mat3(Model)));
+    _ViewInverse = inverse(View); //inverse of the view matrix
+    _NormalMatrix = transpose(inverse(mat3(Model)));
     _World = Model; //world coordinate.
     _View = View;
     
