@@ -65,8 +65,11 @@ using namespace glm;
     GLint _matrixMVP; //matrix for glasses in vertex shader
     GLint _matrixWorld; //matrix for glasses in vertex shader
     GLint _matrixViewInverse; //matrix for glasses in vertex shader
+    GLint _matrixNormalMatrix; //matrix for glasses in vertex shader
     glm::mat4 _Projection; //projection matrix matrix for rotation
-    glm::mat4 _World; //world matrix matrix for rotation
+    glm::mat4 _World; //world matrix for rotation
+    glm::mat4 _View; //view matrix for rotation
+    glm::mat3 _NormalMatrix; //normal Matrix matrix
     glm::mat4 _ViewInverse; //view inverse matrix matrix for rotation
     GLuint _offscreenBufferHandle; //offscreen buffer
     GLuint _depthRenderbuffer; //depth render buffer
@@ -94,6 +97,7 @@ enum {
     UNIFORM_MVP, // "MVP" in vertext shader
     UNIFORM_WORLD, // "gWorld" in vertext shader
     UNIFORM_VIEWINVERSE, // "viewInverse" in vertext shader
+    UNIFORM_NORMALMATRIX, // "NormalMatrix" in vertext shader
     UNIFORM_TEXCOUNT,
     UNIFORM_DIFFUSECOLOR,
     UNIFORM_AMBIENTCOLOR,
@@ -305,7 +309,7 @@ enum {
         }
 #endif
         
-        glm::mat4 MVP = _Projection * World;
+        glm::mat4 MVP = _Projection * _View * World;
         
         //////////////////////
         //Draw the lens
@@ -336,6 +340,7 @@ enum {
         glUniformMatrix4fv(_matrixMVP, 1, GL_FALSE, &MVP[0][0]);
         glUniformMatrix4fv(_matrixWorld, 1, GL_FALSE, &World[0][0]);
         glUniformMatrix4fv(_matrixViewInverse, 1, GL_FALSE, &_ViewInverse[0][0]);
+        glUniformMatrix4fv(_matrixNormalMatrix, 1, GL_FALSE, &_NormalMatrix[0][0]);
         
         //render the meshes
         _pMesh->Render();
@@ -420,6 +425,7 @@ bail:
         (GLchar *)"MVP",
         (GLchar *)"World",
         (GLchar *)"ViewInverse",
+        (GLchar *)"NormalMatrix",
         (GLchar *)"texCount",
         (GLchar *)"diffuseColor",
         (GLchar *)"ambientColor",
@@ -445,13 +451,14 @@ bail:
     _matrixMVP = uniformLocation[UNIFORM_MVP];
     _matrixWorld = uniformLocation[UNIFORM_WORLD];
     _matrixViewInverse = uniformLocation[UNIFORM_VIEWINVERSE];
+    _matrixNormalMatrix = uniformLocation[UNIFORM_NORMALMATRIX];
     
     _pMesh->setAttrUni(uniformLocation[UNIFORM_TEXCOUNT], uniformLocation[UNIFORM_DIFFUSECOLOR], uniformLocation[UNIFORM_AMBIENTCOLOR],
                        uniformLocation[UNIFORM_TEXTUREIMAGE], uniformLocation[UNIFORM_ENVMAP],
                        attribLocation[ATTRIB_POSITION], attribLocation[ATTRIB_TEXCOORD], attribLocation[ATTRIB_NORMAL]);
     
     // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-    glm::mat4 Projection = glm::perspective(45.0f, 16.0f/9.0f, 0.1f, 100.0f); //for portrait mode, front/back camera, is: 16:9
+    glm::mat4 Projection = glm::perspective(45.0f, 16.0f/9.0f, 0.5f, 100.0f); //for portrait mode, front/back camera, is: 16:9
     // Or, for an ortho camera :
     //glm::mat4 Projection = glm::ortho(-8.0f,8.0f,-4.5f,4.5f,0.0f,100.0f); // In world coordinates, x/y =16/9 ratio, far-near is big enough
     
@@ -470,7 +477,9 @@ bail:
     mat4 Model = Model_translation * Model_rotateZ * Model_rotateX * Model_scale;
     
     _ViewInverse = glm::inverse(View); //inverse of the view matrix
-    _World = View * Model; //world coordinate.
+    _NormalMatrix = glm::transpose(glm::inverse(glm::mat3(Model)));
+    _World = Model; //world coordinate.
+    _View = View;
     
     // Our ModelViewProjection : multiplication of our 3 matrices
     // Remember, matrix multiplication is the other way around
