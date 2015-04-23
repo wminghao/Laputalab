@@ -27,11 +27,11 @@ const char* PROCESS_LOCATION = "LandMarkMain";//"/usr/bin/LandMarkMain";
 const char* LANDMARK_URL_PREFIX = "GET /getlandmark?url=";
 const char* LANDMARK_URL_SUFFIX = " HTTP/";
 
-const char* TWO_HUNDRED_OK = "HTTP/1.1 200 OK\r\n";
-const char* FIVE_HUNDRED_ERROR = "HTTP/1.1 500 Cannot process image\r\n";
+const char* TWO_HUNDRED_OK = "HTTP/1.1 200 OK\r\n\r\n";
+const char* FIVE_HUNDRED_ERROR = "HTTP/1.1 500 Cannot process image\r\n\r\n";
 
 //process pipe table.
-const int MAX_PROCESS_PIPES = 10; //max 32 instances at the same time.
+const int MAX_PROCESS_PIPES = 4; //max 32 instances at the same time.
 typedef pair <int, ProcessPipe*> Int_Pipe_Pair;
 unordered_map <int, ProcessPipe*> gPipeMap;
 const unsigned int maskArray[ ] = {0x7fffffff,
@@ -80,7 +80,7 @@ unsigned int gPipeMask;
 int acquireUnusedPipe() {
     int index = -1;
     if( gPipeMask != ALL_PIPE_OCCUPIED ) {
-        for( int i=0; i < 32 ; i++) {
+        for( int i=0; i < MAX_PROCESS_PIPES ; i++) {
             if( (gPipeMask & (~maskArray[i])) == 0 ) {
                 gPipeMask |= (~maskArray[i]);
                 index = i;
@@ -93,7 +93,7 @@ int acquireUnusedPipe() {
 }
 
 void releasePipe(int index) {
-    if( index >= 0 && index < 32 ) {
+    if( index >= 0 && index < MAX_PROCESS_PIPES ) {
          gPipeMask &= maskArray[index];
          OUTPUT("releasePipe, index=%d\r\n", index);
     }
@@ -141,6 +141,9 @@ void freeClient(Client* client) {
         releasePipe(client->pipeIndex);
         client->pipeIndex = -1;
     }
+    free(client->bufIn);
+    client->bufIn = NULL;
+    client->bufLen = client->bufSize = 0;
     close(client->fdSocket);
     evbuffer_free(client->bufOut);
     free(client);
@@ -398,7 +401,6 @@ int main(int argc,
 
     //start hashmap, launch 10 processes
     for(int i = 0; i< MAX_PROCESS_PIPES; i++) {
-        OUTPUT("launch process: %d %s\n", i, PROCESS_LOCATION);
         gPipeMap.insert(Int_Pipe_Pair(i, new ProcessPipe(PROCESS_LOCATION)));
     }
     gPipeMask = 0;

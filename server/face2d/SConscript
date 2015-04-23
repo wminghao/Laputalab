@@ -33,7 +33,21 @@ env.Program( landMarkProg,
 	     LIBS=['pthread','rt', 'dl', 'm', 'LandMark', 'opencv_calib3d', 'opencv_contrib', 'opencv_core', 'opencv_features2d', 'opencv_flann','opencv_gpu', 'opencv_highgui', 'opencv_imgproc','opencv_legacy', 'opencv_ml', 'opencv_nonfree', 'opencv_objdetect', 'opencv_ocl', 'opencv_photo', 'opencv_stitching', 'opencv_superres', 'opencv_ts', 'opencv_video', 'opencv_videostab'],
 	     LIBPATH = ['/usr/lib', '/usr/local/lib', '.'],
 	     CCFLAGS=face2dCflags)
-#test
+
+#test 1
+landMarkLib = File("prog/libLandMark.a")
+Command("libLandMark.a", landMarkLib, Copy("$TARGET", "$SOURCE"))
+landMarkTestObj = env.Object('prog/LandMarkTest.cpp', CCFLAGS=face2dCflags )
+landMarkTestProg = File("prog/LandMarkTest")
+
+progs.append( landMarkTestProg ) 
+env.Program( landMarkTestProg,
+	     [landMarkTestObj,
+	     LoggerObj],
+	     LIBS=['pthread','rt', 'dl', 'm', 'LandMark', 'opencv_calib3d', 'opencv_contrib', 'opencv_core', 'opencv_features2d', 'opencv_flann','opencv_gpu', 'opencv_highgui', 'opencv_imgproc','opencv_legacy', 'opencv_ml', 'opencv_nonfree', 'opencv_objdetect', 'opencv_ocl', 'opencv_photo', 'opencv_stitching', 'opencv_superres', 'opencv_ts', 'opencv_video', 'opencv_videostab'],
+	     LIBPATH = ['/usr/lib', '/usr/local/lib', '.'],
+	     CCFLAGS=face2dCflags)
+#test dummy
 dummyObj = env.Object('prog/dummy.cpp', CCFLAGS=face2dCflags )
 dummyProg = File("prog/dummy")
 

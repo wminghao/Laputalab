@@ -76,7 +76,7 @@ int main()
         if( bWorking ) {
             int pathLen = 0;
             memcpy(&pathLen, buf, 4);
-            OUTPUT("------LandMark read data, size=%d\n", pathLen);
+            //OUTPUT("------LandMark read data, size=%d\n", pathLen);
             bool bIsSuccess = true;
             if( pathLen < BUF_SIZE ) {
                 bWorking = doRead( 0, buf, pathLen );
@@ -96,7 +96,7 @@ int main()
                         doWrite( 1, result, resLen);
                         fsync( 1 ); //flush the buffer
                         result[resLen] = '\0';
-                        OUTPUT("------LandMark result=%s", result);
+                        //OUTPUT("------LandMark result=%s", result);
                         free(result);
                     } else {
                         OUTPUT("----LandMark cannot process!\n");
