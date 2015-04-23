@@ -20,6 +20,19 @@ env.Program( face2dServerProg,
 	       LIBPATH = ['/usr/lib', '/usr/local/lib'],
 	       CCFLAGS=face2dCflags)
 
+#LandMarkMain
+landMarkLib = File("prog/libLandMark.a")
+Command("libLandMark.a", landMarkLib, Copy("$TARGET", "$SOURCE"))
+landMarkObj = env.Object('prog/LandMarkMain.cpp', CCFLAGS=face2dCflags )
+landMarkProg = File("prog/LandMarkMain")
+
+progs.append( landMarkProg ) 
+env.Program( landMarkProg,
+	     [landMarkObj,
+	     LoggerObj],
+	     LIBS=['pthread','rt', 'dl', 'm', 'LandMark', 'opencv_calib3d', 'opencv_contrib', 'opencv_core', 'opencv_features2d', 'opencv_flann','opencv_gpu', 'opencv_highgui', 'opencv_imgproc','opencv_legacy', 'opencv_ml', 'opencv_nonfree', 'opencv_objdetect', 'opencv_ocl', 'opencv_photo', 'opencv_stitching', 'opencv_superres', 'opencv_ts', 'opencv_video', 'opencv_videostab'],
+	     LIBPATH = ['/usr/lib', '/usr/local/lib', '.'],
+	     CCFLAGS=face2dCflags)
 #test
 dummyObj = env.Object('prog/dummy.cpp', CCFLAGS=face2dCflags )
 dummyProg = File("prog/dummy")

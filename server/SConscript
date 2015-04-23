@@ -52,7 +52,6 @@ LINKFLAGS.append('-Lbuild/' + platform + '/libav-0.7.3/lib/')
 # We've only so far enforced this on Linux based compiles, not Mac OS X yet.
 CCFLAGS.append('-Werror')
 CCFLAGS.append('-Wno-unused-result')
-CCFLAGS.append('-DVEETLE_LITTLE_ENDIAN')
 CCFLAGS.append('-Ibuild/' + platform + '/libav-0.7.3/include/')
 CC='gcc'
 CXX='g++'
