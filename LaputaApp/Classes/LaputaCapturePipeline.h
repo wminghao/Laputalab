@@ -46,6 +46,7 @@
  
  */
 
+#define TAP_TEST
 
 #import <AVFoundation/AVFoundation.h>
 
@@ -63,6 +64,10 @@
 // These methods are asynchronous, see the recording delegate callbacks
 - (void)startRecording;
 - (void)stopRecording;
+
+#ifdef TAP_TEST
+- (void)onTap;
+#endif
 
 @property(readwrite) BOOL renderingEnabled; // When set to false the GPU will not be used after the setRenderingEnabled: call returns.
 

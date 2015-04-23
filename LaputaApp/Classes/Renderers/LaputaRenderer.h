@@ -44,7 +44,8 @@
  
  Copyright (C) 2014 Apple Inc. All Rights Reserved.
  
- */
+  */
+#define TAP_TEST
 
 #import <Foundation/Foundation.h>
 #import <CoreMedia/CoreMedia.h>
@@ -64,6 +65,10 @@
 // This can be used by the renderer to size and preallocate their pools.
 - (void)prepareForInputWithFormatDescription:(CMFormatDescriptionRef)inputFormatDescription outputRetainedBufferCountHint:(size_t)outputRetainedBufferCountHint;
 - (void)reset;
+
+#ifdef TAP_TEST
+- (void)onTap;
+#endif
 
 /* Rendering */
 // Renderers which operate in place should return the input pixel buffer with a +1 retain count.
