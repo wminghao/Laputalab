@@ -68,7 +68,7 @@ int main()
 
     LandMark* lm = new LandMark();
 
-    OUTPUT("------LandMarkProc started=%d\r\n");
+    OUTPUT("------LandMarkProc started!\r\n");
     char buf[BUF_SIZE]; 
     bool bWorking = true;
     while ( true ) { 
@@ -77,7 +77,6 @@ int main()
             int pathLen = 0;
             memcpy(&pathLen, buf, 4);
             OUTPUT("------LandMark read data, size=%d\n", pathLen);
-            size_t resLen = 0;
             bool bIsSuccess = true;
             if( pathLen < BUF_SIZE ) {
                 bWorking = doRead( 0, buf, pathLen );
@@ -87,7 +86,7 @@ int main()
                     OUTPUT("------LandMark read data, path=%s\n", faceImg.c_str());
                     string jsonObject;
                     if(!lm->ProcessImage( faceImg, jsonObject )) {
-                        resLen = jsonObject.length();
+                        size_t resLen = jsonObject.length();
                         memcpy(buf, &resLen, 4);
                         doWrite( 1, buf, 4);
                         fsync( 1 ); //flush the buffer
@@ -108,10 +107,9 @@ int main()
                 OUTPUT("----LandMark read path too long!\n");
                 bIsSuccess = false;
             }
-            if(!bIsSuccess ) {
-                resLen = 4;
-                memset(buf, 0, 4);
-                doWrite( 1, buf, resLen);
+            if( !bIsSuccess ) {
+                memset( buf, 0, 4 );
+                doWrite( 1, buf, 4 );
                 fsync( 1 ); //flush the buffer
             }
         }

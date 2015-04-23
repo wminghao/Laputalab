@@ -14,7 +14,21 @@
 #include "ProcessPipe.h"
 
 using namespace std;
-#define SERVER_PORT 8080
+#define SERVER_PORT 1234
+
+//#define TEST_DUMMY
+
+#ifdef TEST_DUMMY
+const char* PROCESS_LOCATION = "dummy";//"/usr/bin/dummy";
+#else
+const char* PROCESS_LOCATION = "LandMarkMain";//"/usr/bin/LandMarkMain";
+#endif
+
+const char* LANDMARK_URL_PREFIX = "GET /getlandmark?url=";
+const char* LANDMARK_URL_SUFFIX = " HTTP/";
+
+const char* TWO_HUNDRED_OK = "HTTP/1.1 200 OK\r\n";
+const char* FIVE_HUNDRED_ERROR = "HTTP/1.1 500 Cannot process image\r\n";
 
 //process pipe table.
 const int MAX_PROCESS_PIPES = 10; //max 32 instances at the same time.
@@ -70,6 +84,7 @@ int acquireUnusedPipe() {
             if( (gPipeMask & (~maskArray[i])) == 0 ) {
                 gPipeMask |= (~maskArray[i]);
                 index = i;
+                OUTPUT("acquireUnusedPipe, index=%d\r\n", index);
                 break;
             }
         }
@@ -80,6 +95,7 @@ int acquireUnusedPipe() {
 void releasePipe(int index) {
     if( index >= 0 && index < 32 ) {
          gPipeMask &= maskArray[index];
+         OUTPUT("releasePipe, index=%d\r\n", index);
     }
 }
 
@@ -162,7 +178,7 @@ void pipe_write_callback(int fd,
     }
 }
 
-void writeBuf(struct client *client, char* buf, int len ) 
+void writeBuf(struct client *client, const char* buf, int len ) 
 {
     struct evbuffer* evreturn = evbuffer_new();
     evbuffer_add(evreturn, buf, len);
@@ -180,6 +196,7 @@ void pipe_read_callback(int fd,
         case kPipeReadNone: 
             {
                 unsigned char lenStr[4];
+                memset(lenStr, 0, 4);
                 int nRead = read( fd, lenStr, 4);
                 if( nRead <= 0 ) {
                     if ( errno == EAGAIN ) {
@@ -190,31 +207,36 @@ void pipe_read_callback(int fd,
                         freeClient(client);
                     }
                 } else {
+                    ASSERT( nRead == 4);
                     int jsonLen = 0;
                     memcpy(&jsonLen, lenStr, 4);
                     client->bufInStatus = kPipeReadLen;
-                    
-                    char jsonBuf[jsonLen];
-                    int nRead = read( fd, jsonBuf, jsonLen);
-                    if( nRead <= 0 ) {
-                        if ( errno == EAGAIN ) {
-                            //try again
-                            OUTPUT("-----read again later----\r\n");
+                    if( jsonLen > 0 ) {
+                        char jsonBuf[jsonLen];
+                        int nRead = read( fd, jsonBuf, jsonLen);
+                        if( nRead <= 0 ) {
+                            if ( errno == EAGAIN ) {
+                                //try again
+                                OUTPUT("-----read again later----\r\n");
+                            } else {
+                                OUTPUT("process pipe read error!");
+                                freeClient(client);
+                            }
                         } else {
-                            OUTPUT("process pipe read error!");
-                            freeClient(client);
+                            OUTPUT("process pipe read=%d!\n", nRead);
+                            if( nRead == jsonLen ) {
+                                writeBuf( client, TWO_HUNDRED_OK, strlen((char*)TWO_HUNDRED_OK));
+                                writeBuf( client, jsonBuf, jsonLen);
+                                client->bufInStatus = kPipeReadJson;
+                            } else {
+                                client->bufIn = (char*)malloc(jsonLen);
+                                client->bufSize = jsonLen;
+                                client->bufLen = nRead;
+                                memcpy(client->bufIn, jsonBuf, nRead);
+                            }
                         }
                     } else {
-                        OUTPUT("process pipe read=%d!\n", nRead);
-                        if( nRead == jsonLen ) {
-                            writeBuf( client, jsonBuf, jsonLen);
-                            client->bufInStatus = kPipeReadJson;
-                        } else {
-                            client->bufIn = (char*)malloc(jsonLen);
-                            client->bufSize = jsonLen;
-                            client->bufLen = nRead;
-                            memcpy(client->bufIn, jsonBuf, nRead);
-                        }
+                        writeBuf( client, FIVE_HUNDRED_ERROR, strlen((char*)FIVE_HUNDRED_ERROR));
                     }
                 }
                 break;
@@ -238,6 +260,7 @@ void pipe_read_callback(int fd,
                     client->bufLen += nRead;
 
                     if( nRead == remaining ) {
+                        writeBuf( client, TWO_HUNDRED_OK, strlen((char*)TWO_HUNDRED_OK));
                         writeBuf( client, client->bufIn, client->bufSize);
                         client->bufInStatus = kPipeReadJson;
                         free(client->bufIn);
@@ -267,9 +290,10 @@ void buf_read_callback(struct bufferevent *incoming,
         int ret = evbuffer_remove(incoming->input, req, len);
         ASSERT(len == ret);
         if ( ret > 0 ) {
-            char* startPos = strstr(req, "GET /getlandmark?url=");
-            char* endPos = strstr(req, "\r\n");
+            char* startPos = strstr(req, LANDMARK_URL_PREFIX);
+            char* endPos = strstr(req, LANDMARK_URL_SUFFIX);
             if( startPos && endPos ) {
+                startPos += strlen(LANDMARK_URL_PREFIX);
                 int urlLen =(endPos-startPos);
                 char url[urlLen+sizeof(int)];
                 memcpy(url, &urlLen, sizeof(int));
@@ -374,7 +398,8 @@ int main(int argc,
 
     //start hashmap, launch 10 processes
     for(int i = 0; i< MAX_PROCESS_PIPES; i++) {
-        gPipeMap.insert(Int_Pipe_Pair(i, new ProcessPipe()));
+        OUTPUT("launch process: %d %s\n", i, PROCESS_LOCATION);
+        gPipeMap.insert(Int_Pipe_Pair(i, new ProcessPipe(PROCESS_LOCATION)));
     }
     gPipeMask = 0;
 
