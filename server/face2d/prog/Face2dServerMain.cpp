@@ -31,6 +31,9 @@ const char* TWO_HUNDRED_OK = "HTTP/1.1 200 OK\r\n\r\n";
 const char* FIVE_HUNDRED_ERROR = "HTTP/1.1 500 Cannot process image\r\n\r\n";
 const char* FIVE_HUNDRED_THREE_ERROR = "HTTP/1.1 503 Service unavailable. Too busy\r\n\r\n";
 
+//client conn timeout
+const int CONN_TIMEOUT = 3; //3 seconds
+
 //process pipe table.
 const int MAX_PROCESS_PIPES = 4; //max 32 instances at the same time.
 typedef pair <int, ProcessPipe*> Int_Pipe_Pair;
@@ -137,6 +140,14 @@ void setnonblock(int fd) {
     fcntl(fd, F_SETFL, flags);
 }
 
+void closeClientPipe(Client* client) {
+    if( client->pipeIndex != -1 ) {
+        event_del( &client->pipeInEvt);
+        event_del( &client->pipeOutEvt);
+        releasePipe(client->pipeIndex);
+        client->pipeIndex = -1;
+    }
+}
 void freeClientInBuf(Client* client) {
     free(client->bufIn);
     client->bufIn = NULL;
@@ -150,12 +161,8 @@ void freeClient(Client* client) {
     client->httpEvt = NULL;
 
     //free pipe
-    if( client->pipeIndex != -1 ) {
-        event_del( &client->pipeInEvt);
-        event_del( &client->pipeOutEvt);
-        releasePipe(client->pipeIndex);
-        client->pipeIndex = -1;
-    }
+    closeClientPipe( client );
+
     //free timer event
     if( client->timerEvt ) {
         evtimer_del(client->timerEvt);
@@ -224,7 +231,7 @@ static void timeout_handler(int sock, short which, void *arg) {
 
 void startTimeoutTimer(struct client *client) {
     struct timeval tv;
-    tv.tv_sec = 3;
+    tv.tv_sec = CONN_TIMEOUT; //very fast close
     tv.tv_usec = 0;
     client->timerEvt = evtimer_new(gEvtBase, timeout_handler, client);
     evtimer_add(client->timerEvt, &tv);
@@ -271,6 +278,7 @@ void pipe_read_callback(int fd,
                             if( nRead == jsonLen ) {
                                 writeBuf( client, TWO_HUNDRED_OK, strlen((char*)TWO_HUNDRED_OK));
                                 writeBuf( client, jsonBuf, jsonLen);
+                                closeClientPipe( client );
                                 startTimeoutTimer( client );
                             } else {
                                 client->bufIn = (char*)malloc(jsonLen);
@@ -281,6 +289,7 @@ void pipe_read_callback(int fd,
                         }
                     } else {
                         writeBuf( client, FIVE_HUNDRED_ERROR, strlen((char*)FIVE_HUNDRED_ERROR));
+                        closeClientPipe( client );
                         startTimeoutTimer( client );
                     }
                 }
@@ -308,6 +317,7 @@ void pipe_read_callback(int fd,
                         writeBuf( client, TWO_HUNDRED_OK, strlen((char*)TWO_HUNDRED_OK));
                         writeBuf( client, client->bufIn, client->bufSize);
                         freeClientInBuf(client);
+                        closeClientPipe( client );
                         startTimeoutTimer( client );
                     }
                 }

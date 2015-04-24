@@ -8,7 +8,7 @@ do
    a=`expr $a + 1`
 done
 
-sleep 5
+sleep 1
 
 b=0
 while [ $b -lt 5 ]
