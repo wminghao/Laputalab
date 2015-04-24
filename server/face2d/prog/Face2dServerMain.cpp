@@ -222,6 +222,7 @@ void buf_read_callback(struct bufferevent *incoming,
             }
         } else {
             OUTPUT("----fatal error!");
+            freeClient(client);
         }
     }
 }
