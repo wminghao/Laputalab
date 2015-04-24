@@ -1,11 +1,12 @@
 #ifndef __PENDING_TASK__
 #define __PENDING_TASK__
 
+#include "utility/Output.h"
 #include "utility/SmartPtr.h"
 #include "utility/SmartPtrInterface.h"
 #include "Client.h"
 #include <unordered_map>
-#include <queue>
+#include <deque>
 
 class PendingTask: public SmartPtrInterface<PendingTask>
 {
@@ -35,13 +36,13 @@ class PendingTaskTable
     PendingTaskTable(){};
     void addTask(Client* client, char* urlStr, int urlLen){
         pendingTaskTable_.insert(PendingMap::value_type(client, new PendingTask(urlStr, urlLen)));
-        clientQueue_.push(client);
+        clientQueue_.push_back(client);
     }
     
-    void removeNext(Client* client) {
-        ASSERT(client == clientQueue_.front());
+    void removeNext() {
+        Client* client = clientQueue_.front();
         pendingTaskTable_.erase(client);
-        clientQueue_.pop();
+        clientQueue_.pop_front();
     }
     
     SmartPtr<PendingTask> getNext(Client*& client) {
@@ -51,9 +52,26 @@ class PendingTaskTable
         }
         return NULL;
     }
+
+    void removeTask(Client* client) {
+        if( pendingTaskTable_.erase(client) > 0 ) {
+            deque<Client*>::iterator found = clientQueue_.end();
+            for (deque<Client*>::iterator itr=clientQueue_.begin(); itr!=clientQueue_.end(); ++itr) {
+                if( *itr == client ) {
+                    found = itr;
+                    break;
+                }
+            }
+            //found and remove
+            if( found != clientQueue_.end() ) {
+                clientQueue_.erase(found);
+            }
+        }
+    }
+
  private:
     PendingMap pendingTaskTable_;
-    queue<Client*> clientQueue_; //keep track of fifo order
+    deque<Client*> clientQueue_; //keep track of fifo order
 };
 
 #endif//__PENDING_TASK__

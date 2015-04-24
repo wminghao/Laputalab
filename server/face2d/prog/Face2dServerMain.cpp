@@ -49,10 +49,15 @@ void nextPendingTask() {
     SmartPtr<PendingTask> pendingTask = gPendingTasks->getNext(nextClient);
     if( nextClient != NULL ) {
         if(nextClient->tryToEnablePipe(pendingTask->getUrlStr(), pendingTask->getUrlLen(), pipe_read_callback, pipe_write_callback) ) {
-            OUTPUT("!remove pending task, client=0x%x\n", nextClient);
-            gPendingTasks->removeNext(nextClient);
+            OUTPUT("remove pending task, client=0x%x\n", nextClient);
+            gPendingTasks->removeNext();
         }
     }
+}
+
+void deleteClient(Client* client) {
+    gPendingTasks->removeTask(client);
+    delete(client);
 }
 
 void pipe_write_callback(int fd,
@@ -73,7 +78,7 @@ void pipe_write_callback(int fd,
                         event_add(&client->pipeInEvt, NULL);
                     } else {
                         OUTPUT("process pipe write error!");
-                        delete(client);
+                        deleteClient(client);
                     }
                     break;
                 } else {
@@ -104,7 +109,7 @@ void pipe_read_callback(int fd,
                         OUTPUT("-----read again later----\r\n");
                     } else {
                         OUTPUT("process pipe read error!");
-                        delete(client);
+                        deleteClient(client);
                     }
                 } else {
                     ASSERT( nRead == 4);
@@ -120,7 +125,7 @@ void pipe_read_callback(int fd,
                                 OUTPUT("-----read again later----\r\n");
                             } else {
                                 OUTPUT("process pipe read error!");
-                                delete(client);
+                                deleteClient(client);
                             }
                         } else {
                             OUTPUT("process pipe read=%d!\n", nRead);
@@ -157,7 +162,7 @@ void pipe_read_callback(int fd,
                         OUTPUT("-----read again later----\r\n");
                     } else {
                         OUTPUT("process pipe read error!");
-                        delete(client);
+                        deleteClient(client);
                     }
                 } else {
                     OUTPUT("process pipe read=%d!\n", nRead);
@@ -203,7 +208,7 @@ void buf_read_callback(struct bufferevent *incoming,
                 memcpy(url, &urlLen, sizeof(int));
                 memcpy(url+sizeof(int), startPos, urlLen);
                 if( !client->tryToEnablePipe( url, sizeof(url), pipe_read_callback, pipe_write_callback) ) {
-                    OUTPUT("!add pending task, client=0x%x, urllen=%d, url=%s\n", client, urlLen, url+sizeof(int));
+                    OUTPUT("add pending task, client=0x%x, urllen=%d, url=%s\n", client, urlLen, url+sizeof(int));
                     gPendingTasks->addTask(client, url, sizeof(url));
                 }
             }
@@ -225,9 +230,7 @@ void buf_error_callback(struct bufferevent *bev,
 {
     //this happens when the client disconnects.
     OUTPUT("---client disconnected and returned\n");
-
-    Client *client = (Client *)arg;
-    delete(client);
+    deleteClient((Client *)arg);
 }
 
 void accept_callback(int fd,
