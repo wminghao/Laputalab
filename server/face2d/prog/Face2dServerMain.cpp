@@ -50,7 +50,7 @@ void nextPendingTask() {
     if( nextClient != NULL ) {
         if(nextClient->tryToEnablePipe(pendingTask->getUrlStr(), pendingTask->getUrlLen(), pipe_read_callback, pipe_write_callback) ) {
             OUTPUT("!remove pending task, client=0x%x\n", nextClient);
-            gPendingTasks->removeTask(nextClient);
+            gPendingTasks->removeNext(nextClient);
         }
     }
 }

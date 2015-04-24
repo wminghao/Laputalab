@@ -5,6 +5,7 @@
 #include "utility/SmartPtrInterface.h"
 #include "Client.h"
 #include <unordered_map>
+#include <queue>
 
 class PendingTask: public SmartPtrInterface<PendingTask>
 {
@@ -33,24 +34,26 @@ class PendingTaskTable
  public:
     PendingTaskTable(){};
     void addTask(Client* client, char* urlStr, int urlLen){
-        pendingTaskTable_[client] = new PendingTask(urlStr, urlLen);
+        pendingTaskTable_.insert(PendingMap::value_type(client, new PendingTask(urlStr, urlLen)));
+        clientQueue_.push(client);
     }
     
-    void removeTask(Client* client) {
+    void removeNext(Client* client) {
+        ASSERT(client == clientQueue_.front());
         pendingTaskTable_.erase(client);
+        clientQueue_.pop();
     }
     
     SmartPtr<PendingTask> getNext(Client*& client) {
-        PendingMap::iterator it = pendingTaskTable_.begin();
-        if( it != pendingTaskTable_.end() ) {
-            client = it->first;
-            return it->second;
-        } else {
-            return NULL;
+        if( clientQueue_.size() > 0 ) {
+            client = clientQueue_.front();
+            return pendingTaskTable_[client];
         }
+        return NULL;
     }
  private:
     PendingMap pendingTaskTable_;
+    queue<Client*> clientQueue_; //keep track of fifo order
 };
 
 #endif//__PENDING_TASK__
