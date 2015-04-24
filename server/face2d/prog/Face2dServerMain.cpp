@@ -18,7 +18,6 @@ using namespace std;
 #define SERVER_PORT 1234
 
 //#define TEST_DUMMY
-
 #ifdef TEST_DUMMY
 const char* PROCESS_LOCATION = "dummy";//"/usr/bin/dummy";
 #else
@@ -222,7 +221,7 @@ void buf_read_callback(struct bufferevent *incoming,
             }
         } else {
             OUTPUT("----fatal error!");
-            freeClient(client);
+            deleteClient(client);
         }
     }
 }
