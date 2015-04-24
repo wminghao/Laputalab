@@ -29,6 +29,7 @@ const char* LANDMARK_URL_SUFFIX = " HTTP/";
 
 const char* TWO_HUNDRED_OK = "HTTP/1.1 200 OK\r\n\r\n";
 const char* FIVE_HUNDRED_ERROR = "HTTP/1.1 500 Cannot process image\r\n\r\n";
+const char* FIVE_HUNDRED_THREE_ERROR = "HTTP/1.1 503 Service unavailable. Too busy\r\n\r\n";
 
 //process pipe table.
 const int MAX_PROCESS_PIPES = 4; //max 32 instances at the same time.
@@ -75,6 +76,8 @@ const unsigned int maskArray[ ] = {0x7fffffff,
                                    0xfffffffe };
 const unsigned int ALL_PIPE_OCCUPIED = 0xffffffff;
 unsigned int gPipeMask;
+struct event_base * gEvtBase;
+
 
 //return index
 int acquireUnusedPipe() {
@@ -101,8 +104,7 @@ void releasePipe(int index) {
 
 typedef enum {
     kPipeReadNone,
-    kPipeReadLen,
-    kPipeReadJson
+    kPipeReadLen
 }PIPE_READ_STATUS;
 
 typedef struct client {
@@ -118,6 +120,9 @@ typedef struct client {
     //temp buffer used when outputing from socket and input to pipe.
     struct evbuffer* bufOut;
 
+    //timer event after everything is done
+    struct event *timerEvt;
+
     //input buf
     char* bufIn;
     int bufLen;
@@ -132,20 +137,41 @@ void setnonblock(int fd) {
     fcntl(fd, F_SETFL, flags);
 }
 
+void freeClientInBuf(Client* client) {
+    free(client->bufIn);
+    client->bufIn = NULL;
+    client->bufLen = client->bufSize = 0;
+    client->bufInStatus = kPipeReadNone;
+}
 void freeClient(Client* client) {
+    //close events
     bufferevent_disable(client->httpEvt, EV_READ);
     bufferevent_free(client->httpEvt);
+    client->httpEvt = NULL;
+
+    //free pipe
     if( client->pipeIndex != -1 ) {
         event_del( &client->pipeInEvt);
         event_del( &client->pipeOutEvt);
         releasePipe(client->pipeIndex);
         client->pipeIndex = -1;
     }
-    free(client->bufIn);
-    client->bufIn = NULL;
-    client->bufLen = client->bufSize = 0;
-    close(client->fdSocket);
+    //free timer event
+    if( client->timerEvt ) {
+        evtimer_del(client->timerEvt);
+        client->timerEvt = NULL;
+    }
+    //free buIn
+    freeClientInBuf(client);
+    
+    //free bufOut buffer
     evbuffer_free(client->bufOut);
+    client->bufOut = NULL;
+
+    //close socket
+    close(client->fdSocket);
+
+    //free everything
     free(client);
 }
 
@@ -189,6 +215,21 @@ void writeBuf(struct client *client, const char* buf, int len )
     evbuffer_free(evreturn);
 }
 
+static void timeout_handler(int sock, short which, void *arg) {
+    struct client *client = (struct client *)arg;    
+    if ( client && client->timerEvt && !evtimer_pending(client->timerEvt, NULL)) {
+        freeClient(client);
+    }
+}
+
+void startTimeoutTimer(struct client *client) {
+    struct timeval tv;
+    tv.tv_sec = 3;
+    tv.tv_usec = 0;
+    client->timerEvt = evtimer_new(gEvtBase, timeout_handler, client);
+    evtimer_add(client->timerEvt, &tv);
+}
+
 void pipe_read_callback(int fd,
                         short ev,
                         void *arg)
@@ -230,7 +271,7 @@ void pipe_read_callback(int fd,
                             if( nRead == jsonLen ) {
                                 writeBuf( client, TWO_HUNDRED_OK, strlen((char*)TWO_HUNDRED_OK));
                                 writeBuf( client, jsonBuf, jsonLen);
-                                client->bufInStatus = kPipeReadJson;
+                                startTimeoutTimer( client );
                             } else {
                                 client->bufIn = (char*)malloc(jsonLen);
                                 client->bufSize = jsonLen;
@@ -240,6 +281,7 @@ void pipe_read_callback(int fd,
                         }
                     } else {
                         writeBuf( client, FIVE_HUNDRED_ERROR, strlen((char*)FIVE_HUNDRED_ERROR));
+                        startTimeoutTimer( client );
                     }
                 }
                 break;
@@ -247,8 +289,8 @@ void pipe_read_callback(int fd,
         case kPipeReadLen: 
             {
                 int remaining = client->bufSize-client->bufLen;
-                char jsonBuf[ remaining ];
-                int nRead = read( fd, jsonBuf, remaining);
+                char remBuf[ remaining ];
+                int nRead = read( fd, remBuf, remaining);
                 if( nRead <= 0 ) {
                     if ( errno == EAGAIN ) {
                         //try again
@@ -259,21 +301,18 @@ void pipe_read_callback(int fd,
                     }
                 } else {
                     OUTPUT("process pipe read=%d!\n", nRead);
-                    memcpy(client->bufIn+client->bufLen, jsonBuf, nRead);
+                    memcpy(client->bufIn+client->bufLen, remBuf, nRead);
                     client->bufLen += nRead;
 
                     if( nRead == remaining ) {
                         writeBuf( client, TWO_HUNDRED_OK, strlen((char*)TWO_HUNDRED_OK));
                         writeBuf( client, client->bufIn, client->bufSize);
-                        client->bufInStatus = kPipeReadJson;
-                        free(client->bufIn);
-                        client->bufIn = NULL;
-                        client->bufLen = client->bufSize = 0;
+                        freeClientInBuf(client);
+                        startTimeoutTimer( client );
                     }
                 }
                 break;
             }
-        case kPipeReadJson:
         default:
             {
                 ASSERT(0);
@@ -328,6 +367,9 @@ void buf_read_callback(struct bufferevent *incoming,
                     
                     //copy data for future write
                     evbuffer_add(client->bufOut, url, sizeof(url));
+                } else {
+                    writeBuf( client, FIVE_HUNDRED_THREE_ERROR, strlen((char*)FIVE_HUNDRED_THREE_ERROR));
+                    startTimeoutTimer( client );
                 }
             }
         } else {
@@ -406,7 +448,7 @@ int main(int argc,
     gPipeMask = 0;
 
     //start event loop
-    event_init();
+    gEvtBase = event_init();
     
     socketlisten = socket(AF_INET, SOCK_STREAM, 0);
     

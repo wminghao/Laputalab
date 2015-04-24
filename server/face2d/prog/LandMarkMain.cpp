@@ -92,12 +92,14 @@ int main()
                         fsync( 1 ); //flush the buffer
                         
                         char* result =(char*) malloc(resLen);
-                        memcpy(result, jsonObject.c_str(), resLen);
-                        doWrite( 1, result, resLen);
-                        fsync( 1 ); //flush the buffer
-                        result[resLen] = '\0';
-                        //OUTPUT("------LandMark result=%s", result);
-                        free(result);
+                        if( result ) {
+                            memcpy(result, jsonObject.c_str(), resLen);
+                            doWrite( 1, result, resLen);
+                            fsync( 1 ); //flush the buffer
+                            result[resLen] = '\0';
+                            //OUTPUT("------LandMark result=%s", result);
+                            free(result);
+                        }
                     } else {
                         OUTPUT("----LandMark cannot process!\n");
                         bIsSuccess = false;
