@@ -1,4 +1,3 @@
-#include <event.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -9,9 +8,10 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
-#include <unordered_map>
 #include "Output.h"
 #include "ProcessPipe.h"
+#include "PipeTable.h"
+#include "Client.h"
 
 using namespace std;
 #define SERVER_PORT 1234
@@ -31,107 +31,8 @@ const char* TWO_HUNDRED_OK = "HTTP/1.1 200 OK\r\n\r\n";
 const char* FIVE_HUNDRED_ERROR = "HTTP/1.1 500 Cannot process image\r\n\r\n";
 const char* FIVE_HUNDRED_THREE_ERROR = "HTTP/1.1 503 Service unavailable. Too busy\r\n\r\n";
 
-//client conn timeout
-const int CONN_TIMEOUT = 3; //3 seconds
-
-//process pipe table.
-const int MAX_PROCESS_PIPES = 4; //max 32 instances at the same time.
-typedef pair <int, ProcessPipe*> Int_Pipe_Pair;
-unordered_map <int, ProcessPipe*> gPipeMap;
-const unsigned int maskArray[ ] = {0x7fffffff,
-                                   0xbfffffff,
-                                   0xdfffffff,
-                                   0xefffffff,
-
-                                   0xf7ffffff,
-                                   0xfbffffff,
-                                   0xfdffffff,
-                                   0xfeffffff,
-
-                                   0xff7fffff,
-                                   0xffbfffff,
-                                   0xffdfffff,
-                                   0xffefffff,
-
-                                   0xfff7ffff,
-                                   0xfffbffff,
-                                   0xfffdffff,
-                                   0xfffeffff,
-
-                                   0xffff7fff,
-                                   0xffffbfff,
-                                   0xffffdfff,
-                                   0xffffefff,
-
-                                   0xfffff7ff,
-                                   0xfffffbff,
-                                   0xfffffdff,
-                                   0xfffffeff,
-
-                                   0xffffff7f,
-                                   0xffffffbf,
-                                   0xffffffdf,
-                                   0xffffffef,
-
-                                   0xfffffff7,
-                                   0xfffffffb,
-                                   0xfffffffd,
-                                   0xfffffffe };
-const unsigned int ALL_PIPE_OCCUPIED = 0xffffffff;
-unsigned int gPipeMask;
+PipeTable* gPipeTable;
 struct event_base * gEvtBase;
-
-
-//return index
-int acquireUnusedPipe() {
-    int index = -1;
-    if( gPipeMask != ALL_PIPE_OCCUPIED ) {
-        for( int i=0; i < MAX_PROCESS_PIPES ; i++) {
-            if( (gPipeMask & (~maskArray[i])) == 0 ) {
-                gPipeMask |= (~maskArray[i]);
-                index = i;
-                OUTPUT("acquireUnusedPipe, index=%d\r\n", index);
-                break;
-            }
-        }
-    }
-    return index;
-}
-
-void releasePipe(int index) {
-    if( index >= 0 && index < MAX_PROCESS_PIPES ) {
-         gPipeMask &= maskArray[index];
-         OUTPUT("releasePipe, index=%d\r\n", index);
-    }
-}
-
-typedef enum {
-    kPipeReadNone,
-    kPipeReadLen
-}PIPE_READ_STATUS;
-
-typedef struct client {
-    //process pipe
-    int pipeIndex;
-    struct event pipeInEvt;
-    struct event pipeOutEvt;
-
-    //http client socket
-    int fdSocket;
-    struct bufferevent *httpEvt;
-
-    //temp buffer used when outputing from socket and input to pipe.
-    struct evbuffer* bufOut;
-
-    //timer event after everything is done
-    struct event *timerEvt;
-
-    //input buf
-    char* bufIn;
-    int bufLen;
-    int bufSize;
-    PIPE_READ_STATUS bufInStatus;
-} Client;
 
 void setnonblock(int fd) {
     int flags;    
@@ -140,53 +41,11 @@ void setnonblock(int fd) {
     fcntl(fd, F_SETFL, flags);
 }
 
-void closeClientPipe(Client* client) {
-    if( client->pipeIndex != -1 ) {
-        event_del( &client->pipeInEvt);
-        event_del( &client->pipeOutEvt);
-        releasePipe(client->pipeIndex);
-        client->pipeIndex = -1;
-    }
-}
-void freeClientInBuf(Client* client) {
-    free(client->bufIn);
-    client->bufIn = NULL;
-    client->bufLen = client->bufSize = 0;
-    client->bufInStatus = kPipeReadNone;
-}
-void freeClient(Client* client) {
-    //close events
-    bufferevent_disable(client->httpEvt, EV_READ);
-    bufferevent_free(client->httpEvt);
-    client->httpEvt = NULL;
-
-    //free pipe
-    closeClientPipe( client );
-
-    //free timer event
-    if( client->timerEvt ) {
-        evtimer_del(client->timerEvt);
-        client->timerEvt = NULL;
-    }
-    //free buIn
-    freeClientInBuf(client);
-    
-    //free bufOut buffer
-    evbuffer_free(client->bufOut);
-    client->bufOut = NULL;
-
-    //close socket
-    close(client->fdSocket);
-
-    //free everything
-    free(client);
-}
-
 void pipe_write_callback(int fd,
                          short ev,
                          void *arg)
 {
-    struct client *client = (struct client *)arg;
+    Client *client = (Client *)arg;
     if( client) {
         int len = evbuffer_get_length(client->bufOut);
         if( len > 0 ) {
@@ -201,7 +60,7 @@ void pipe_write_callback(int fd,
                                   NULL);
                     } else {
                         OUTPUT("process pipe write error!");
-                        freeClient(client);
+                        delete(client);
                     }
                     break;
                 } else {
@@ -214,34 +73,11 @@ void pipe_write_callback(int fd,
     }
 }
 
-void writeBuf(struct client *client, const char* buf, int len ) 
-{
-    struct evbuffer* evreturn = evbuffer_new();
-    evbuffer_add(evreturn, buf, len);
-    bufferevent_write_buffer(client->httpEvt, evreturn);
-    evbuffer_free(evreturn);
-}
-
-static void timeout_handler(int sock, short which, void *arg) {
-    struct client *client = (struct client *)arg;    
-    if ( client && client->timerEvt && !evtimer_pending(client->timerEvt, NULL)) {
-        freeClient(client);
-    }
-}
-
-void startTimeoutTimer(struct client *client) {
-    struct timeval tv;
-    tv.tv_sec = CONN_TIMEOUT; //very fast close
-    tv.tv_usec = 0;
-    client->timerEvt = evtimer_new(gEvtBase, timeout_handler, client);
-    evtimer_add(client->timerEvt, &tv);
-}
-
 void pipe_read_callback(int fd,
                         short ev,
                         void *arg)
 {
-    struct client *client = (struct client *)arg;
+    Client *client = (Client *)arg;
     if( client ) {
         switch( client->bufInStatus) {
         case kPipeReadNone: 
@@ -255,7 +91,7 @@ void pipe_read_callback(int fd,
                         OUTPUT("-----read again later----\r\n");
                     } else {
                         OUTPUT("process pipe read error!");
-                        freeClient(client);
+                        delete(client);
                     }
                 } else {
                     ASSERT( nRead == 4);
@@ -271,15 +107,15 @@ void pipe_read_callback(int fd,
                                 OUTPUT("-----read again later----\r\n");
                             } else {
                                 OUTPUT("process pipe read error!");
-                                freeClient(client);
+                                delete(client);
                             }
                         } else {
                             OUTPUT("process pipe read=%d!\n", nRead);
                             if( nRead == jsonLen ) {
-                                writeBuf( client, TWO_HUNDRED_OK, strlen((char*)TWO_HUNDRED_OK));
-                                writeBuf( client, jsonBuf, jsonLen);
-                                closeClientPipe( client );
-                                startTimeoutTimer( client );
+                                client->writeBuf(TWO_HUNDRED_OK, strlen((char*)TWO_HUNDRED_OK));
+                                client->writeBuf(jsonBuf, jsonLen);
+                                client->closePipe();
+                                client->startTimeoutTimer(gEvtBase);
                             } else {
                                 client->bufIn = (char*)malloc(jsonLen);
                                 client->bufSize = jsonLen;
@@ -288,9 +124,9 @@ void pipe_read_callback(int fd,
                             }
                         }
                     } else {
-                        writeBuf( client, FIVE_HUNDRED_ERROR, strlen((char*)FIVE_HUNDRED_ERROR));
-                        closeClientPipe( client );
-                        startTimeoutTimer( client );
+                        client->writeBuf(FIVE_HUNDRED_ERROR, strlen((char*)FIVE_HUNDRED_ERROR));
+                        client->closePipe();
+                        client->startTimeoutTimer(gEvtBase);
                     }
                 }
                 break;
@@ -306,7 +142,7 @@ void pipe_read_callback(int fd,
                         OUTPUT("-----read again later----\r\n");
                     } else {
                         OUTPUT("process pipe read error!");
-                        freeClient(client);
+                        delete(client);
                     }
                 } else {
                     OUTPUT("process pipe read=%d!\n", nRead);
@@ -314,11 +150,11 @@ void pipe_read_callback(int fd,
                     client->bufLen += nRead;
 
                     if( nRead == remaining ) {
-                        writeBuf( client, TWO_HUNDRED_OK, strlen((char*)TWO_HUNDRED_OK));
-                        writeBuf( client, client->bufIn, client->bufSize);
-                        freeClientInBuf(client);
-                        closeClientPipe( client );
-                        startTimeoutTimer( client );
+                        client->writeBuf(TWO_HUNDRED_OK, strlen((char*)TWO_HUNDRED_OK));
+                        client->writeBuf(client->bufIn, client->bufSize);
+                        client->freeInBuf();
+                        client->closePipe();
+                        client->startTimeoutTimer(gEvtBase);
                     }
                 }
                 break;
@@ -335,7 +171,7 @@ void pipe_read_callback(int fd,
 void buf_read_callback(struct bufferevent *incoming,
                        void *arg)
 {
-    struct client *client = (struct client *)arg;
+    Client *client = (Client *)arg;
     if( client ) {
         int len = evbuffer_get_length(incoming->input);
         char req[len];
@@ -351,10 +187,10 @@ void buf_read_callback(struct bufferevent *incoming,
                 memcpy(url, &urlLen, sizeof(int));
                 memcpy(url+sizeof(int), startPos, urlLen);
                 if( client->pipeIndex == -1 ) {
-                    client->pipeIndex = acquireUnusedPipe();
+                    client->pipeIndex = gPipeTable->acquireUnusedPipe();
                 }
                 if( client->pipeIndex != -1 ) {
-                    ProcessPipe* pipe = gPipeMap[client->pipeIndex];
+                    ProcessPipe* pipe = gPipeTable->get(client->pipeIndex);
                     //register input
                     event_set(&client->pipeInEvt,
                               pipe->getInFd(),
@@ -378,8 +214,8 @@ void buf_read_callback(struct bufferevent *incoming,
                     //copy data for future write
                     evbuffer_add(client->bufOut, url, sizeof(url));
                 } else {
-                    writeBuf( client, FIVE_HUNDRED_THREE_ERROR, strlen((char*)FIVE_HUNDRED_THREE_ERROR));
-                    startTimeoutTimer( client );
+                    client->writeBuf(FIVE_HUNDRED_THREE_ERROR, strlen((char*)FIVE_HUNDRED_THREE_ERROR));
+                    client->startTimeoutTimer(gEvtBase);
                 }
             }
         } else {
@@ -401,8 +237,8 @@ void buf_error_callback(struct bufferevent *bev,
     //this happens when the client disconnects.
     OUTPUT("---client disconnected and returned\n");
 
-    struct client *client = (struct client *)arg;
-    freeClient(client);
+    Client *client = (Client *)arg;
+    delete(client);
 }
 
 void accept_callback(int fd,
@@ -412,7 +248,7 @@ void accept_callback(int fd,
     int client_fd;
     struct sockaddr_in client_addr;
     socklen_t client_len = sizeof(client_addr);
-    struct client *client;
+
 
     client_fd = accept(fd,
                        (struct sockaddr *)&client_addr,
@@ -424,20 +260,14 @@ void accept_callback(int fd,
     
     setnonblock(client_fd);
     
-    client = (struct client*)calloc(1, sizeof(*client));
+    Client* client = new Client(client_fd, 
+                                buf_read_callback,
+                                buf_write_callback,
+                                buf_error_callback,
+                                gPipeTable);
     if (client == NULL) {
-        OUTPUT("malloc failed");
+        OUTPUT("client alloc failed");
     }
-    client->fdSocket = client_fd;
-    client->pipeIndex = -1; //unassigned.
-    client->bufOut = evbuffer_new();
-    
-    client->httpEvt = bufferevent_new(client_fd,
-                                     buf_read_callback,
-                                     buf_write_callback,
-                                     buf_error_callback,
-                                     client);
-
     bufferevent_enable(client->httpEvt, EV_READ);
 }
 
@@ -452,10 +282,7 @@ int main(int argc,
     Logger::initLog("Face2ServerMain");    
 
     //start hashmap, launch 10 processes
-    for(int i = 0; i< MAX_PROCESS_PIPES; i++) {
-        gPipeMap.insert(Int_Pipe_Pair(i, new ProcessPipe(PROCESS_LOCATION)));
-    }
-    gPipeMask = 0;
+    gPipeTable = new PipeTable(PROCESS_LOCATION);
 
     //start event loop
     gEvtBase = event_init();
