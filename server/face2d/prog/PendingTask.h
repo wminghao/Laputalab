@@ -11,10 +11,12 @@
 class PendingTask: public SmartPtrInterface<PendingTask>
 {
  public:
-    PendingTask(char* urlStr, int urlLen){
+    PendingTask(char* urlStr, int urlLen):urlLen_(0){
         urlStr_ = (char*) malloc(urlLen);
-        memcpy(urlStr_, urlStr, urlLen);
-        urlLen_ = urlLen;
+        if( urlStr_ ) {
+            memcpy(urlStr_, urlStr, urlLen);
+            urlLen_ = urlLen;
+        }
     }
     ~PendingTask(){
         free(urlStr_);

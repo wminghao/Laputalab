@@ -44,7 +44,7 @@ void setnonblock(int fd) {
 void pipe_read_callback(int fd,short ev,void *arg);
 void pipe_write_callback(int fd,short ev,void *arg);
 
-void nextPendingTask() {
+static void nextPendingTask() {
     Client* nextClient = NULL;
     SmartPtr<PendingTask> pendingTask = gPendingTasks->getNext(nextClient);
     if( nextClient != NULL ) {
@@ -55,9 +55,17 @@ void nextPendingTask() {
     }
 }
 
-void deleteClient(Client* client) {
+static void deleteClient(Client* client) {
     gPendingTasks->removeTask(client);
     delete(client);
+}
+
+static void timeout_handler(int sock, short which, void *arg){
+    Client *client = (Client *)arg;    
+    if ( client ) {
+        OUTPUT("close and deleted client");
+        deleteClient(client);
+    }
 }
 
 void pipe_write_callback(int fd,
@@ -133,7 +141,7 @@ void pipe_read_callback(int fd,
                                 client->writeBuf(TWO_HUNDRED_OK, strlen((char*)TWO_HUNDRED_OK));
                                 client->writeBuf(jsonBuf, jsonLen);
                                 client->closePipe();
-                                client->startTimeoutTimer(gEvtBase);
+                                client->startTimeoutTimer(gEvtBase, timeout_handler);
                                 nextPendingTask(); //start the next task
                             } else {
                                 client->bufIn = (char*)malloc(jsonLen);
@@ -145,7 +153,7 @@ void pipe_read_callback(int fd,
                     } else {
                         client->writeBuf(FIVE_HUNDRED_ERROR, strlen((char*)FIVE_HUNDRED_ERROR));
                         client->closePipe();
-                        client->startTimeoutTimer(gEvtBase);
+                        client->startTimeoutTimer(gEvtBase, timeout_handler);
                         nextPendingTask(); //start the next task
                     }
                 }
@@ -174,7 +182,7 @@ void pipe_read_callback(int fd,
                         client->writeBuf(client->bufIn, client->bufSize);
                         client->freeInBuf();
                         client->closePipe();
-                        client->startTimeoutTimer(gEvtBase);
+                        client->startTimeoutTimer(gEvtBase, timeout_handler);
                         nextPendingTask(); //start the next task
                     }
                 }

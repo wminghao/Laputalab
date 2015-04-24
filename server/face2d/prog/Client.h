@@ -1,3 +1,4 @@
+
 #ifndef __CLIENT__
 #define __CLIENT__
 
@@ -15,7 +16,7 @@ typedef enum {
 
 class Client;
 
-static void timeout_handler(int sock, short which, void *arg);
+typedef void (*Timeout_Handler)(int sock, short which, void *arg);
 
 class Client {
  public:
@@ -24,14 +25,10 @@ class Client {
     struct event pipeOutEvt;
 
     //http client socket
-    int fdSocket;
     struct bufferevent *httpEvt;
 
     //temp buffer used when outputing from socket and input to pipe.
     struct evbuffer* bufOut;
-
-    //timer event after everything is done
-    struct event *timerEvt;
 
     //input buf
     char* bufIn;
@@ -40,18 +37,25 @@ class Client {
     PIPE_READ_STATUS bufInStatus;
 
  private:
-    PipeTable* pipeTable;
-    int pipeIndex;
+    PipeTable* pipeTable_;
+    
+    //pipe index
+    int pipeIndex_;
+
+    //http client socket
+    int fdSocket_;
+
+    //timer event after everything is done
+    struct event *timerEvt_;
 
  public:
     Client(int client_fd, 
            void (*buf_read_callback)(struct bufferevent *incoming,void *arg),
            void (*buf_write_callback)(struct bufferevent *bev,void *arg),
            void (*buf_error_callback)(struct bufferevent *bev,short what,void *arg),
-           PipeTable* pTable): fdSocket(client_fd), 
-        bufOut(evbuffer_new()), timerEvt(NULL), 
+           PipeTable* pTable): bufOut(evbuffer_new()), 
         bufIn(NULL), bufLen(0), bufSize(0), 
-        bufInStatus(kPipeReadNone),pipeTable(pTable),pipeIndex(-1) {
+        bufInStatus(kPipeReadNone), pipeTable_(pTable),pipeIndex_(-1), fdSocket_(client_fd), timerEvt_(NULL) {
         httpEvt = bufferevent_new(client_fd,
                                           buf_read_callback,
                                           buf_write_callback,
@@ -69,9 +73,10 @@ class Client {
         closePipe();
         
         //free timer event
-        if( timerEvt ) {
-            evtimer_del(timerEvt);
-            timerEvt = NULL;
+        if( timerEvt_ ) {
+            evtimer_del(timerEvt_);
+            event_free(timerEvt_);
+            timerEvt_ = NULL;
         }
         //free buIn
         freeInBuf();
@@ -81,15 +86,15 @@ class Client {
         bufOut = NULL;
         
         //close socket
-        close(fdSocket);
+        close(fdSocket_);
     }
 
     void closePipe() {
-        if( pipeIndex != -1 ) {
+        if( pipeIndex_ != -1 ) {
             event_del( &pipeInEvt);
             event_del( &pipeOutEvt);
-            pipeTable->releasePipe(pipeIndex);
-            pipeIndex = -1;
+            pipeTable_->releasePipe(pipeIndex_);
+            pipeIndex_ = -1;
         }
     }
     void freeInBuf() {
@@ -107,12 +112,12 @@ class Client {
         evbuffer_free(evreturn);
     }
 
-    void startTimeoutTimer(struct event_base * evtBase) {
+    void startTimeoutTimer(struct event_base * evtBase, Timeout_Handler handler) {
         struct timeval tv;
         tv.tv_sec = CONN_TIMEOUT; //very fast close
         tv.tv_usec = 0;
-        timerEvt = evtimer_new(evtBase, timeout_handler, this);
-        evtimer_add(timerEvt, &tv);
+        timerEvt_ = evtimer_new(evtBase, handler, this);
+        evtimer_add(timerEvt_, &tv);
     }
 
     bool tryToEnablePipe( char* url, int len,
@@ -124,11 +129,11 @@ class Client {
                                                  void *arg)
                      ) {
         bool ret = false;
-        if( pipeIndex == -1 ) {
-            pipeIndex = pipeTable->acquireUnusedPipe();
+        if( pipeIndex_ == -1 ) {
+            pipeIndex_ = pipeTable_->acquireUnusedPipe();
         }
-        if( pipeIndex != -1 ) {
-            ProcessPipe* pipe = pipeTable->get(pipeIndex);
+        if( pipeIndex_ != -1 ) {
+            ProcessPipe* pipe = pipeTable_->get(pipeIndex_);
             //register input
             event_set(&pipeInEvt,
                       pipe->getInFd(),
@@ -155,11 +160,4 @@ class Client {
         return ret;
     }
 };
-
-static void timeout_handler(int sock, short which, void *arg){
-    Client *client = (Client *)arg;    
-    if ( client && client->timerEvt && !evtimer_pending(client->timerEvt, NULL)) {
-        delete(client);
-    }
-}
 #endif //__CLIENT__
