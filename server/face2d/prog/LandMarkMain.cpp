@@ -83,7 +83,7 @@ int main()
                 if( bWorking ) {
                     buf[pathLen]='\0';
                     string faceImg(buf);
-                    OUTPUT("------LandMark read data, path=%s\n", faceImg.c_str());
+                    //OUTPUT("------LandMark read data, path=%s\n", faceImg.c_str());
                     string jsonObject;
                     if(!lm->ProcessImage( faceImg, jsonObject )) {
                         size_t resLen = jsonObject.length();
@@ -91,14 +91,10 @@ int main()
                         doWrite( 1, buf, 4);
                         fsync( 1 ); //flush the buffer
                         
-                        char* result =(char*) malloc(resLen);
-                        if( result ) {
-                            memcpy(result, jsonObject.c_str(), resLen);
-                            doWrite( 1, result, resLen);
+                        if( resLen > 0 ) {
+                            doWrite( 1, jsonObject.c_str(), resLen);
                             fsync( 1 ); //flush the buffer
-                            result[resLen] = '\0';
                             //OUTPUT("------LandMark result=%s", result);
-                            free(result);
                         }
                     } else {
                         OUTPUT("----LandMark cannot process!\n");
