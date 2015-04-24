@@ -1,7 +1,7 @@
 #!/bin/sh
 
 a=0
-while [ $a -lt 5 ]
+while [ $a -lt 4 ]
 do
    echo "launching instances"+$a
    ./launchSingleClient.sh &
@@ -11,7 +11,7 @@ done
 sleep 1
 
 b=0
-while [ $b -lt 5 ]
+while [ $b -lt 10 ]
 do
    echo "launching instances"+$b
    ./launchSingleClient.sh &

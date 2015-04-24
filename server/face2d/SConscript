@@ -4,7 +4,7 @@ face2dCflags = CCFLAGS
 face2dCflags.append( '-Wno-unused' )
 
 #objects
-LoggerObj = env.Object('prog/Logger.cpp', CCFLAGS=face2dCflags )
+LoggerObj = env.Object('prog/utility/Logger.cpp', CCFLAGS=face2dCflags )
 processPipeObj = env.Object('prog/ProcessPipe.cpp', CCFLAGS=face2dCflags )
 mainObj = env.Object('prog/Face2dServerMain.cpp', CCFLAGS=face2dCflags )
 

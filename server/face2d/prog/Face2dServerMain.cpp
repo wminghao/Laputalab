@@ -8,10 +8,11 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
-#include "Output.h"
+#include "utility/Output.h"
 #include "ProcessPipe.h"
 #include "PipeTable.h"
 #include "Client.h"
+#include "PendingTask.h"
 
 using namespace std;
 #define SERVER_PORT 1234
@@ -29,9 +30,9 @@ const char* LANDMARK_URL_SUFFIX = " HTTP/";
 
 const char* TWO_HUNDRED_OK = "HTTP/1.1 200 OK\r\n\r\n";
 const char* FIVE_HUNDRED_ERROR = "HTTP/1.1 500 Cannot process image\r\n\r\n";
-const char* FIVE_HUNDRED_THREE_ERROR = "HTTP/1.1 503 Service unavailable. Too busy\r\n\r\n";
 
 PipeTable* gPipeTable;
+PendingTaskTable* gPendingTasks;
 struct event_base * gEvtBase;
 
 void setnonblock(int fd) {
@@ -39,6 +40,19 @@ void setnonblock(int fd) {
     flags = fcntl(fd, F_GETFL);
     flags |= O_NONBLOCK;
     fcntl(fd, F_SETFL, flags);
+}
+void pipe_read_callback(int fd,short ev,void *arg);
+void pipe_write_callback(int fd,short ev,void *arg);
+
+void nextPendingTask() {
+    Client* nextClient = NULL;
+    SmartPtr<PendingTask> pendingTask = gPendingTasks->getNext(nextClient);
+    if( nextClient != NULL ) {
+        if(nextClient->tryToEnablePipe(pendingTask->getUrlStr(), pendingTask->getUrlLen(), pipe_read_callback, pipe_write_callback) ) {
+            OUTPUT("!remove pending task, client=0x%x\n", nextClient);
+            gPendingTasks->removeTask(nextClient);
+        }
+    }
 }
 
 void pipe_write_callback(int fd,
@@ -56,8 +70,7 @@ void pipe_write_callback(int fd,
                     int netErrorNumber = errno;
                     if ( netErrorNumber == EAGAIN) {
                         OUTPUT("-----write again later----\r\n");
-                        event_add(&client->pipeInEvt,
-                                  NULL);
+                        event_add(&client->pipeInEvt, NULL);
                     } else {
                         OUTPUT("process pipe write error!");
                         delete(client);
@@ -116,6 +129,7 @@ void pipe_read_callback(int fd,
                                 client->writeBuf(jsonBuf, jsonLen);
                                 client->closePipe();
                                 client->startTimeoutTimer(gEvtBase);
+                                nextPendingTask(); //start the next task
                             } else {
                                 client->bufIn = (char*)malloc(jsonLen);
                                 client->bufSize = jsonLen;
@@ -127,6 +141,7 @@ void pipe_read_callback(int fd,
                         client->writeBuf(FIVE_HUNDRED_ERROR, strlen((char*)FIVE_HUNDRED_ERROR));
                         client->closePipe();
                         client->startTimeoutTimer(gEvtBase);
+                        nextPendingTask(); //start the next task
                     }
                 }
                 break;
@@ -155,6 +170,7 @@ void pipe_read_callback(int fd,
                         client->freeInBuf();
                         client->closePipe();
                         client->startTimeoutTimer(gEvtBase);
+                        nextPendingTask(); //start the next task
                     }
                 }
                 break;
@@ -186,36 +202,9 @@ void buf_read_callback(struct bufferevent *incoming,
                 char url[urlLen+sizeof(int)];
                 memcpy(url, &urlLen, sizeof(int));
                 memcpy(url+sizeof(int), startPos, urlLen);
-                if( client->pipeIndex == -1 ) {
-                    client->pipeIndex = gPipeTable->acquireUnusedPipe();
-                }
-                if( client->pipeIndex != -1 ) {
-                    ProcessPipe* pipe = gPipeTable->get(client->pipeIndex);
-                    //register input
-                    event_set(&client->pipeInEvt,
-                              pipe->getInFd(),
-                              EV_WRITE|EV_PERSIST,
-                              pipe_write_callback,
-                              client);
-                    event_add(&client->pipeInEvt,
-                              NULL);
-                    
-                    //register output
-                    event_set(&client->pipeOutEvt,
-                              pipe->getOutFd(),
-                              EV_READ|EV_PERSIST,
-                              pipe_read_callback,
-                              client);
-                    event_add(&client->pipeOutEvt,
-                              NULL);                
-                    
-                    OUTPUT("registered processpipe, inFd=%d, outFd=%d, urllen=%d, url=%s\n", pipe->getInFd(), pipe->getOutFd(), urlLen, url+sizeof(int));
-                    
-                    //copy data for future write
-                    evbuffer_add(client->bufOut, url, sizeof(url));
-                } else {
-                    client->writeBuf(FIVE_HUNDRED_THREE_ERROR, strlen((char*)FIVE_HUNDRED_THREE_ERROR));
-                    client->startTimeoutTimer(gEvtBase);
+                if( !client->tryToEnablePipe( url, sizeof(url), pipe_read_callback, pipe_write_callback) ) {
+                    OUTPUT("!add pending task, client=0x%x, urllen=%d, url=%s\n", client, urlLen, url+sizeof(int));
+                    gPendingTasks->addTask(client, url, sizeof(url));
                 }
             }
         } else {
@@ -267,6 +256,7 @@ void accept_callback(int fd,
                                 gPipeTable);
     if (client == NULL) {
         OUTPUT("client alloc failed");
+        return;
     }
     bufferevent_enable(client->httpEvt, EV_READ);
 }
@@ -283,6 +273,9 @@ int main(int argc,
 
     //start hashmap, launch 10 processes
     gPipeTable = new PipeTable(PROCESS_LOCATION);
+
+    //pending tasks table
+    gPendingTasks = new PendingTaskTable();
 
     //start event loop
     gEvtBase = event_init();
@@ -332,6 +325,8 @@ int main(int argc,
     event_dispatch();
     
     close(socketlisten);
-    
+
+    delete(gPipeTable);
+    delete(gPendingTasks);
     return 0;
 }

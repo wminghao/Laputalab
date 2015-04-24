@@ -12,7 +12,7 @@
 #include <sys/types.h>
 #include <assert.h>
 #include <vector>
-#include "Output.h"
+#include "utility/Output.h"
 
 const char* LD_LIBRARY_PATH = "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:.";
 

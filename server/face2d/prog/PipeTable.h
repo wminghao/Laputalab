@@ -2,7 +2,7 @@
 #define __PIPE_TABLE__
 
 #include <unordered_map>
-#include "Output.h"
+#include "utility/Output.h"
 #include "ProcessPipe.h"
 
 //process pipe table.
@@ -65,7 +65,7 @@ class PipeTable {
                 if( (pipeMask_ & (~maskArray[i])) == 0 ) {
                     pipeMask_ |= (~maskArray[i]);
                     index = i;
-                    OUTPUT("acquireUnusedPipe, index=%d\r\n", index);
+                    OUTPUT("acquirePipe, index=%d\n", index);
                     break;
                 }
             }
@@ -76,7 +76,7 @@ class PipeTable {
     void releasePipe(int index) {
         if( index >= 0 && index < MAX_PROCESS_PIPES ) {
             pipeMask_ &= maskArray[index];
-            OUTPUT("releasePipe, index=%d\r\n", index);
+            OUTPUT("releasePipe, index=%d\n", index);
         }
     }
 

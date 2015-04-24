@@ -10,8 +10,8 @@
 #include <unistd.h>   /* For open(), creat() */
 #include <string>
 #include <assert.h>
-#include "Output.h"
 #include "LandMark.h"
+#include "utility/Output.h"
 
 using namespace std;
 
