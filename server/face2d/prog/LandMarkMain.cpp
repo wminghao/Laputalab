@@ -10,6 +10,7 @@
 #include <unistd.h>   /* For open(), creat() */
 #include <string>
 #include <assert.h>
+#include <jansson.h>
 #include "LandMark.h"
 #include "utility/Output.h"
 
@@ -55,7 +56,43 @@ bool doWrite( int fd, const char *buf, size_t len ) {
     return true;
 }
 
-#define BUF_SIZE 1024
+//TODO fix any leaks.
+//convert from jsonArray into jsonObject
+bool convertToJson(string& jsonArray, string& jsonObject) {
+    bool bIsSucess = false;
+
+    //input
+    json_t *rootInput;
+    json_error_t error;
+
+    rootInput = json_loads(jsonArray.c_str(), 0, &error);
+    if( rootInput && json_is_array(rootInput)) {
+        int total = json_array_size(rootInput);
+        //output
+        json_t* rootOutput = json_object();
+        for(int i = 0; i < total; i+=2) {
+            json_t *data = json_array_get(rootInput, i);
+            double x = json_real_value(data);
+            data = json_array_get(rootInput, i+1);
+            double y = json_real_value(data);
+
+            char pointKeyword[100];
+            sprintf(pointKeyword, "point%02d", i/2);
+            json_t* point_obj = json_object();
+            json_object_set_new( rootOutput, pointKeyword, point_obj );            
+            json_object_set_new( point_obj, "x", json_real(x) );
+            json_object_set_new( point_obj, "y", json_real(y) );
+        }
+        
+        bIsSucess = true;
+        char *ret_strings = json_dumps(rootOutput, JSON_SORT_KEYS|JSON_REAL_PRECISION(6));
+        jsonObject = ret_strings;
+        free(ret_strings);
+        json_decref( rootOutput );
+    }
+    json_decref( rootInput );
+    return bIsSucess;
+}
 
 int main()
 {
@@ -69,42 +106,45 @@ int main()
     LandMark* lm = new LandMark();
 
     OUTPUT("------LandMarkProc started!\r\n");
-    char buf[BUF_SIZE]; 
     bool bWorking = true;
     while ( true ) { 
-        bWorking = doRead( 0, buf, 4 );
+        char lenBuf[4]; 
+        bWorking = doRead( 0, lenBuf, 4 );
         if( bWorking ) {
             int pathLen = 0;
-            memcpy(&pathLen, buf, 4);
+            memcpy(&pathLen, lenBuf, 4);
             //OUTPUT("------LandMark read data, size=%d\n", pathLen);
             bool bIsSuccess = true;
-            if( pathLen < BUF_SIZE ) {
-                bWorking = doRead( 0, buf, pathLen );
-                if( bWorking ) {
-                    buf[pathLen]='\0';
-                    string faceImg(buf);
-                    //OUTPUT("------LandMark read data, path=%s\n", faceImg.c_str());
-                    string jsonObject;
-                    if(!lm->ProcessImage( faceImg, jsonObject )) {
+            char buf[pathLen];
+            bWorking = doRead( 0, buf, pathLen );
+            if( bWorking ) {
+                buf[pathLen]='\0';
+                string faceImg(buf);
+                //OUTPUT("------LandMark read data, path=%s\n", faceImg.c_str());
+                string jsonArray;
+                string jsonObject;
+                bool bIsSuccess = false;
+                if(!lm->ProcessImage( faceImg, jsonArray )) {
+                    if(convertToJson(jsonArray, jsonObject)) {
                         size_t resLen = jsonObject.length();
                         memcpy(buf, &resLen, 4);
                         doWrite( 1, buf, 4);
                         fsync( 1 ); //flush the buffer
-                        
+                    
                         if( resLen > 0 ) {
                             doWrite( 1, jsonObject.c_str(), resLen);
                             fsync( 1 ); //flush the buffer
                             //OUTPUT("------LandMark result=%s", result);
+                            bIsSuccess = true;
                         }
-                    } else {
-                        OUTPUT("----LandMark cannot process!\n");
-                        bIsSuccess = false;
                     }
                 }
-            } else {
-                OUTPUT("----LandMark read path too long!\n");
-                bIsSuccess = false;
+                if(!bIsSuccess) {
+                    OUTPUT("----LandMark cannot process!\n");
+                    bIsSuccess = false;
+                }
             }
+        
             if( !bIsSuccess ) {
                 memset( buf, 0, 4 );
                 doWrite( 1, buf, 4 );
