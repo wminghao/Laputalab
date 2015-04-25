@@ -56,7 +56,6 @@ bool doWrite( int fd, const char *buf, size_t len ) {
     return true;
 }
 
-//TODO fix any leaks.
 //convert from jsonArray into jsonObject
 bool convertToJson(string& jsonArray, string& jsonObject) {
     bool bIsSucess = false;
