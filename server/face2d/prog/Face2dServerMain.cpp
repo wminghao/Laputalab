@@ -139,7 +139,7 @@ void pipe_read_callback(int fd,
                             OUTPUT("process pipe read=%d!\n", nRead);
                             if( nRead == jsonLen ) {
                                 client->writeBuf(TWO_HUNDRED_OK, strlen((char*)TWO_HUNDRED_OK));
-                                client->writeBuf(jsonBuf, jsonLen);
+                                client->writeBuf(jsonBuf, jsonLen, true);
                                 client->closePipe();
                                 client->startTimeoutTimer(gEvtBase, timeout_handler);
                                 nextPendingTask(); //start the next task
@@ -151,7 +151,7 @@ void pipe_read_callback(int fd,
                             }
                         }
                     } else {
-                        client->writeBuf(FIVE_HUNDRED_ERROR, strlen((char*)FIVE_HUNDRED_ERROR));
+                        client->writeBuf(FIVE_HUNDRED_ERROR, strlen((char*)FIVE_HUNDRED_ERROR), true);
                         client->closePipe();
                         client->startTimeoutTimer(gEvtBase, timeout_handler);
                         nextPendingTask(); //start the next task
@@ -179,7 +179,7 @@ void pipe_read_callback(int fd,
 
                     if( nRead == remaining ) {
                         client->writeBuf(TWO_HUNDRED_OK, strlen((char*)TWO_HUNDRED_OK));
-                        client->writeBuf(client->bufIn, client->bufSize);
+                        client->writeBuf(client->bufIn, client->bufSize, true);
                         client->freeInBuf();
                         client->closePipe();
                         client->startTimeoutTimer(gEvtBase, timeout_handler);

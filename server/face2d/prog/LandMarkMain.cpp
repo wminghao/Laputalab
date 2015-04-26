@@ -123,7 +123,8 @@ int main()
                 string jsonArray;
                 string jsonObject;
                 bool bIsSuccess = false;
-                if( !lm->ProcessImage( faceImg, jsonArray ) ) {
+                int ret = lm->ProcessImage( faceImg, jsonArray );
+                if( !ret ) {
                     if(convertToJson(jsonArray, jsonObject)) {
                         size_t resLen = jsonObject.length();
                         memcpy(buf, &resLen, 4);
@@ -137,15 +138,13 @@ int main()
                             bIsSuccess = true;
                         }
                     }
-                }                
-            }
-        
-            if( !bIsSuccess ) {
-                OUTPUT("----LandMark cannot process!\n");
-                memset( buf, 0, 4 );
-                doWrite( 1, buf, 4 );
-                fsync( 1 ); //flush the buffer
-            }
+                } else {
+                    OUTPUT("----LandMark cannot process! ret=%d\n", ret);
+                    memset( buf, 0, 4 );
+                    doWrite( 1, buf, 4 );
+                    fsync( 1 ); //flush the buffer
+                }     
+            }        
         }
     }
     OUTPUT("------LandMark ended=%d\r\n");

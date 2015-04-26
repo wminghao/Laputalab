@@ -7,7 +7,7 @@
 #include "utility/Output.h"
 
 //client conn timeout
-const int CONN_TIMEOUT = 3; //3 seconds
+const int CONN_TIMEOUT = 0; //0 seconds means immediately.
 
 typedef enum {
     kPipeReadNone,
@@ -104,12 +104,16 @@ class Client {
         bufInStatus = kPipeReadNone;
     }
 
-    void writeBuf(const char* buf, int len ) 
+    void writeBuf(const char* buf, int len, bool isEOF = false ) 
     {
         struct evbuffer* evreturn = evbuffer_new();
         evbuffer_add(evreturn, buf, len);
         bufferevent_write_buffer(httpEvt, evreturn);
+        bufferevent_flush(httpEvt, EV_WRITE, BEV_FLUSH);
         evbuffer_free(evreturn);
+        if( isEOF ) {
+            bufferevent_flush(httpEvt, EV_WRITE|EV_READ, BEV_FINISHED);
+        }
     }
 
     void startTimeoutTimer(struct event_base * evtBase, Timeout_Handler handler) {
