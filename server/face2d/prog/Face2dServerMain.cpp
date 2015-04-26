@@ -25,7 +25,7 @@ const char* PROCESS_LOCATION = "LandMarkMain";//"/usr/bin/LandMarkMain";
 #endif
 
 const char* LANDMARK_URL_PREFIX = "GET /getlandmark?url=";
-const char* LANDMARK_URL_SUFFIX = " HTTP/";
+const char* LANDMARK_URL_SUFFIX = "&";
 
 const char* TWO_HUNDRED_OK = "HTTP/1.1 200 OK\r\n\r\n";
 const char* FIVE_HUNDRED_ERROR = "HTTP/1.1 500 Cannot process image\r\n\r\n";
@@ -110,6 +110,7 @@ void pipe_read_callback(int fd,
                 unsigned char lenStr[4];
                 memset(lenStr, 0, 4);
                 int nRead = read( fd, lenStr, 4);
+
                 if( nRead <= 0 ) {
                     if ( errno == EAGAIN ) {
                         //try again

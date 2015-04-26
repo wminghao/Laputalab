@@ -113,7 +113,7 @@ int main()
             int pathLen = 0;
             memcpy(&pathLen, lenBuf, 4);
             //OUTPUT("------LandMark read data, size=%d\n", pathLen);
-            bool bIsSuccess = true;
+            bool bIsSuccess = false;
             char buf[pathLen];
             bWorking = doRead( 0, buf, pathLen );
             if( bWorking ) {
@@ -123,7 +123,7 @@ int main()
                 string jsonArray;
                 string jsonObject;
                 bool bIsSuccess = false;
-                if(!lm->ProcessImage( faceImg, jsonArray )) {
+                if( !lm->ProcessImage( faceImg, jsonArray ) ) {
                     if(convertToJson(jsonArray, jsonObject)) {
                         size_t resLen = jsonObject.length();
                         memcpy(buf, &resLen, 4);
@@ -137,14 +137,11 @@ int main()
                             bIsSuccess = true;
                         }
                     }
-                }
-                if(!bIsSuccess) {
-                    OUTPUT("----LandMark cannot process!\n");
-                    bIsSuccess = false;
-                }
+                }                
             }
         
             if( !bIsSuccess ) {
+                OUTPUT("----LandMark cannot process!\n");
                 memset( buf, 0, 4 );
                 doWrite( 1, buf, 4 );
                 fsync( 1 ); //flush the buffer
