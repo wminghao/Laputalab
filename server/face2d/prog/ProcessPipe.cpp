@@ -51,7 +51,7 @@ pid_t ProcessPipe::open(const char* processLocation)
     char **arguments;
     {
         std::vector<char *> strings;
-        strings.push_back( strdup( processLocation ) );
+        strings.push_back( (char*)processLocation );
         //strings.push_back( strdup( more arg ) );
         size_t arrayLen = strings.size() + 1;
         arguments = new char *[ arrayLen ];
@@ -64,7 +64,7 @@ pid_t ProcessPipe::open(const char* processLocation)
     char **env;
     {
         std::vector<char *> stringsEnv;
-        stringsEnv.push_back( strdup( LD_LIBRARY_PATH ) );
+        stringsEnv.push_back( (char*)LD_LIBRARY_PATH );
         size_t arrayLenEnv = stringsEnv.size() + 1;
         env = new char *[ arrayLenEnv ];
         for ( size_t i = 0 ; i < arrayLenEnv - 1 ; ++i ) {
