@@ -108,8 +108,7 @@ int main()
 
 #ifdef TEST_INPUT
     char outputFilename[] = "out.list";
-    FILE *ofp;
-    ofp = fopen(outputFilename, "w");
+    FILE *ofp = fopen(outputFilename, "w");
 #endif
 
     OUTPUT("------LandMarkProc started!\r\n");
@@ -141,7 +140,6 @@ int main()
                 //OUTPUT("------LandMark read data, path=%s\n", faceImg.c_str());
                 string jsonArray;
                 string jsonObject;
-                bool bIsSuccess = false;
                 int ret = lm->ProcessImage( faceImg, jsonArray );
                 if( !ret ) {
                     if(convertToJson(jsonArray, jsonObject)) {
@@ -153,8 +151,7 @@ int main()
                         if( resLen > 0 ) {
                             doWrite( 1, jsonObject.c_str(), resLen);
                             fsync( 1 ); //flush the buffer
-                            //OUTPUT("------LandMark result=%s", result);
-                            bIsSuccess = true;
+                            //OUTPUT("------LandMark result len=%d", resLen);
                         }
                     }
                 } else {
@@ -168,6 +165,6 @@ int main()
     }
     delete(lm);
     
-    OUTPUT("------LandMark ended=%d!\n");    
+    OUTPUT("------LandMark ended!\n");    
     return 0;
 }
