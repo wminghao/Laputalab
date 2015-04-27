@@ -93,6 +93,8 @@ bool convertToJson(string& jsonArray, string& jsonObject) {
     return bIsSucess;
 }
 
+//#define TEST_INPUT
+
 int main()
 {
     signal( SIGSEGV, handlesig );
@@ -104,11 +106,24 @@ int main()
 
     LandMark* lm = new LandMark();
 
+#ifdef TEST_INPUT
+    char outputFilename[] = "out.list";
+    FILE *ofp;
+    ofp = fopen(outputFilename, "w");
+#endif
+
     OUTPUT("------LandMarkProc started!\r\n");
     bool bWorking = true;
+#ifdef TEST_INPUT
+    {
+#else 
     while ( true ) { 
+#endif
         char lenBuf[4]; 
         bWorking = doRead( 0, lenBuf, 4 );
+#ifdef TEST_INPUT
+        int t = fwrite(lenBuf, 1, 4, ofp);
+#endif
         if( bWorking ) {
             int pathLen = 0;
             memcpy(&pathLen, lenBuf, 4);
@@ -117,6 +132,10 @@ int main()
             char buf[pathLen];
             bWorking = doRead( 0, buf, pathLen );
             if( bWorking ) {
+#ifdef TEST_INPUT
+                fwrite(buf, 1, pathLen, ofp);
+                fclose(ofp);
+#endif
                 buf[pathLen]='\0';
                 string faceImg(buf);
                 //OUTPUT("------LandMark read data, path=%s\n", faceImg.c_str());
@@ -147,8 +166,8 @@ int main()
             }        
         }
     }
-    OUTPUT("------LandMark ended=%d\r\n");
-    
     delete(lm);
+    
+    OUTPUT("------LandMark ended=%d!\n");    
     return 0;
 }
