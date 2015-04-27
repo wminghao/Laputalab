@@ -1,3 +1,10 @@
+//
+//  Face2dServerMain.cpp
+//  This server listens on a port: 1234 and serves http request for any face2d API calls.
+//
+//  Created by Xingze and Minghao on 4/21/15.
+//  Copyright (c) 2015 laputalab. All rights reserved.
+//
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
