@@ -126,7 +126,9 @@ int main()
         if( bWorking ) {
             int pathLen = 0;
             memcpy(&pathLen, lenBuf, 4);
-            //OUTPUT("------LandMark read data, size=%d\n", pathLen);
+#ifdef TEST_INPUT
+            OUTPUT("------LandMark read data, size=%d\n", pathLen);
+#endif
             bool bIsSuccess = false;
             char buf[pathLen];
             bWorking = doRead( 0, buf, pathLen );
@@ -136,7 +138,9 @@ int main()
 #endif
                 buf[pathLen]='\0';
                 string faceImg(buf);
-                //OUTPUT("------LandMark read data, path=%s\n", faceImg.c_str());
+#ifdef TEST_INPUT
+                OUTPUT("------LandMark read data, path=%s\n", faceImg.c_str());
+#endif
                 string jsonArray;
                 string jsonObject;
                 int ret = lm->ProcessImage( faceImg, jsonArray );
@@ -150,7 +154,9 @@ int main()
                         if( resLen > 0 ) {
                             doWrite( 1, jsonObject.c_str(), resLen);
                             fsync( 1 ); //flush the buffer
-                            //OUTPUT("------LandMark result len=%d", resLen);
+#ifdef TEST_INPUT
+                            OUTPUT("------LandMark result len=%d", resLen);
+#endif
                         }
                     }
                 } else {
