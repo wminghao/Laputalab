@@ -8,6 +8,8 @@
 #include <unordered_map>
 #include <deque>
 
+const int MAX_PENDING_TASKS = 500; //no more than 100 pending tasks can be initiated at the same time.
+
 class PendingTask: public SmartPtrInterface<PendingTask>
 {
  public:
@@ -36,9 +38,14 @@ class PendingTaskTable
 {
  public:
     PendingTaskTable(){};
-    void addTask(Client* client, char* urlStr, int urlLen){
-        pendingTaskTable_.insert(PendingMap::value_type(client, new PendingTask(urlStr, urlLen)));
-        clientQueue_.push_back(client);
+    bool addTask(Client* client, char* urlStr, int urlLen){
+        bool bRet = false;
+        if( clientQueue_.size() < MAX_PENDING_TASKS ) {
+            pendingTaskTable_.insert(PendingMap::value_type(client, new PendingTask(urlStr, urlLen)));
+            clientQueue_.push_back(client);
+            bRet = true;
+        }
+        return bRet;
     }
     
     void removeNext() {

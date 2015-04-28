@@ -40,6 +40,7 @@ const char* LANDMARK_URL_SUFFIX = "&";
 
 const char* TWO_HUNDRED_OK = "HTTP/1.1 200 OK\r\n\r\n";
 const char* FIVE_HUNDRED_ERROR = "HTTP/1.1 500 Cannot process image\r\n\r\n";
+const char* FIVE_HUNDRED_THREE_ERROR = "HTTP/1.1 503 Too many pending tasks\r\n\r\n";
 
 PipeTable* gPipeTable;
 PendingTaskTable* gPendingTasks;
@@ -255,11 +256,15 @@ void buf_read_callback(struct bufferevent *incoming,
                 memcpy(url+sizeof(int), startPos, urlLen);
                 if( !client->tryToEnablePipe( url, sizeof(url), pipe_read_callback, pipe_write_callback) ) {
                     OUTPUT("add pending task, client=0x%x, urllen=%d, url=%s\n", client, urlLen, url+sizeof(int));
-                    gPendingTasks->addTask(client, url, sizeof(url));
+                    if( !gPendingTasks->addTask(client, url, sizeof(url)) ) {
+                        OUTPUT("----too many tasks in the queue!");
+                        client->writeBuf(FIVE_HUNDRED_THREE_ERROR, strlen((char*)FIVE_HUNDRED_THREE_ERROR), true);
+                        client->startTimeoutTimer(gEvtBase, timeout_handler);
+                    }
                 }
             }
         } else {
-            OUTPUT("----fatal error!");
+            OUTPUT("----fatal error, cannot read from http input!");
             deleteClient(client);
         }
     }
