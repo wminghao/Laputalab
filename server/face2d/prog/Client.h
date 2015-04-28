@@ -124,6 +124,10 @@ class Client {
         evtimer_add(timerEvt_, &tv);
     }
 
+    int getPipeIndex() {
+        return pipeIndex_;
+    }
+
     bool tryToEnablePipe( char* url, int len,
                      void (*pipe_read_callback)(int fd,
                                                 short ev,

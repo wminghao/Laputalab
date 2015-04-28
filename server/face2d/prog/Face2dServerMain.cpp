@@ -17,6 +17,8 @@
 #include <errno.h>
 #include <evhttp.h>
 #include <memory>
+#include <sys/signal.h>
+#include <sys/stat.h>
 #include "utility/Output.h"
 #include "ProcessPipe.h"
 #include "PipeTable.h"
@@ -69,6 +71,14 @@ static void nextPendingTask() {
 static void deleteClient(Client* client) {
     gPendingTasks->removeTask(client);
     delete(client);
+}
+
+static void deleteClientOnPipeError(Client* client) {
+    int pipeIndex = client->getPipeIndex();
+    deleteClient(client);
+    if( pipeIndex != -1 ) {
+        gPipeTable->reLaunchPipeProcess(pipeIndex);
+    }
 }
 
 static void timeout_handler(int sock, short which, void *arg){
@@ -124,7 +134,7 @@ void pipe_write_callback(int fd,
                         event_add(&client->pipeInEvt, NULL);
                     } else {
                         OUTPUT("process pipe write error!");
-                        deleteClient(client);
+                        deleteClientOnPipeError(client);
                     }
                     break;
                 } else {
@@ -156,7 +166,7 @@ void pipe_read_callback(int fd,
                         OUTPUT("-----read again later----\r\n");
                     } else {
                         OUTPUT("process pipe read error!");
-                        deleteClient(client);
+                        deleteClientOnPipeError(client);
                     }
                 } else {
                     ASSERT( nRead == 4);
@@ -172,7 +182,7 @@ void pipe_read_callback(int fd,
                                 OUTPUT("-----read again later----\r\n");
                             } else {
                                 OUTPUT("process pipe read error!");
-                                deleteClient(client);
+                                deleteClientOnPipeError(client);
                             }
                         } else {
                             OUTPUT("process pipe read=%d!\n", nRead);
@@ -209,7 +219,7 @@ void pipe_read_callback(int fd,
                         OUTPUT("-----read again later----\r\n");
                     } else {
                         OUTPUT("process pipe read error!");
-                        deleteClient(client);
+                        deleteClientOnPipeError(client);                        
                     }
                 } else {
                     OUTPUT("process pipe read=%d!\n", nRead);
@@ -370,6 +380,9 @@ int openListenSocket(int listeningPort, struct event & accept_ev) {
 int main(int argc,
          char **argv)
 {
+    //ignore sig pipe, any io to an invalid pipe will return properly
+    signal(SIGPIPE, SIG_IGN);
+
     Logger::initLog("Face2ServerMain");    
 
     //start hashmap, launch 10 processes

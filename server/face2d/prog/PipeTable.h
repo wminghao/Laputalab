@@ -55,7 +55,14 @@ class PipeTable {
         for(int i = 0; i< maxProcessPipes; i++) {
             pipeMap_.insert(Int_Pipe_Pair(i, new ProcessPipe(procPath)));
         }
+        procPath_ = procPath;
         pipeMask_ = 0;        
+    }
+    ~PipeTable() {
+        for(int i = 0; i< maxProcessPipes_; i++) {
+            ProcessPipe* pipe = pipeMap_[i];
+            delete( pipe );
+        }
     }
     //return index
     int acquireUnusedPipe() {
@@ -79,6 +86,12 @@ class PipeTable {
             OUTPUT("releasePipe, index=%d\n", index);
         }
     }
+    
+    void reLaunchPipeProcess( int index ) {
+        delete( pipeMap_[index] );
+        pipeMap_.erase( index );
+        pipeMap_.insert(Int_Pipe_Pair(index, new ProcessPipe(procPath_)));
+    }
 
     ProcessPipe* get(int index) {
         return pipeMap_[index];
@@ -87,6 +100,7 @@ class PipeTable {
     unordered_map <int, ProcessPipe*> pipeMap_;
     unsigned int pipeMask_;
     int maxProcessPipes_;
+    const char* procPath_;
 };
 
 #endif
