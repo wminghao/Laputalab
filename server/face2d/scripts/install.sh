@@ -1,6 +1,6 @@
 cd ../..
 scons
-cd face2d/install
+cd face2d/scripts
 sudo cp face2d.sh /etc/init.d/
 sudo /etc/init.d/face2d.sh stop
 sudo cp /home/ubuntu/Laputalab/server/build/Linux-x86_64/face2d/prog/LandMarkMain /usr/bin/
