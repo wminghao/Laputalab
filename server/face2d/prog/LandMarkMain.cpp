@@ -114,7 +114,7 @@ int main()
     OUTPUT("------LandMarkProc started!\r\n");
     bool bWorking = true;
 #ifdef TEST_INPUT
-    {
+    for(int i=0; i<2; i++) {
 #else 
     while ( true ) { 
 #endif
@@ -133,7 +133,6 @@ int main()
             if( bWorking ) {
 #ifdef TEST_INPUT
                 fwrite(buf, 1, pathLen, ofp);
-                fclose(ofp);
 #endif
                 buf[pathLen]='\0';
                 string faceImg(buf);
@@ -164,7 +163,10 @@ int main()
         }
     }
     delete(lm);
-    
+
+#ifdef TEST_INPUT
+    fclose(ofp);
+#endif    
     OUTPUT("------LandMark ended!\n");    
     return 0;
 }

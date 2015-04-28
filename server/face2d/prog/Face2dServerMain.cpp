@@ -15,6 +15,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
+#include <evhttp.h>
+#include <memory>
 #include "utility/Output.h"
 #include "ProcessPipe.h"
 #include "PipeTable.h"
@@ -22,7 +24,9 @@
 #include "PendingTask.h"
 
 using namespace std;
-#define SERVER_PORT 1234
+const int MAX_PROCESS_PIPES = 2; //max 32 instances at the same time.
+const int SERVER_PORT = 1234;
+const int STATUS_PORT = 1235;
 
 //#define TEST_DUMMY
 #ifdef TEST_DUMMY
@@ -74,6 +78,33 @@ static void timeout_handler(int sock, short which, void *arg){
     }
 }
 
+///////////////////////////////////
+//status listener logic
+///////////////////////////////////
+void status_accept_callback( evhttp_request *req, void *) 
+{
+    auto *outBuf = evhttp_request_get_output_buffer(req);
+    if (!outBuf) {
+        return;
+    }
+    evbuffer_add_printf(outBuf, "Up"); //notify it's up
+    evhttp_send_reply(req, HTTP_OK, "OK", outBuf);
+}
+
+int openListenHttp(int listeningPort, struct evhttp* &httpd) {
+    httpd = evhttp_start("0.0.0.0", listeningPort);
+    if ( !httpd ) {
+        OUTPUT("Failed to init status http server.");
+        return -1;
+    }
+    evhttp_set_gencb(httpd, status_accept_callback, NULL);
+    OUTPUT("status server port listen on %d", listeningPort);
+    return 0;
+}
+
+///////////////////////////////////
+//main server listener logic
+///////////////////////////////////
 void pipe_write_callback(int fd,
                          short ev,
                          void *arg)
@@ -249,7 +280,8 @@ void buf_error_callback(struct bufferevent *bev,
     deleteClient((Client *)arg);
 }
 
-void accept_callback(int fd,
+//main server logic
+void server_accept_callback(int fd,
                      short ev,
                      void *arg)
 {
@@ -280,37 +312,23 @@ void accept_callback(int fd,
     bufferevent_enable(client->httpEvt, EV_READ);
 }
 
-int main(int argc,
-         char **argv)
-{
+int openListenSocket(int listeningPort, struct event & accept_ev) {
     int socketlisten;
     struct sockaddr_in addresslisten;
-    struct event accept_ev;
     int reuse = 1;
-
-    Logger::initLog("Face2ServerMain");    
-
-    //start hashmap, launch 10 processes
-    gPipeTable = new PipeTable(PROCESS_LOCATION);
-
-    //pending tasks table
-    gPendingTasks = new PendingTaskTable();
-
-    //start event loop
-    gEvtBase = event_init();
     
     socketlisten = socket(AF_INET, SOCK_STREAM, 0);
     
     if (socketlisten < 0) {
         OUTPUT("Failed to create listen socket");
-        return 1;
+        return -1;
     }
     
     memset(&addresslisten, 0, sizeof(addresslisten));
     
     addresslisten.sin_family = AF_INET;
     addresslisten.sin_addr.s_addr = INADDR_ANY;
-    addresslisten.sin_port = htons(SERVER_PORT);
+    addresslisten.sin_port = htons(listeningPort);
 
     setsockopt(socketlisten,
                SOL_SOCKET,
@@ -324,26 +342,53 @@ int main(int argc,
              (struct sockaddr *)&addresslisten,
              sizeof(addresslisten)) < 0) {
         OUTPUT("Failed to bind");
-        return 1;
+        return -1;
     }
     
     if (listen(socketlisten, 5) < 0) {
         OUTPUT("Failed to listen to socket");
-        return 1;
+        return -1;
     }
     
     event_set(&accept_ev,
               socketlisten,
               EV_READ|EV_PERSIST,
-              accept_callback,
+              server_accept_callback,
               NULL);
     
     event_add(&accept_ev,
               NULL);
-    
-    event_dispatch();
-    
-    close(socketlisten);
+    OUTPUT("main server port listen on %d", listeningPort);
+    return socketlisten;
+}
+
+int main(int argc,
+         char **argv)
+{
+    Logger::initLog("Face2ServerMain");    
+
+    //start hashmap, launch 10 processes
+    gPipeTable = new PipeTable(PROCESS_LOCATION, MAX_PROCESS_PIPES);
+
+    //pending tasks table
+    gPendingTasks = new PendingTaskTable();
+
+    //start event loop
+    gEvtBase = event_init();
+
+    //status server listener
+    struct evhttp* httpd;
+    if( openListenHttp( STATUS_PORT, httpd ) != -1 ) {
+        //main server listener
+        struct event accept_ev;
+        
+        int serverListenSocket = openListenSocket(SERVER_PORT, accept_ev);
+        if( serverListenSocket != -1 ) {
+            event_dispatch();
+            close(serverListenSocket);
+        }
+        evhttp_free(httpd);
+    }
 
     delete(gPipeTable);
     delete(gPendingTasks);

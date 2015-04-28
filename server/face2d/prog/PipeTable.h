@@ -6,7 +6,6 @@
 #include "ProcessPipe.h"
 
 //process pipe table.
-const int MAX_PROCESS_PIPES = 4; //max 32 instances at the same time.
 typedef pair <int, ProcessPipe*> Int_Pipe_Pair;
 const unsigned int maskArray[ ] = {0x7fffffff,
                                    0xbfffffff,
@@ -51,8 +50,9 @@ const unsigned int ALL_PIPE_OCCUPIED = 0xffffffff;
 
 class PipeTable {
  public:
-    PipeTable(const char* procPath) {
-        for(int i = 0; i< MAX_PROCESS_PIPES; i++) {
+    PipeTable(const char* procPath, int maxProcessPipes) {
+        maxProcessPipes_ = maxProcessPipes;
+        for(int i = 0; i< maxProcessPipes; i++) {
             pipeMap_.insert(Int_Pipe_Pair(i, new ProcessPipe(procPath)));
         }
         pipeMask_ = 0;        
@@ -61,7 +61,7 @@ class PipeTable {
     int acquireUnusedPipe() {
         int index = -1;
         if( pipeMask_ != ALL_PIPE_OCCUPIED ) {
-            for( int i=0; i < MAX_PROCESS_PIPES ; i++) {
+            for( int i=0; i < maxProcessPipes_; i++) {
                 if( (pipeMask_ & (~maskArray[i])) == 0 ) {
                     pipeMask_ |= (~maskArray[i]);
                     index = i;
@@ -74,7 +74,7 @@ class PipeTable {
     }
     
     void releasePipe(int index) {
-        if( index >= 0 && index < MAX_PROCESS_PIPES ) {
+        if( index >= 0 && index < maxProcessPipes_ ) {
             pipeMask_ &= maskArray[index];
             OUTPUT("releasePipe, index=%d\n", index);
         }
@@ -86,6 +86,7 @@ class PipeTable {
  private:
     unordered_map <int, ProcessPipe*> pipeMap_;
     unsigned int pipeMask_;
+    int maxProcessPipes_;
 };
 
 #endif
