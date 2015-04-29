@@ -16,9 +16,30 @@
 
 using namespace std;
 
+void fnExit (void)
+{
+    LOG("----LandMarkMain Exited!");
+}
 void handlesig( int signum )
 {
-    OUTPUT("Exiting on signal: %d\r\n", signum );
+    LOG( "Exiting on signal: %d", signum  );
+    LOG( "LandMarkMain just crashed, see stack dump below." );
+    LOG( "---------------------------------------------");
+    void *array[10];
+    size_t bt_size;
+
+    // get void*'s for all entries on the stack
+    bt_size = backtrace(array, 10);
+
+    // print out all the frames to stderr
+    char **bt_syms = backtrace_symbols(array, bt_size);
+    for (size_t i = 1; i < bt_size; i++) {
+        //size_t len = strlen(bt_syms[i]);
+        LOG("%s", bt_syms[i]);
+    }
+    free( bt_syms );
+    LOG( "---------------------------------------------");
+
     exit( 0 );
 }
 
@@ -97,10 +118,22 @@ bool convertToJson(string& jsonArray, string& jsonObject) {
 
 int main()
 {
+    //ignore sig pipe, any io to an invalid pipe will return properly
+    signal(SIGPIPE, SIG_IGN);
+    signal( SIGHUP, SIG_IGN ); //ignore hangup
     signal( SIGSEGV, handlesig );
     signal( SIGFPE, handlesig );
     signal( SIGBUS, handlesig );
     signal( SIGSYS, handlesig );
+    signal( SIGTERM, handlesig );
+    signal( SIGQUIT, handlesig );
+    signal( SIGINT, handlesig );
+    signal( SIGILL, handlesig );
+    signal( SIGABRT, handlesig );
+    signal( SIGALRM, handlesig );
+    signal( SIGXCPU, handlesig ); //CPU limit
+    // SIGKILL command cannot be caught
+    atexit(fnExit);
 
     Logger::initLog("LandMarkProc");
 

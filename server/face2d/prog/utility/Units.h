@@ -12,8 +12,9 @@ typedef int16_t s16;
 typedef int32_t s32;
 typedef int64_t s64;
 
-#define MAX(a, b) (a > b)? a : b
-#define MIN(a, b) (a < b)? a : b
+//defined <sys/param.h>
+//#define MAX(a, b) (a > b)? a : b
+//#define MIN(a, b) (a < b)? a : b
 #define CLIP( val, max, min ) ( val >  max ) ? max: ( ( val < min ) ? min: val)
 
 #define MAX_U32 0xffffffff

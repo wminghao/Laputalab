@@ -17,8 +17,15 @@
 #include <errno.h>
 #include <evhttp.h>
 #include <memory>
-#include <sys/signal.h>
+#include <sys/param.h>
+#include <sys/fcntl.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <sys/stat.h>
+#include <sys/signal.h>
+#include <execinfo.h>
+#include <sys/types.h>
+#include <sys/resource.h>
 #include "utility/Output.h"
 #include "ProcessPipe.h"
 #include "PipeTable.h"
@@ -42,11 +49,42 @@ const char* LANDMARK_URL_SUFFIX = "&";
 
 const char* TWO_HUNDRED_OK = "HTTP/1.1 200 OK\r\n\r\n";
 const char* FIVE_HUNDRED_ERROR = "HTTP/1.1 500 Cannot process image\r\n\r\n";
-const char* FIVE_HUNDRED_THREE_ERROR = "HTTP/1.1 503 Too many pending tasks\r\n\r\n";
+const char* FIVE_HUNDRED_THREE_ERROR_TOO_MANY_TASKS = "HTTP/1.1 503 Too many pending tasks\r\n\r\n";
+const char* FIVE_HUNDRED_THREE_ERROR_TEMP_UNAVAIL = "HTTP/1.1 503 Service temporarily unavailable\r\n\r\n";
 
 PipeTable* gPipeTable;
 PendingTaskTable* gPendingTasks;
 struct event_base * gEvtBase;
+
+///////////////////////////////////
+//exit/crash handling functions
+///////////////////////////////////
+void fnExit (void)
+{
+    LOG("----face2dServer Exited!");
+}
+void handlesig( int signum )
+{
+    LOG( "Exiting on signal: %d", signum  );
+    LOG( "Face2dServer just crashed, see stack dump below." );
+    LOG( "---------------------------------------------");
+    void *array[10];
+    size_t bt_size;
+
+    // get void*'s for all entries on the stack
+    bt_size = backtrace(array, 10);
+
+    // print out all the frames to stderr
+    char **bt_syms = backtrace_symbols(array, bt_size);
+    for (size_t i = 1; i < bt_size; i++) {
+        //size_t len = strlen(bt_syms[i]);
+        LOG("%s", bt_syms[i]);
+    }
+    free( bt_syms );
+    LOG( "---------------------------------------------");
+
+    exit( 0 );
+}
 
 void setnonblock(int fd) {
     int flags;    
@@ -54,6 +92,10 @@ void setnonblock(int fd) {
     flags |= O_NONBLOCK;
     fcntl(fd, F_SETFL, flags);
 }
+
+///////////////////////////////////
+//helper functions
+///////////////////////////////////
 void pipe_read_callback(int fd,short ev,void *arg);
 void pipe_write_callback(int fd,short ev,void *arg);
 
@@ -72,20 +114,20 @@ static void deleteClient(Client* client) {
     gPendingTasks->removeTask(client);
     delete(client);
 }
-
-static void deleteClientOnPipeError(Client* client) {
-    int pipeIndex = client->getPipeIndex();
-    deleteClient(client);
-    if( pipeIndex != -1 ) {
-        gPipeTable->reLaunchPipeProcess(pipeIndex);
-    }
-}
-
 static void timeout_handler(int sock, short which, void *arg){
     Client *client = (Client *)arg;    
     if ( client ) {
         OUTPUT("close and deleted client");
         deleteClient(client);
+    }
+}
+static void deleteClientOnPipeError(Client* client) {
+    int pipeIndex = client->getPipeIndex();
+    client->writeBuf(FIVE_HUNDRED_THREE_ERROR_TEMP_UNAVAIL, strlen((char*)FIVE_HUNDRED_THREE_ERROR_TEMP_UNAVAIL), true);
+    client->closePipe();
+    client->startTimeoutTimer(gEvtBase, timeout_handler);
+    if( pipeIndex != -1 ) {
+        gPipeTable->reLaunchPipeProcess(pipeIndex);
     }
 }
 
@@ -268,7 +310,7 @@ void buf_read_callback(struct bufferevent *incoming,
                     OUTPUT("add pending task, client=0x%x, urllen=%d, url=%s\n", client, urlLen, url+sizeof(int));
                     if( !gPendingTasks->addTask(client, url, sizeof(url)) ) {
                         OUTPUT("----too many tasks in the queue!");
-                        client->writeBuf(FIVE_HUNDRED_THREE_ERROR, strlen((char*)FIVE_HUNDRED_THREE_ERROR), true);
+                        client->writeBuf(FIVE_HUNDRED_THREE_ERROR_TOO_MANY_TASKS, strlen((char*)FIVE_HUNDRED_THREE_ERROR_TOO_MANY_TASKS), true);
                         client->startTimeoutTimer(gEvtBase, timeout_handler);
                     }
                 }
@@ -382,6 +424,20 @@ int main(int argc,
 {
     //ignore sig pipe, any io to an invalid pipe will return properly
     signal(SIGPIPE, SIG_IGN);
+    signal( SIGHUP, SIG_IGN ); //ignore hangup
+    signal( SIGSEGV, handlesig );
+    signal( SIGFPE, handlesig );
+    signal( SIGBUS, handlesig );
+    signal( SIGSYS, handlesig );
+    signal( SIGTERM, handlesig );
+    signal( SIGQUIT, handlesig );
+    signal( SIGINT, handlesig );
+    signal( SIGILL, handlesig );
+    signal( SIGABRT, handlesig );
+    signal( SIGALRM, handlesig );
+    signal( SIGXCPU, handlesig ); //CPU limit
+    // SIGKILL command cannot be caught
+    atexit(fnExit);
 
     Logger::initLog("Face2ServerMain");    
 
