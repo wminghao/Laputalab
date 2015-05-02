@@ -10,7 +10,7 @@
 #include <unistd.h>   /* For open(), creat() */
 #include <string>
 #include <assert.h>
-#include "Output.h"
+#include "utility/Output.h"
 
 using namespace std;
 
@@ -54,7 +54,6 @@ bool doWrite( int fd, const char *buf, size_t len ) {
     return true;
 }
 
-#define BUF_SIZE 1
 //test example to read input, parse the image data and return immediately
 int main()
 {
@@ -66,14 +65,24 @@ int main()
     Logger::initLog("dummyProc");
 
     OUTPUT("------dummy started=%d\r\n");
-    char buf[BUF_SIZE]; 
     bool bWorking = true;
-    while ( bWorking ){
-        bWorking = doRead( 0, buf, BUF_SIZE );
+    while ( bWorking ) {
+        char buf[4]; 
+        bWorking = doRead( 0, buf, 4 );
         if( bWorking ) {
-            OUTPUT("------dummy read data, size=%d\n", BUF_SIZE);
-            doWrite( 1, buf, BUF_SIZE);
+            int totalBytes = 0;
+            memcpy( &totalBytes, buf, 4 );
+            OUTPUT("------dummy read data, size=%d\n", totalBytes);
+
+            doWrite( 1, buf, 4);
             fsync( 1 ); //flush the buffer
+
+            char buf2[totalBytes];
+            bWorking = doRead( 0, buf2, totalBytes );
+            if( bWorking ) {
+                doWrite( 1, buf2, totalBytes);
+                fsync( 1 ); //flush the buffer
+            }
         }
     }
     OUTPUT("------dummy ended=%d\r\n");

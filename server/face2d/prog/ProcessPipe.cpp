@@ -12,15 +12,7 @@
 #include <sys/types.h>
 #include <assert.h>
 #include <vector>
-#include "Output.h"
-
-#define TEST_DUMMY
-
-#ifdef TEST_DUMMY
-const char* PROCESS_LOCATION = "dummy";//"/usr/bin/dummy";
-#else
-const char* PROCESS_LOCATION = "face2d";//"/usr/bin/face2d";
-#endif
+#include "utility/Output.h"
 
 const char* LD_LIBRARY_PATH = "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib:.";
 
@@ -30,10 +22,10 @@ void killChild() {
     //wait(0);
 }
 
-ProcessPipe::ProcessPipe()
+ProcessPipe::ProcessPipe(const char* processLoc):processLocation_(processLoc)
 {    
     atexit(killChild);    
-    childPid_ = open();
+    childPid_ = open(processLoc);
 }
 ProcessPipe::~ProcessPipe()
 {
@@ -49,17 +41,17 @@ int ProcessPipe::getOutFd()
     return q_[0];
 }
 
-pid_t ProcessPipe::open()
+pid_t ProcessPipe::open(const char* processLocation)
 {
     if ( 0 > pipe( p_ ) || 0 > pipe( q_ ) ) {
-        OUTPUT("!!!Failed to create process pipe = %s p_[1]=%d q_[0]=%d" , PROCESS_LOCATION, p_[1], q_[0]);        
+        OUTPUT("!!!Failed to create process pipe = %s p_[1]=%d q_[0]=%d" , processLocation, p_[1], q_[0]);        
         perror( "pipe" );
         return -1;
     }
     char **arguments;
     {
         std::vector<char *> strings;
-        strings.push_back( strdup( PROCESS_LOCATION ) );
+        strings.push_back( (char*)processLocation );
         //strings.push_back( strdup( more arg ) );
         size_t arrayLen = strings.size() + 1;
         arguments = new char *[ arrayLen ];
@@ -72,7 +64,7 @@ pid_t ProcessPipe::open()
     char **env;
     {
         std::vector<char *> stringsEnv;
-        stringsEnv.push_back( strdup( LD_LIBRARY_PATH ) );
+        stringsEnv.push_back( (char*)LD_LIBRARY_PATH );
         size_t arrayLenEnv = stringsEnv.size() + 1;
         env = new char *[ arrayLenEnv ];
         for ( size_t i = 0 ; i < arrayLenEnv - 1 ; ++i ) {
@@ -102,8 +94,8 @@ pid_t ProcessPipe::open()
         }
 
         //somehow execve does not work, have to change /etc/ld.so.conf.d/
-        //if( -1 == execve( PROCESS_LOCATION, arguments, env ) ) {
-        if( -1 == execvp( PROCESS_LOCATION, arguments ) ) {
+        //if( -1 == execve( processLocation, arguments, env ) ) {
+        if( -1 == execvp( processLocation, arguments ) ) {
             assert(0);
             OUTPUT("Fatal error: EXECLP FAILED, error=%d?!\n", errno);
         }
@@ -113,7 +105,7 @@ pid_t ProcessPipe::open()
         //parent process
         ::close(p_[0]);
         ::close(q_[1]);
-        OUTPUT("----Launching process=%s, pid=%d", PROCESS_LOCATION, rval);
+        OUTPUT("----Launching process=%s, pid=%d", processLocation, rval);
     }    
     delete [] arguments;
     delete [] env;
@@ -123,7 +115,7 @@ pid_t ProcessPipe::open()
 
 void ProcessPipe::close()
 {
-    OUTPUT("----Closing process=%s, pid=%d", PROCESS_LOCATION, childPid_);
+    OUTPUT("----Closing process=%s, pid=%d", processLocation_.c_str(), childPid_);
     if ( childPid_ ) {
         ::kill( childPid_, SIGKILL );
         int status;
@@ -132,6 +124,6 @@ void ProcessPipe::close()
     }
     ::close(p_[1]);
     ::close(q_[0]);
-    OUTPUT("----Closed process=%s", PROCESS_LOCATION);
+    OUTPUT("----Closed process=%s", processLocation_.c_str());
     return;
 }

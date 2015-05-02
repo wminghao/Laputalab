@@ -2,8 +2,8 @@
 #define __OUTPUT__
 #include "Logger.h"
 
-#define DEBUG
-#ifdef DEBUG
+#define ENABLE_LOGGER
+#ifdef ENABLE_LOGGER
 //#define OUTPUT(...) printf(__VA_ARGS__)
 #define OUTPUT Logger::log
 #define ASSERT(x) assert(x)
