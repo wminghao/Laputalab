@@ -458,7 +458,7 @@ bail:
                        attribLocation[ATTRIB_POSITION], attribLocation[ATTRIB_TEXCOORD], attribLocation[ATTRIB_NORMAL]);
     
     // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-    mat4 Projection = perspective(45.0f, 16.0f/9.0f, 0.5f, 100.0f); //for portrait mode, front/back camera, is: 16:9
+    mat4 Projection = perspective(radians(60.0f), 16.0f/9.0f, 0.5f, 100.0f); //for portrait mode, front/back camera, is: 16:9
     // Or, for an ortho camera :
     //mat4 Projection = ortho(-8.0f,8.0f,-4.5f,4.5f,0.0f,100.0f); // In world coordinates, x/y =16/9 ratio, far-near is big enough
     
