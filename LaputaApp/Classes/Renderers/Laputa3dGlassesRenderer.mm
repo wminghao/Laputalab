@@ -457,18 +457,29 @@ bail:
                        uniformLocation[UNIFORM_TEXTUREIMAGE], uniformLocation[UNIFORM_ENVMAP],
                        attribLocation[ATTRIB_POSITION], attribLocation[ATTRIB_TEXCOORD], attribLocation[ATTRIB_NORMAL]);
     
+    
+    ////////////////////////
+    //Load model with ASSIMP
+    ////////////////////////
+    Assimp::Importer importer;
+    NSString *glassesFilePath = [[NSBundle mainBundle] pathForResource:@"RanGlass" ofType:@"obj"];
+    _pMesh->LoadMesh([glassesFilePath UTF8String]);
+    
+    ////////////////////////
+    //Set the matrices
+    ////////////////////////
     // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-    mat4 Projection = perspective(radians(60.0f), 16.0f/9.0f, 0.5f, 100.0f); //for portrait mode, front/back camera, is: 16:9
+    mat4 Projection = perspective(radians(45.0f), 16.0f/9.0f, 0.5f, 100.0f); //for portrait mode, front/back camera, is: 16:9
     // Or, for an ortho camera :
     //mat4 Projection = ortho(-8.0f,8.0f,-4.5f,4.5f,0.0f,100.0f); // In world coordinates, x/y =16/9 ratio, far-near is big enough
     
     // Camera matrix
     mat4 View       = lookAt(vec3(0,0,10), // Camera is at (0, 0, 10), in World Space
-                                       vec3(0,0,0), // and looks at the origin
-                                       vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-                                       );
+                             vec3(0,0,0), // and looks at the origin
+                             vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+                             );
     // Model matrix : an identity matrix (model will be at the origin)
-    float scaleFactor = 0.20;
+    float scaleFactor = 9.0/_pMesh->getWidth(); //put the object width the same as portaint mode 9:16
     //mat4 Model      = mat4(1.0f);
     mat4 Model_translation = translate(mat4(1.0f), vec3(0,0,0));
     mat4 Model_rotateZ = rotate(mat4(1.0f), radians(90.0f), vec3(0,0,1)); //rotate z of 90 degree
@@ -484,13 +495,6 @@ bail:
     // Our ModelViewProjection : multiplication of our 3 matrices
     // Remember, matrix multiplication is the other way around
     _Projection = Projection;
-    
-    ////////////////////////
-    //Load model with ASSIMP
-    ////////////////////////
-    Assimp::Importer importer;
-    NSString *glassesFilePath = [[NSBundle mainBundle] pathForResource:@"RanGlass" ofType:@"obj"];
-    _pMesh->LoadMesh([glassesFilePath UTF8String]);
     
     ///////////////////
     //buffer management

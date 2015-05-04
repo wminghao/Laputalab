@@ -82,6 +82,8 @@ public:
     bool LoadMesh(const std::string& Filename);
 
     void Render();
+    
+    float getWidth() { return xMax-xMin;}
 
 private:
     bool InitFromScene(const aiScene* pScene, const std::string& Filename);
