@@ -36,7 +36,7 @@ void main()
     } else if( texCount == 1 ) {
         color = texture2D(textureImage, texCoordFrag);
         amb = color * 0.33;
-        gl_FragColor = (color * brightness) + amb;
+        gl_FragColor = vec4(color.rgb*brightness, color.a) + amb;
     } else {
         color = diffuseColor;
         amb = ambientColor;

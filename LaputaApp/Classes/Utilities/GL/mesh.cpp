@@ -209,8 +209,8 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
         aiColor4D ambient;
         aiGetMaterialColor(pMaterial, AI_MATKEY_COLOR_DIFFUSE, &diffuse);
         aiGetMaterialColor(pMaterial, AI_MATKEY_COLOR_AMBIENT, &ambient);
-        /*
-         All other colors are read as default values.
+        
+        //All other colors are read as default values.
         aiColor4D specular;
         aiColor4D emissive;
         aiColor4D transparent;
@@ -220,7 +220,6 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
         aiGetMaterialColor(pMaterial, AI_MATKEY_COLOR_SPECULAR, &specular);
         aiGetMaterialColor(pMaterial, AI_MATKEY_COLOR_EMISSIVE, &emissive);
         aiGetMaterialColor(pMaterial, AI_MATKEY_COLOR_TRANSPARENT, &transparent);
-        */
         
         Vector4f diffuseColor(diffuse.r, diffuse.g, diffuse.b, diffuse.a);
         Vector4f ambientColor(ambient.r, ambient.g, ambient.b, ambient.a);
@@ -257,10 +256,14 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
                     m_Materials[i] = NULL;
                     Ret = false;
                 } else {
-                    printf("Loaded texture index:%d, name %s file: %s coord:%.2f, %.2f, %.2f, %.2f: %.2f, %.2f, %.2f, %.2f\n",
+                    printf("Loaded texture index:%d, name %s file: %s coord:%.2f, %.2f, %.2f, %.2f: %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f, %.2f, %d\n",
                            i, name.C_Str(), Path.data,
                            diffuseColor.x, diffuseColor.y, diffuseColor.z, diffuseColor.w,
-                           ambientColor.x, ambientColor.y, ambientColor.z, ambientColor.w);
+                           ambientColor.x, ambientColor.y, ambientColor.z, ambientColor.w,
+                           specular.r, specular.g, specular.b, specular.a,
+                           emissive.r, emissive.g, emissive.b, emissive.a,
+                           transparent.r, transparent.g, transparent.b, transparent.a,
+                           shininess, max);
                 }
             }
         } else {
@@ -270,10 +273,14 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
                                        m_textureImageLocation,
                                        diffuseColor,
                                        ambientColor);
-            printf("Loaded color index:%d, name %s coord:%.2f, %.2f, %.2f, %.2f: %.2f, %.2f, %.2f, %.2f\n",
+            printf("Loaded color index:%d, name %s coord:%.2f, %.2f, %.2f, %.2f: %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f, %.2f, %d\n",
                    i, name.C_Str(),
                    diffuseColor.x, diffuseColor.y, diffuseColor.z, diffuseColor.w,
-                   ambientColor.x, ambientColor.y, ambientColor.z, ambientColor.w);
+                   ambientColor.x, ambientColor.y, ambientColor.z, ambientColor.w,
+                   specular.r, specular.g, specular.b, specular.a,
+                   emissive.r, emissive.g, emissive.b, emissive.a,
+                   transparent.r, transparent.g, transparent.b, transparent.a,
+                   shininess, max);
         }
     }
 

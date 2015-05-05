@@ -293,9 +293,9 @@ enum {
         //TODO below is the test code to do rotation.
         static float angleInDegree = 0.0f;
         static int sign = -1;
-        if(angleInDegree >= 45) {
+        if(angleInDegree >= 90) {
             sign = -1;
-        } else if(angleInDegree <= -45) {
+        } else if(angleInDegree <= -90) {
             sign = 1;
         }
         angleInDegree += sign;
@@ -479,7 +479,7 @@ bail:
                              vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
                              );
     // Model matrix : an identity matrix (model will be at the origin)
-    float scaleFactor = 9.0/_pMesh->getWidth(); //put the object width the same as portaint mode 9:16
+    float scaleFactor = 9.0/_pMesh->getWidth() * 0.6; //put the object width the same as portaint mode 9:16
     //mat4 Model      = mat4(1.0f);
     mat4 Model_translation = translate(mat4(1.0f), vec3(0,0,0));
     mat4 Model_rotateZ = rotate(mat4(1.0f), radians(90.0f), vec3(0,0,1)); //rotate z of 90 degree
