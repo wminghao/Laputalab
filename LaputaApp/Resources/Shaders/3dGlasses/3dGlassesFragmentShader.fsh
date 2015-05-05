@@ -32,7 +32,7 @@ void main()
         vec4 envColor = textureCube( envMap, reflection);
         
         //attenuate the src color plus environment color
-        gl_FragColor = 0.2 * (color * brightness) + envColor;
+        gl_FragColor = 0.25 * vec4(color.rgb*brightness, color.a) + vec4(envColor.rgb*brightness, envColor.a);
     } else if( texCount == 1 ) {
         color = texture2D(textureImage, texCoordFrag);
         amb = color * 0.33;
@@ -40,6 +40,6 @@ void main()
     } else {
         color = diffuseColor;
         amb = ambientColor;
-        gl_FragColor = (color * brightness) + amb;
+        gl_FragColor = vec4(color.rgb*brightness, color.a) + amb;
     }
 }
