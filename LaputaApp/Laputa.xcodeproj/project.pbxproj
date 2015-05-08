@@ -51,7 +51,6 @@
 		892DA8C81ACA101B00ABA31E /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 892DA8C71ACA101B00ABA31E /* libz.dylib */; };
 		892DA8CD1ACA1A2600ABA31E /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 892DA8CC1ACA1A2600ABA31E /* GLKit.framework */; };
 		892DA8F41ACDCECE00ABA31E /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 171999D919C7695800A719B5 /* CoreImage.framework */; };
-		89334C311AF98FC400A6F851 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 892DA8EE1ACB649A00ABA31E /* opencv2.framework */; };
 		895589BB1AF97FBD0019374C /* haarcascade_frontalface_default.xml in Resources */ = {isa = PBXBuildFile; fileRef = 895589B61AF97FBD0019374C /* haarcascade_frontalface_default.xml */; };
 		895589BC1AF97FBD0019374C /* m1.txt in Resources */ = {isa = PBXBuildFile; fileRef = 895589B71AF97FBD0019374C /* m1.txt */; };
 		895589BD1AF97FBD0019374C /* m2.txt in Resources */ = {isa = PBXBuildFile; fileRef = 895589B81AF97FBD0019374C /* m2.txt */; };
@@ -77,6 +76,7 @@
 		89B2EB881AD87DDA00D1E27E /* reflectionTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89B2EB861AD87DDA00D1E27E /* reflectionTexture.cpp */; };
 		89DDF75B1AFC2153006222A4 /* CVAnalyzerOperation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 89DDF75A1AFC2153006222A4 /* CVAnalyzerOperation.mm */; };
 		89DDF7861AFD2EC9006222A4 /* libCVAnalyzerLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 89DDF7851AFD2EC9006222A4 /* libCVAnalyzerLib.a */; };
+		89DDF78A1AFD7AB4006222A4 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 892DA8EE1ACB649A00ABA31E /* opencv2.framework */; };
 		89F003FD1AC9C7F500D8EC6D /* LaputaApp-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 89F003FC1AC9C7F500D8EC6D /* LaputaApp-Info.plist */; };
 /* End PBXBuildFile section */
 
@@ -171,6 +171,7 @@
 		89DDF7591AFC2153006222A4 /* CVAnalyzerOperation.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = CVAnalyzerOperation.hh; path = CV/CVAnalyzerOperation.hh; sourceTree = "<group>"; };
 		89DDF75A1AFC2153006222A4 /* CVAnalyzerOperation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CVAnalyzerOperation.mm; path = CV/CVAnalyzerOperation.mm; sourceTree = "<group>"; };
 		89DDF7851AFD2EC9006222A4 /* libCVAnalyzerLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCVAnalyzerLib.a; path = thirdpartylib/cvanalyzer/lib/libCVAnalyzerLib.a; sourceTree = "<group>"; };
+		89DDF7871AFD6E53006222A4 /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = thirdpartylib/opencv3/opencv2.framework; sourceTree = "<group>"; };
 		89F003FC1AC9C7F500D8EC6D /* LaputaApp-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "LaputaApp-Info.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -185,7 +186,7 @@
 				891082531ACF0BC300D5314C /* libMagickWand.a in Frameworks */,
 				891082541ACF0BC300D5314C /* libpng.a in Frameworks */,
 				891082551ACF0BC300D5314C /* libtiff.a in Frameworks */,
-				89334C311AF98FC400A6F851 /* opencv2.framework in Frameworks */,
+				89DDF78A1AFD7AB4006222A4 /* opencv2.framework in Frameworks */,
 				892DA8F41ACDCECE00ABA31E /* CoreImage.framework in Frameworks */,
 				892DA8CD1ACA1A2600ABA31E /* GLKit.framework in Frameworks */,
 				892DA8C81ACA101B00ABA31E /* libz.dylib in Frameworks */,
@@ -255,6 +256,7 @@
 		6F90DDD81395CAAA00125BDA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				89DDF7871AFD6E53006222A4 /* opencv2.framework */,
 				89DDF7851AFD2EC9006222A4 /* libCVAnalyzerLib.a */,
 				8910824C1ACF0BC300D5314C /* libjpeg.a */,
 				8910824D1ACF0BC300D5314C /* libMagickCore.a */,

@@ -327,7 +327,7 @@ typedef NS_ENUM( NSInteger, LaputaRecordingStatus )
 		frameRate = 15;
 	}
 	else {
-		frameRate = 30;
+		frameRate = 20;
 	}
 	
 	_captureSession.sessionPreset = sessionPreset;
