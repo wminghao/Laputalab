@@ -7,5 +7,5 @@ uniform sampler2D videoframe;
 void main()
 {
 	vec4 color = texture2D(videoframe, coordinate);
-	gl_FragColor.bgra = vec4(color.b, color.g, color.r, color.a);
+	gl_FragColor.bgra = vec4(color.b, 0, color.r, color.a);
 }

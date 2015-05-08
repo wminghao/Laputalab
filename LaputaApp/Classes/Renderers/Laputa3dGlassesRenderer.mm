@@ -39,8 +39,12 @@
 //mesh reader
 #include "mesh.h"
 
+//include CVAnalyzer
+#import "CVAnalyzerOperation.hh"
+
 #ifdef TAP_TEST
 static bool shouldRotate = true;
+static bool onTapped = false;
 #endif
 
 using namespace std;
@@ -48,7 +52,7 @@ using namespace glm;
 
 @interface Laputa3dGlassesRenderer ()
 {
-    //it contains a screen renderer
+    //it contains a screen renderer for filters
     LaputaScreenRenderer* _screenRenderer;
     
     /* EGL assets */
@@ -83,6 +87,9 @@ using namespace glm;
     
     /*mesh*/
     Mesh* _pMesh;
+    
+    /*CVAnalyzer*/
+    CVAnalyzerOperation* cvAnalyzer_;
 }
 @end
 
@@ -136,7 +143,8 @@ enum {
         }
         
         _pMesh = new Mesh();
-
+        
+        cvAnalyzer_ = [[CVAnalyzerOperation alloc]init];
     }
     return self;
 }
@@ -235,7 +243,12 @@ enum {
     CGColorSpaceRelease(colorSpace);
     CFRelease( origPixelBuffer );
 #else
-    CVPixelBufferRef  dstPixelBuffer = [_screenRenderer copyRenderedPixelBuffer:origPixelBuffer];
+    CVPixelBufferRef  dstPixelBuffer = origPixelBuffer;
+    [cvAnalyzer_ processImage:dstPixelBuffer andOnTap:onTapped];
+    if( onTapped ) {
+        printf("-----on Tapped---\r\n");
+        onTapped = false;
+    }
 #endif
     
     if ( _offscreenBufferHandle == 0 ) {
@@ -357,7 +370,9 @@ bail:
     if ( dstTexture ) {
         CFRelease( dstTexture );
     }
-    return dstPixelBuffer;
+    //if we apply filter
+    //return [_screenRenderer copyRenderedPixelBuffer:dstPixelBuffer];
+    return CVPixelBufferRetain( dstPixelBuffer );
 }
 
 - (CMFormatDescriptionRef)outputFormatDescription
@@ -577,6 +592,7 @@ bail:
 - (void)onTap
 {
     shouldRotate = !shouldRotate;
+    onTapped = true;
 }
 #endif
 @end

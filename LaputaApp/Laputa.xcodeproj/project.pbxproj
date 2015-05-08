@@ -50,8 +50,13 @@
 		89120A371ACA04660086174B /* libassimp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 89120A361ACA04660086174B /* libassimp.a */; };
 		892DA8C81ACA101B00ABA31E /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 892DA8C71ACA101B00ABA31E /* libz.dylib */; };
 		892DA8CD1ACA1A2600ABA31E /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 892DA8CC1ACA1A2600ABA31E /* GLKit.framework */; };
-		892DA8EF1ACB649A00ABA31E /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 892DA8EE1ACB649A00ABA31E /* opencv2.framework */; };
 		892DA8F41ACDCECE00ABA31E /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 171999D919C7695800A719B5 /* CoreImage.framework */; };
+		89334C311AF98FC400A6F851 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 892DA8EE1ACB649A00ABA31E /* opencv2.framework */; };
+		895589BB1AF97FBD0019374C /* haarcascade_frontalface_default.xml in Resources */ = {isa = PBXBuildFile; fileRef = 895589B61AF97FBD0019374C /* haarcascade_frontalface_default.xml */; };
+		895589BC1AF97FBD0019374C /* m1.txt in Resources */ = {isa = PBXBuildFile; fileRef = 895589B71AF97FBD0019374C /* m1.txt */; };
+		895589BD1AF97FBD0019374C /* m2.txt in Resources */ = {isa = PBXBuildFile; fileRef = 895589B81AF97FBD0019374C /* m2.txt */; };
+		895589BE1AF97FBD0019374C /* m3.txt in Resources */ = {isa = PBXBuildFile; fileRef = 895589B91AF97FBD0019374C /* m3.txt */; };
+		895589BF1AF97FBD0019374C /* m4.txt in Resources */ = {isa = PBXBuildFile; fileRef = 895589BA1AF97FBD0019374C /* m4.txt */; };
 		895656A01ACE0551004AE70A /* SimpleFragmentShaderF.fragmentshader in Resources */ = {isa = PBXBuildFile; fileRef = 8956569C1ACE0551004AE70A /* SimpleFragmentShaderF.fragmentshader */; };
 		895656A11ACE0551004AE70A /* SimpleFragmentShaderL.fragmentshader in Resources */ = {isa = PBXBuildFile; fileRef = 8956569D1ACE0551004AE70A /* SimpleFragmentShaderL.fragmentshader */; };
 		895656A21ACE0551004AE70A /* SimpleVertexShaderF.vertexshader in Resources */ = {isa = PBXBuildFile; fileRef = 8956569E1ACE0551004AE70A /* SimpleVertexShaderF.vertexshader */; };
@@ -70,6 +75,8 @@
 		89B2EB701AD2FF9000D1E27E /* color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89B2EB6E1AD2FF9000D1E27E /* color.cpp */; };
 		89B2EB7F1AD7488F00D1E27E /* ramp1-nurbsToPoly1.png in Resources */ = {isa = PBXBuildFile; fileRef = 89B2EB7E1AD7488F00D1E27E /* ramp1-nurbsToPoly1.png */; };
 		89B2EB881AD87DDA00D1E27E /* reflectionTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89B2EB861AD87DDA00D1E27E /* reflectionTexture.cpp */; };
+		89DDF75B1AFC2153006222A4 /* CVAnalyzerOperation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 89DDF75A1AFC2153006222A4 /* CVAnalyzerOperation.mm */; };
+		89DDF7861AFD2EC9006222A4 /* libCVAnalyzerLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 89DDF7851AFD2EC9006222A4 /* libCVAnalyzerLib.a */; };
 		89F003FD1AC9C7F500D8EC6D /* LaputaApp-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 89F003FC1AC9C7F500D8EC6D /* LaputaApp-Info.plist */; };
 /* End PBXBuildFile section */
 
@@ -133,6 +140,12 @@
 		892DA8C71ACA101B00ABA31E /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		892DA8CC1ACA1A2600ABA31E /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		892DA8EE1ACB649A00ABA31E /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = thirdpartylib/opencv/opencv2.framework; sourceTree = "<group>"; };
+		89334C321AF9937C00A6F851 /* LaputaApp-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LaputaApp-Prefix.pch"; sourceTree = "<group>"; };
+		895589B61AF97FBD0019374C /* haarcascade_frontalface_default.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = haarcascade_frontalface_default.xml; path = Resources/Model/haarcascade_frontalface_default.xml; sourceTree = SOURCE_ROOT; };
+		895589B71AF97FBD0019374C /* m1.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = m1.txt; path = Resources/Model/m1.txt; sourceTree = SOURCE_ROOT; };
+		895589B81AF97FBD0019374C /* m2.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = m2.txt; path = Resources/Model/m2.txt; sourceTree = SOURCE_ROOT; };
+		895589B91AF97FBD0019374C /* m3.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = m3.txt; path = Resources/Model/m3.txt; sourceTree = SOURCE_ROOT; };
+		895589BA1AF97FBD0019374C /* m4.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = m4.txt; path = Resources/Model/m4.txt; sourceTree = SOURCE_ROOT; };
 		8956569C1ACE0551004AE70A /* SimpleFragmentShaderF.fragmentshader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SimpleFragmentShaderF.fragmentshader; sourceTree = "<group>"; };
 		8956569D1ACE0551004AE70A /* SimpleFragmentShaderL.fragmentshader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SimpleFragmentShaderL.fragmentshader; sourceTree = "<group>"; };
 		8956569E1ACE0551004AE70A /* SimpleVertexShaderF.vertexshader */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = SimpleVertexShaderF.vertexshader; sourceTree = "<group>"; };
@@ -155,6 +168,9 @@
 		89B2EB7E1AD7488F00D1E27E /* ramp1-nurbsToPoly1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ramp1-nurbsToPoly1.png"; path = "Resources/3dmodels/3dGlasses/ramp1-nurbsToPoly1.png"; sourceTree = SOURCE_ROOT; };
 		89B2EB861AD87DDA00D1E27E /* reflectionTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = reflectionTexture.cpp; path = Utilities/GL/reflectionTexture.cpp; sourceTree = "<group>"; };
 		89B2EB871AD87DDA00D1E27E /* reflectionTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = reflectionTexture.h; path = Utilities/GL/reflectionTexture.h; sourceTree = "<group>"; };
+		89DDF7591AFC2153006222A4 /* CVAnalyzerOperation.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = CVAnalyzerOperation.hh; path = CV/CVAnalyzerOperation.hh; sourceTree = "<group>"; };
+		89DDF75A1AFC2153006222A4 /* CVAnalyzerOperation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CVAnalyzerOperation.mm; path = CV/CVAnalyzerOperation.mm; sourceTree = "<group>"; };
+		89DDF7851AFD2EC9006222A4 /* libCVAnalyzerLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCVAnalyzerLib.a; path = thirdpartylib/cvanalyzer/lib/libCVAnalyzerLib.a; sourceTree = "<group>"; };
 		89F003FC1AC9C7F500D8EC6D /* LaputaApp-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "LaputaApp-Info.plist"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -163,13 +179,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				89DDF7861AFD2EC9006222A4 /* libCVAnalyzerLib.a in Frameworks */,
 				891082511ACF0BC300D5314C /* libjpeg.a in Frameworks */,
 				891082521ACF0BC300D5314C /* libMagickCore.a in Frameworks */,
 				891082531ACF0BC300D5314C /* libMagickWand.a in Frameworks */,
 				891082541ACF0BC300D5314C /* libpng.a in Frameworks */,
 				891082551ACF0BC300D5314C /* libtiff.a in Frameworks */,
+				89334C311AF98FC400A6F851 /* opencv2.framework in Frameworks */,
 				892DA8F41ACDCECE00ABA31E /* CoreImage.framework in Frameworks */,
-				892DA8EF1ACB649A00ABA31E /* opencv2.framework in Frameworks */,
 				892DA8CD1ACA1A2600ABA31E /* GLKit.framework in Frameworks */,
 				892DA8C81ACA101B00ABA31E /* libz.dylib in Frameworks */,
 				89120A371ACA04660086174B /* libassimp.a in Frameworks */,
@@ -216,6 +233,7 @@
 		6F90DDCA1395CAAA00125BDA = {
 			isa = PBXGroup;
 			children = (
+				89334C321AF9937C00A6F851 /* LaputaApp-Prefix.pch */,
 				28365598139FE71B00D09100 /* ReadMe.txt */,
 				6F90DDDF1395CAAA00125BDA /* Classes */,
 				6FF11C8616A8778500E14D71 /* Utilities */,
@@ -237,6 +255,7 @@
 		6F90DDD81395CAAA00125BDA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				89DDF7851AFD2EC9006222A4 /* libCVAnalyzerLib.a */,
 				8910824C1ACF0BC300D5314C /* libjpeg.a */,
 				8910824D1ACF0BC300D5314C /* libMagickCore.a */,
 				8910824E1ACF0BC300D5314C /* libMagickWand.a */,
@@ -265,6 +284,7 @@
 		6F90DDDF1395CAAA00125BDA /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				89A60A3A1AF980280034DD5F /* CV */,
 				6F90DDEB1395CAAA00125BDA /* LaputaViewController.h */,
 				6F90DDED1395CAAA00125BDA /* LaputaViewController.m */,
 				6F90DE0E1395CD9C00125BDA /* LaputaCapturePipeline.h */,
@@ -279,6 +299,7 @@
 		6F90DDE01395CAAA00125BDA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				895589B51AF97FA60019374C /* Model */,
 				892DA8C91ACA119C00ABA31E /* 3dModels */,
 				89F003FC1AC9C7F500D8EC6D /* LaputaApp-Info.plist */,
 				7214DBCD182AEF8900EA3F99 /* Images.xcassets */,
@@ -364,6 +385,18 @@
 			name = 3dModels;
 			sourceTree = "<group>";
 		};
+		895589B51AF97FA60019374C /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				895589B61AF97FBD0019374C /* haarcascade_frontalface_default.xml */,
+				895589B71AF97FBD0019374C /* m1.txt */,
+				895589B81AF97FBD0019374C /* m2.txt */,
+				895589B91AF97FBD0019374C /* m3.txt */,
+				895589BA1AF97FBD0019374C /* m4.txt */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 		895656A41ACE0628004AE70A /* SimpleGlasses */ = {
 			isa = PBXGroup;
 			children = (
@@ -389,6 +422,15 @@
 				891082631ACF670600D5314C /* RanGlass.mtl */,
 			);
 			name = 3dGlasses;
+			sourceTree = "<group>";
+		};
+		89A60A3A1AF980280034DD5F /* CV */ = {
+			isa = PBXGroup;
+			children = (
+				89DDF7591AFC2153006222A4 /* CVAnalyzerOperation.hh */,
+				89DDF75A1AFC2153006222A4 /* CVAnalyzerOperation.mm */,
+			);
+			name = CV;
 			sourceTree = "<group>";
 		};
 		AF052D151422BCEA00CD2D66 /* Other Sources */ = {
@@ -450,6 +492,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				895589BC1AF97FBD0019374C /* m1.txt in Resources */,
 				895656E01ACE08AD004AE70A /* logo1flippedSmall.jpg in Resources */,
 				895656DE1ACE08AD004AE70A /* logo1.jpg in Resources */,
 				895656DF1ACE08AD004AE70A /* logo1flipped.jpg in Resources */,
@@ -457,9 +500,11 @@
 				6F90DDE41395CAAA00125BDA /* InfoPlist.strings in Resources */,
 				8910825F1ACF14B800D5314C /* 3dGlassesFragmentShader.fsh in Resources */,
 				281FB47F176694640071511D /* Main.storyboard in Resources */,
+				895589BD1AF97FBD0019374C /* m2.txt in Resources */,
 				5DBA2A9919C232E200530F7A /* Launch.storyboard in Resources */,
 				895656A01ACE0551004AE70A /* SimpleFragmentShaderF.fragmentshader in Resources */,
 				895656A31ACE0551004AE70A /* SimpleVertexShaderL.vertexshader in Resources */,
+				895589BF1AF97FBD0019374C /* m4.txt in Resources */,
 				6F90DDEC1395CAAA00125BDA /* LaputaViewController.h in Resources */,
 				28365599139FE71B00D09100 /* ReadMe.txt in Resources */,
 				891082641ACF670600D5314C /* RanGlass.mtl in Resources */,
@@ -468,9 +513,11 @@
 				891082621ACF49C400D5314C /* exportAll.dae in Resources */,
 				89F003FD1AC9C7F500D8EC6D /* LaputaApp-Info.plist in Resources */,
 				896E7E211ADC789F0002205C /* Brooklyn_Bridge_Planks_1k.hdr in Resources */,
+				895589BE1AF97FBD0019374C /* m3.txt in Resources */,
 				7214DBCE182AEF8900EA3F99 /* Images.xcassets in Resources */,
 				895656D21ACE08A1004AE70A /* SimpleGlasses.obj in Resources */,
 				895656E31ACE08AD004AE70A /* RanGlass.dae in Resources */,
+				895589BB1AF97FBD0019374C /* haarcascade_frontalface_default.xml in Resources */,
 				895656E41ACE08AD004AE70A /* RanGlass.obj in Resources */,
 				89120A301ACA011B0086174B /* myFilter.vsh in Resources */,
 				89120A2F1ACA011B0086174B /* myFilter.fsh in Resources */,
@@ -503,6 +550,7 @@
 				8910825A1ACF114500D5314C /* mesh.cpp in Sources */,
 				8910825B1ACF114500D5314C /* texture.cpp in Sources */,
 				6FF11C9616A877B100E14D71 /* ShaderUtilities.c in Sources */,
+				89DDF75B1AFC2153006222A4 /* CVAnalyzerOperation.mm in Sources */,
 				89120A281AC9FED80086174B /* LaputaScreenRenderer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -553,7 +601,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -595,7 +643,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
@@ -635,6 +683,7 @@
 					thirdpartylib/glm,
 					thirdpartylib/libassimp/include,
 					"thirdpartylib/iOSMagick-6.8.8-9-libs/include",
+					thirdpartylib/cvanalyzer/include,
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/LaputaApp-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -643,6 +692,7 @@
 					"$(PROJECT_DIR)/thirdpartylib",
 					"$(PROJECT_DIR)/thirdpartylib/libassimp/lib",
 					"$(PROJECT_DIR)/thirdpartylib/iOSMagick-6.8.8-9-libs",
+					"$(PROJECT_DIR)/thirdpartylib/cvanalyzer/lib",
 				);
 				OTHER_CFLAGS = "-DUSE_OPENGL_RENDERER=1";
 				PRODUCT_NAME = LaputaOpenGL;
@@ -672,6 +722,7 @@
 					thirdpartylib/glm,
 					thirdpartylib/libassimp/include,
 					"thirdpartylib/iOSMagick-6.8.8-9-libs/include",
+					thirdpartylib/cvanalyzer/include,
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/LaputaApp-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -680,6 +731,7 @@
 					"$(PROJECT_DIR)/thirdpartylib",
 					"$(PROJECT_DIR)/thirdpartylib/libassimp/lib",
 					"$(PROJECT_DIR)/thirdpartylib/iOSMagick-6.8.8-9-libs",
+					"$(PROJECT_DIR)/thirdpartylib/cvanalyzer/lib",
 				);
 				OTHER_CFLAGS = "-DUSE_OPENGL_RENDERER=1";
 				PRODUCT_NAME = LaputaOpenGL;
