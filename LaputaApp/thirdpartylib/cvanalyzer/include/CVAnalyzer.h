@@ -21,7 +21,7 @@
 #include <opencv2/objdetect/objdetect.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/nonfree/nonfree.hpp>
+#include <opencv2/xfeatures2d/nonfree.hpp>
 
 #define PCADIM 20
 #define FEATUREDIM 128
@@ -51,7 +51,7 @@ private:
     Mat lms0;
     vector<KeyPoint> kps0;
     CascadeClassifier face;
-    SiftDescriptorExtractor extractor;
+    cv::xfeatures2d::SiftDescriptorExtractor extractor;
     Mat descriptor;
     
     int trackFlag = 0;
