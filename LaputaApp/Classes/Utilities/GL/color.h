@@ -11,9 +11,8 @@
 
 #include <stdio.h>
 
-#include <OpenGLES/ES2/gl.h>
-#include <OpenGLES/ES2/glext.h>
 #include "material.h"
+#include "platform.h"
 
 class Color: public Material
 {

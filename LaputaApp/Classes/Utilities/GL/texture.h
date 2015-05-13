@@ -12,9 +12,6 @@
 #include <string>
 #include "material.h"
 
-#include <OpenGLES/ES2/gl.h>
-#include <OpenGLES/ES2/glext.h>
-
 class Texture: public Material
 {
 public:

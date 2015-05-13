@@ -49,9 +49,8 @@
 
 #ifndef Laputa_ShaderUtilities_h
 #define Laputa_ShaderUtilities_h
-    
-#include <OpenGLES/ES2/gl.h>
-#include <OpenGLES/ES2/glext.h>
+
+#include "platform.h"
 
 #if defined __cplusplus
 extern "C" {

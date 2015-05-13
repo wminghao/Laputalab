@@ -160,6 +160,7 @@
 		895656DA1ACE08AC004AE70A /* RanGlass.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; name = RanGlass.dae; path = Resources/3dmodels/3dGlasses/RanGlass.dae; sourceTree = SOURCE_ROOT; };
 		895656DB1ACE08AC004AE70A /* RanGlass.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = RanGlass.obj; path = Resources/3dmodels/3dGlasses/RanGlass.obj; sourceTree = SOURCE_ROOT; };
 		896E7E201ADC789F0002205C /* Brooklyn_Bridge_Planks_1k.hdr */ = {isa = PBXFileReference; lastKnownFileType = file; name = Brooklyn_Bridge_Planks_1k.hdr; path = Resources/3dmodels/3dGlasses/Brooklyn_Bridge_Planks_1k.hdr; sourceTree = SOURCE_ROOT; };
+		899A5E671B03D1E400A080FF /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = SOURCE_ROOT; };
 		89B2EB6A1AD2F7D200D1E27E /* ranTry2.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ranTry2.mtl; path = Resources/3dmodels/SimpleGlasses/ranTry2.mtl; sourceTree = SOURCE_ROOT; };
 		89B2EB6B1AD2F7D200D1E27E /* ranTry2.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ranTry2.obj; path = Resources/3dmodels/SimpleGlasses/ranTry2.obj; sourceTree = SOURCE_ROOT; };
 		89B2EB6E1AD2FF9000D1E27E /* color.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = color.cpp; path = Utilities/GL/color.cpp; sourceTree = "<group>"; };
@@ -438,6 +439,7 @@
 		AF052D151422BCEA00CD2D66 /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				899A5E671B03D1E400A080FF /* platform.h */,
 				6F90DDE51395CAAA00125BDA /* main.m */,
 			);
 			name = "Other Sources";
