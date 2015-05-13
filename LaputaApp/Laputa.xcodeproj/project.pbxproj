@@ -69,6 +69,7 @@
 		895656E31ACE08AD004AE70A /* RanGlass.dae in Resources */ = {isa = PBXBuildFile; fileRef = 895656DA1ACE08AC004AE70A /* RanGlass.dae */; };
 		895656E41ACE08AD004AE70A /* RanGlass.obj in Resources */ = {isa = PBXBuildFile; fileRef = 895656DB1ACE08AC004AE70A /* RanGlass.obj */; };
 		896E7E211ADC789F0002205C /* Brooklyn_Bridge_Planks_1k.hdr in Resources */ = {isa = PBXBuildFile; fileRef = 896E7E201ADC789F0002205C /* Brooklyn_Bridge_Planks_1k.hdr */; };
+		899A5E831B03DBE300A080FF /* glasses.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 899A5E821B03DBE300A080FF /* glasses.cpp */; };
 		89B2EB6C1AD2F7D200D1E27E /* ranTry2.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 89B2EB6A1AD2F7D200D1E27E /* ranTry2.mtl */; };
 		89B2EB6D1AD2F7D200D1E27E /* ranTry2.obj in Resources */ = {isa = PBXBuildFile; fileRef = 89B2EB6B1AD2F7D200D1E27E /* ranTry2.obj */; };
 		89B2EB701AD2FF9000D1E27E /* color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89B2EB6E1AD2FF9000D1E27E /* color.cpp */; };
@@ -161,6 +162,8 @@
 		895656DB1ACE08AC004AE70A /* RanGlass.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = RanGlass.obj; path = Resources/3dmodels/3dGlasses/RanGlass.obj; sourceTree = SOURCE_ROOT; };
 		896E7E201ADC789F0002205C /* Brooklyn_Bridge_Planks_1k.hdr */ = {isa = PBXFileReference; lastKnownFileType = file; name = Brooklyn_Bridge_Planks_1k.hdr; path = Resources/3dmodels/3dGlasses/Brooklyn_Bridge_Planks_1k.hdr; sourceTree = SOURCE_ROOT; };
 		899A5E671B03D1E400A080FF /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = SOURCE_ROOT; };
+		899A5E811B03DA4F00A080FF /* glasses.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = glasses.h; path = Utilities/GL/glasses.h; sourceTree = "<group>"; };
+		899A5E821B03DBE300A080FF /* glasses.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = glasses.cpp; path = Utilities/GL/glasses.cpp; sourceTree = "<group>"; };
 		89B2EB6A1AD2F7D200D1E27E /* ranTry2.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ranTry2.mtl; path = Resources/3dmodels/SimpleGlasses/ranTry2.mtl; sourceTree = SOURCE_ROOT; };
 		89B2EB6B1AD2F7D200D1E27E /* ranTry2.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ranTry2.obj; path = Resources/3dmodels/SimpleGlasses/ranTry2.obj; sourceTree = SOURCE_ROOT; };
 		89B2EB6E1AD2FF9000D1E27E /* color.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = color.cpp; path = Utilities/GL/color.cpp; sourceTree = "<group>"; };
@@ -346,6 +349,8 @@
 				6FF11C9116A877B100E14D71 /* matrix.c */,
 				6FF11C9416A877B100E14D71 /* ShaderUtilities.h */,
 				6FF11C9316A877B100E14D71 /* ShaderUtilities.c */,
+				899A5E811B03DA4F00A080FF /* glasses.h */,
+				899A5E821B03DBE300A080FF /* glasses.cpp */,
 			);
 			name = GL;
 			sourceTree = "<group>";
@@ -541,6 +546,7 @@
 			files = (
 				89B2EB701AD2FF9000D1E27E /* color.cpp in Sources */,
 				895656BC1ACE0672004AE70A /* LaputaSimpleGlassesRenderer.mm in Sources */,
+				899A5E831B03DBE300A080FF /* glasses.cpp in Sources */,
 				89B2EB881AD87DDA00D1E27E /* reflectionTexture.cpp in Sources */,
 				6F90DDE61395CAAA00125BDA /* main.m in Sources */,
 				6F90DDEA1395CAAA00125BDA /* LaputaAppDelegate.m in Sources */,
