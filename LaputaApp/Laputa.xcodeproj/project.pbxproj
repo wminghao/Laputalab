@@ -76,7 +76,7 @@
 		89B2EB881AD87DDA00D1E27E /* reflectionTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89B2EB861AD87DDA00D1E27E /* reflectionTexture.cpp */; };
 		89DDF75B1AFC2153006222A4 /* CVAnalyzerOperation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 89DDF75A1AFC2153006222A4 /* CVAnalyzerOperation.mm */; };
 		89DDF7861AFD2EC9006222A4 /* libCVAnalyzerLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 89DDF7851AFD2EC9006222A4 /* libCVAnalyzerLib.a */; };
-		89DDF78B1AFD8B26006222A4 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89DDF7871AFD6E53006222A4 /* opencv2.framework */; };
+		89DDF78C1B012765006222A4 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 892DA8EE1ACB649A00ABA31E /* opencv2.framework */; };
 		89F003FD1AC9C7F500D8EC6D /* LaputaApp-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 89F003FC1AC9C7F500D8EC6D /* LaputaApp-Info.plist */; };
 /* End PBXBuildFile section */
 
@@ -186,7 +186,7 @@
 				891082531ACF0BC300D5314C /* libMagickWand.a in Frameworks */,
 				891082541ACF0BC300D5314C /* libpng.a in Frameworks */,
 				891082551ACF0BC300D5314C /* libtiff.a in Frameworks */,
-				89DDF78B1AFD8B26006222A4 /* opencv2.framework in Frameworks */,
+				89DDF78C1B012765006222A4 /* opencv2.framework in Frameworks */,
 				892DA8F41ACDCECE00ABA31E /* CoreImage.framework in Frameworks */,
 				892DA8CD1ACA1A2600ABA31E /* GLKit.framework in Frameworks */,
 				892DA8C81ACA101B00ABA31E /* libz.dylib in Frameworks */,
@@ -675,7 +675,7 @@
 				COMPRESS_PNG_FILES = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/thirdpartylib/opencv3",
+					"$(PROJECT_DIR)/thirdpartylib/opencv",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LaputaApp-Prefix.pch";
@@ -714,7 +714,7 @@
 				COMPRESS_PNG_FILES = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/thirdpartylib/opencv3",
+					"$(PROJECT_DIR)/thirdpartylib/opencv",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LaputaApp-Prefix.pch";

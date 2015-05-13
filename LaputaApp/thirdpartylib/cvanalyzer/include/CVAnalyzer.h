@@ -9,6 +9,8 @@
 #ifndef __Laputa__CVAnalyzer__
 #define __Laputa__CVAnalyzer__
 
+//#define CV3
+
 #include <CoreVideo/CVPixelBuffer.h>
 #include <iostream>
 #include <fstream>
@@ -21,10 +23,16 @@
 #include <opencv2/objdetect/objdetect.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/xfeatures2d/nonfree.hpp>
+
+#ifdef CV3
+#include <opencv2/xfeatures2d.hpp>
+#else
+#include <opencv2/nonfree/nonfree.hpp>
+#endif
 
 #define PCADIM 20
 #define FEATUREDIM 128
+
 
 using namespace std;
 using namespace cv;
@@ -34,6 +42,7 @@ class CVAnalyzer
     
 public:
     CVAnalyzer();
+    bool init(const char* prefix);
     bool processImage(Mat& frame, bool onTap);
     
 private:
@@ -51,7 +60,13 @@ private:
     Mat lms0;
     vector<KeyPoint> kps0;
     CascadeClassifier face;
-    cv::xfeatures2d::SiftDescriptorExtractor extractor;
+    
+#ifdef CV3
+    cv::Ptr<Feature2D> extractor = xfeatures2d::SIFT::create();
+#else
+    SiftDescriptorExtractor extractor;    
+#endif
+
     Mat descriptor;
     
     int trackFlag = 0;

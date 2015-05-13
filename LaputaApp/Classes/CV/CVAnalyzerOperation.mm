@@ -38,14 +38,15 @@ static void getMat(CVPixelBufferRef pixelBuffer, Mat& image) {
     CVPixelBufferUnlockBaseAddress( pixelBuffer, 0 );
     
     //then resize
-    Mat frameResized;
     //original scale is: 16/9 = 640/360
     cv::Size size(640, 360);
-    resize( frame, frameResized, size );
+    resize( frame, image, size );
     
     //then flip and convert color
-    flip(frameResized, frameResized, 1);
-    cvtColor(frameResized, image, CV_BGRA2GRAY);
+    flip(image, image, 1);
+    
+    //cv::Size s = image.size();
+    //cout<<" image width="<<s.width << " height="<<s.height;
 }
 
 @implementation CVAnalyzerOperation
@@ -57,6 +58,9 @@ static void getMat(CVPixelBufferRef pixelBuffer, Mat& image) {
         myQueue = [[NSOperationQueue alloc] init];
         myQueue.name = @"CV analyzer Queue";
         myQueue.MaxConcurrentOperationCount = MAX_NUMBER_CONCURRENT_OPERATIONS;
+        for(int i=0; i<MAX_NUMBER_CONCURRENT_OPERATIONS; i++) {
+            cvAnalyzer_[i].init("");
+        }
     }
     return self;
 }
