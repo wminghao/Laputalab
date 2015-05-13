@@ -23,9 +23,9 @@
 #include <vector>
 
 //libassimp imports
-#include <Importer.hpp>
-#include <scene.h>
-#include <postprocess.h>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 //math library
 #include <glm/glm.hpp>

@@ -27,9 +27,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 //assimp library
-#include <Importer.hpp>      // C++ importer interface
-#include <scene.h>       // Output data structure
-#include <postprocess.h> // Post processing flags
+#include <assimp/Importer.hpp>      // C++ importer interface
+#include <assimp/scene.h>       // Output data structure
+#include <assimp/postprocess.h> // Post processing flags
 
 //include materials
 #include "material.h"

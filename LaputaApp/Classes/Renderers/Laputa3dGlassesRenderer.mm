@@ -22,11 +22,6 @@
 
 #include <vector>
 
-//libassimp imports
-#include <Importer.hpp>
-#include <scene.h>
-#include <postprocess.h>
-
 //math library
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

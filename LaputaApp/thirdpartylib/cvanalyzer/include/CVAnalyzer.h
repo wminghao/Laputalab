@@ -30,6 +30,8 @@
 #include <opencv2/nonfree/nonfree.hpp>
 #endif
 
+#include "platform.h"
+
 #define PCADIM 20
 #define FEATUREDIM 128
 
