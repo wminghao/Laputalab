@@ -47,7 +47,7 @@ public:
     
     bool init(const GLchar *vertLSrc, const GLchar *fragLSrc, const char* glassesFilePath);
     
-    bool Render(int srcWidth, int srcHeight, GLenum dstTextureTarget, GLuint dstTextureName);
+    bool render(int srcWidth, int srcHeight, GLenum dstTextureTarget, GLuint dstTextureName);
     
     void deinit();
 private:

@@ -143,7 +143,7 @@ void Glasses::deinit()
     }
 }
 
-bool Glasses::Render(int srcWidth, int srcHeight, GLenum dstTextureTarget, GLuint dstTextureName)
+bool Glasses::render(int srcWidth, int srcHeight, GLenum dstTextureTarget, GLuint dstTextureName)
 {
     bool ret = false;
     if ( _offscreenBufferHandle != 0 ) {

@@ -191,7 +191,7 @@ using namespace glm;
     if ( ! dstTexture || err ) {
         NSLog( @"Error at CVOpenGLESTextureCacheCreateTextureFromImage %d", err );
     } else {
-        if( !glasses_.Render( srcDimensions.width, srcDimensions.height, CVOpenGLESTextureGetTarget( dstTexture ), CVOpenGLESTextureGetName( dstTexture ) ) ) {
+        if( !glasses_.render( srcDimensions.width, srcDimensions.height, CVOpenGLESTextureGetTarget( dstTexture ), CVOpenGLESTextureGetName( dstTexture ) ) ) {
             NSLog( @"Error at glasses_.Render");
         }
     }
