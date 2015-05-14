@@ -365,7 +365,7 @@ bail:
     const GLchar *vertLSrc = [Tools readFile:@"SimpleVertexShaderL.vertexshader"];
     const GLchar *fragLSrc = [Tools readFile:@"SimpleFragmentShaderL.fragmentshader"];
     
-    glueCreateProgram( vertLSrc, fragLSrc,
+    glueCreateProgram( vertLSrc, fragLSrc, NULL,
                       NUM_ATTRIBUTES, (const GLchar **)&attribName[0], attribLocation,
                       NUM_UNIFORMS, (const GLchar **)&uniformName[0], uniformLocation,
                       &_programIDL );
@@ -379,7 +379,7 @@ bail:
     
     const GLchar *vertFSrc = [Tools readFile:@"SimpleVertexShaderF.vertexshader"];
     const GLchar *fragFSrc = [Tools readFile:@"SimpleFragmentShaderF.fragmentshader"];
-    glueCreateProgram( vertFSrc, fragFSrc,
+    glueCreateProgram( vertFSrc, fragFSrc, NULL,
                       NUM_ATTRIBUTES, (const GLchar **)&attribName[0], attribLocation,
                       NUM_UNIFORMS, (const GLchar **)&uniformName[0], uniformLocation,
                       &_programIDF );

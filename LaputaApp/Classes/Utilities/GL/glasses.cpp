@@ -1,4 +1,4 @@
-//
+ //
 //  glasses.cpp
 //  Laputa
 //
@@ -10,6 +10,7 @@
 #include "glasses.h"
 #include "mesh.h"
 #include "ShaderUtilities.h"
+#include "err.h"
 
 Glasses::Glasses()
 {
@@ -22,7 +23,7 @@ Glasses::~Glasses()
     delete(_pMesh);
 }
 
-bool Glasses::init(const GLchar *vertLSrc, const GLchar *fragLSrc, const char* glassesFilePath)
+bool Glasses::init(const GLchar *vertLSrc, const GLchar *fragLSrc, const char* glassesFilePath, float zRotateInDegree)
 {
     bool ret = false;
     
@@ -34,7 +35,6 @@ bool Glasses::init(const GLchar *vertLSrc, const GLchar *fragLSrc, const char* g
     glEnable(GL_DITHER); //enable dithering.
     glEnable(GL_BLEND); //enable blending
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
     
     glGenFramebuffers( 1, &_offscreenBufferHandle );
     glBindFramebuffer( GL_FRAMEBUFFER, _offscreenBufferHandle );
@@ -62,7 +62,7 @@ bool Glasses::init(const GLchar *vertLSrc, const GLchar *fragLSrc, const char* g
         (GLchar *)"MVP",
         (GLchar *)"World",
         (GLchar *)"ViewInverse",
-        (GLchar *)"NormalMatrix",
+        //(GLchar *)"NormalMatrix",
         (GLchar *)"texCount",
         (GLchar *)"diffuseColor",
         (GLchar *)"ambientColor",
@@ -72,7 +72,7 @@ bool Glasses::init(const GLchar *vertLSrc, const GLchar *fragLSrc, const char* g
     
     // Load vertex and fragment shaders
     // Load vertex and fragment shaders for glasses    
-    glueCreateProgram( vertLSrc, fragLSrc,
+    glueCreateProgram( vertLSrc, fragLSrc, NULL,
                       NUM_ATTRIBUTES, (const GLchar **)&attribName[0], attribLocation,
                       NUM_UNIFORMS, (const GLchar **)&uniformName[0], uniformLocation,
                       &_programID );
@@ -80,7 +80,7 @@ bool Glasses::init(const GLchar *vertLSrc, const GLchar *fragLSrc, const char* g
         _matrixMVP = uniformLocation[UNIFORM_MVP];
         _matrixWorld = uniformLocation[UNIFORM_WORLD];
         _matrixViewInverse = uniformLocation[UNIFORM_VIEWINVERSE];
-        _matrixNormalMatrix = uniformLocation[UNIFORM_NORMALMATRIX];
+        //_matrixNormalMatrix = uniformLocation[UNIFORM_NORMALMATRIX];
         
         _pMesh->setAttrUni(uniformLocation[UNIFORM_TEXCOUNT], uniformLocation[UNIFORM_DIFFUSECOLOR], uniformLocation[UNIFORM_AMBIENTCOLOR],
                            uniformLocation[UNIFORM_TEXTUREIMAGE], uniformLocation[UNIFORM_ENVMAP],
@@ -109,13 +109,13 @@ bool Glasses::init(const GLchar *vertLSrc, const GLchar *fragLSrc, const char* g
         float scaleFactor = 9.0/_pMesh->getWidth() * 0.6; //put the object width the same as portaint mode 9:16
         //mat4 Model      = mat4(1.0f);
         mat4 Model_translation = translate(mat4(1.0f), vec3(0,0,0));
-        mat4 Model_rotateZ = rotate(mat4(1.0f), radians(90.0f), vec3(0,0,1)); //rotate z of 90 degree
+        mat4 Model_rotateZ = rotate(mat4(1.0f), radians(zRotateInDegree), vec3(0,0,1)); //rotate z of 90 degree
         mat4 Model_rotateX = rotate(mat4(1.0f), radians(10.0f), vec3(1,0,0)); //rotate x of 10 degree
         mat4 Model_scale = scale(mat4(1.0f), vec3(scaleFactor,scaleFactor,scaleFactor));
         mat4 Model = Model_translation * Model_rotateZ * Model_rotateX * Model_scale;
         
         _ViewInverse = inverse(View); //inverse of the view matrix
-        _NormalMatrix = transpose(inverse(mat3(Model)));
+        //_NormalMatrix = transpose(inverse(mat3(Model)));
         _World = Model; //world coordinate.
         _View = View;
         
@@ -143,7 +143,7 @@ void Glasses::deinit()
     }
 }
 
-bool Glasses::render(int srcWidth, int srcHeight, GLenum dstTextureTarget, GLuint dstTextureName)
+bool Glasses::render(int srcWidth, int srcHeight, GLuint dstTextureName)
 {
     bool ret = false;
     if ( _offscreenBufferHandle != 0 ) {
@@ -181,28 +181,31 @@ bool Glasses::render(int srcWidth, int srcHeight, GLenum dstTextureTarget, GLuin
         
         // Set up our destination pixel buffer as the framebuffer's render target.
         glActiveTexture( GL_TEXTURE0 );
-        glBindTexture( dstTextureTarget, dstTextureName );
+        glBindTexture( GL_TEXTURE_2D, dstTextureName );
         glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
         glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
         glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
         glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
-        glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, dstTextureTarget, dstTextureName, 0 );
-        glBindTexture( dstTextureTarget, 0 );
+        glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, dstTextureName, 0 );
+        glBindTexture( GL_TEXTURE_2D, 0 );
         
         glBindRenderbuffer(GL_RENDERBUFFER, _depthRenderbuffer);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, srcWidth, srcHeight);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _depthRenderbuffer);
-        
         glUseProgram( _programID );
         
         glUniformMatrix4fv(_matrixMVP, 1, GL_FALSE, &MVP[0][0]);
         glUniformMatrix4fv(_matrixWorld, 1, GL_FALSE, &World[0][0]);
         glUniformMatrix4fv(_matrixViewInverse, 1, GL_FALSE, &_ViewInverse[0][0]);
-        glUniformMatrix4fv(_matrixNormalMatrix, 1, GL_FALSE, &_NormalMatrix[0][0]);
+        //glUniformMatrix4fv(_matrixNormalMatrix, 1, GL_FALSE, &_NormalMatrix[0][0]);
+        
+        getGLErr("render 1");
         
         //render the meshes
         _pMesh->Render();
         
+        getGLErr("render 2");
+
         // Make sure that outstanding GL commands which render to the destination pixel buffer have been submitted.
         // AVAssetWriter, AVSampleBufferDisplayLayer, and GL will block until the rendering is complete when sourcing from this pixel buffer.
         glFlush();

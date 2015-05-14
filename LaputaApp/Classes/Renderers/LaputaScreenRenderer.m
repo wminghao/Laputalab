@@ -336,7 +336,7 @@ bail:
     const GLchar *fragSrc = [Tools readFile:@"myFilter.fsh"];
     
     // shader program
-	glueCreateProgram( vertSrc, fragSrc,  
+	glueCreateProgram( vertSrc, fragSrc, NULL,
 					  NUM_ATTRIBUTES, (const GLchar **)&attribName[0], attribLocation,
 					  0, 0, 0,
 					  &_program );

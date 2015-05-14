@@ -62,6 +62,7 @@ GLint glueValidateProgram(GLuint program);
 GLint glueGetUniformLocation(GLuint program, const GLchar *name);
 
 GLint glueCreateProgram(const GLchar *vertSource, const GLchar *fragSource,
+                        const GLchar *fragColorName,
                         GLsizei attribNameCt, const GLchar **attribNames, 
                         const GLint *attribLocations,
                         GLsizei uniformNameCt, const GLchar **uniformNames,

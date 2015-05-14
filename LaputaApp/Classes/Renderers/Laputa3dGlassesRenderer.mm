@@ -9,10 +9,6 @@
 #import "LaputaScreenRenderer.h"
 #import "Laputa3dGlassesRenderer.hh"
 
-#import <OpenGLES/EAGL.h>
-#import <OpenGLES/ES2/gl.h>
-#import <OpenGLES/ES2/glext.h>
-
 #import <CoreImage/CoreImage.h>
 #import <ImageIO/CGImageProperties.h>
 
@@ -191,7 +187,8 @@ using namespace glm;
     if ( ! dstTexture || err ) {
         NSLog( @"Error at CVOpenGLESTextureCacheCreateTextureFromImage %d", err );
     } else {
-        if( !glasses_.render( srcDimensions.width, srcDimensions.height, CVOpenGLESTextureGetTarget( dstTexture ), CVOpenGLESTextureGetName( dstTexture ) ) ) {
+        assert(CVOpenGLESTextureGetTarget( dstTexture ) == GL_TEXTURE_2D);
+        if( !glasses_.render( srcDimensions.width, srcDimensions.height, CVOpenGLESTextureGetName( dstTexture ) ) ) {
             NSLog( @"Error at glasses_.Render");
         }
     }
@@ -243,7 +240,7 @@ bail:
     const GLchar *vertLSrc = [Tools readFile:@"3dGlassesVertexShader.vsh"];
     const GLchar *fragLSrc = [Tools readFile:@"3dGlassesFragmentShader.fsh"];
     NSString *glassesFilePath = [[NSBundle mainBundle] pathForResource:@"RanGlass" ofType:@"obj"];
-    if( !glasses_.init(vertLSrc, fragLSrc, [glassesFilePath UTF8String])) {
+    if( !glasses_.init(vertLSrc, fragLSrc, [glassesFilePath UTF8String], 90.0f)) {
         NSLog( @"Problem initializing the _programIDL." );
         success = NO;
         [self cleanup:success oldContext:oldContext];

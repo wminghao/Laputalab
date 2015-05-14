@@ -31,7 +31,7 @@ enum {
     UNIFORM_MVP, // "MVP" in vertext shader
     UNIFORM_WORLD, // "gWorld" in vertext shader
     UNIFORM_VIEWINVERSE, // "viewInverse" in vertext shader
-    UNIFORM_NORMALMATRIX, // "NormalMatrix" in vertext shader
+    //UNIFORM_NORMALMATRIX, // "NormalMatrix" in vertext shader
     UNIFORM_TEXCOUNT,
     UNIFORM_DIFFUSECOLOR,
     UNIFORM_AMBIENTCOLOR,
@@ -45,9 +45,9 @@ public:
     Glasses();
     ~Glasses();
     
-    bool init(const GLchar *vertLSrc, const GLchar *fragLSrc, const char* glassesFilePath);
+    bool init(const GLchar *vertLSrc, const GLchar *fragLSrc, const char* glassesFilePath, float zRotateInDegree);
     
-    bool render(int srcWidth, int srcHeight, GLenum dstTextureTarget, GLuint dstTextureName);
+    bool render(int srcWidth, int srcHeight, GLuint dstTextureName);
     
     void deinit();
 private:
@@ -63,7 +63,7 @@ private:
     mat4 _Projection; //projection matrix matrix for rotation
     mat4 _World; //world matrix for rotation
     mat4 _View; //view matrix for rotation
-    mat3 _NormalMatrix; //normal Matrix matrix
+    //mat3 _NormalMatrix; //normal Matrix matrix
     mat4 _ViewInverse; //view inverse matrix matrix for rotation
     GLuint _offscreenBufferHandle; //offscreen buffer
     GLuint _depthRenderbuffer; //depth render buffer

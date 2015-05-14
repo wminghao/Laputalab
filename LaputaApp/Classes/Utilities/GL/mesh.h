@@ -74,6 +74,16 @@ public:
         m_positionLocation = positionLocation;
         m_texCoordLocation = texCoordLocation;
         m_normalLocation = normalLocation;
+#ifdef DESKTOP_MAC
+        //according to http://stackoverflow.com/questions/24643027/opengl-invalid-operation-following-glenablevertexattribarray
+        //enable core profile
+        glGenVertexArrays((GLsizei)1, (GLuint*)(&m_positionLocation));
+        glBindVertexArray(m_positionLocation);
+        glGenVertexArrays((GLsizei)1, (GLuint*)(&m_texCoordLocation));
+        glBindVertexArray(m_texCoordLocation);
+        glGenVertexArrays((GLsizei)1, (GLuint*)(&m_normalLocation));
+        glBindVertexArray(m_normalLocation);
+#endif
     }
     bool LoadMesh(const std::string& Filename);
 

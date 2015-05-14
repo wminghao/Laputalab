@@ -164,6 +164,7 @@
 		899A5E671B03D1E400A080FF /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = SOURCE_ROOT; };
 		899A5E811B03DA4F00A080FF /* glasses.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = glasses.h; path = Utilities/GL/glasses.h; sourceTree = "<group>"; };
 		899A5E821B03DBE300A080FF /* glasses.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = glasses.cpp; path = Utilities/GL/glasses.cpp; sourceTree = "<group>"; };
+		899A5E871B050A9D00A080FF /* err.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = err.h; path = Utilities/GL/err.h; sourceTree = "<group>"; };
 		89B2EB6A1AD2F7D200D1E27E /* ranTry2.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ranTry2.mtl; path = Resources/3dmodels/SimpleGlasses/ranTry2.mtl; sourceTree = SOURCE_ROOT; };
 		89B2EB6B1AD2F7D200D1E27E /* ranTry2.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ranTry2.obj; path = Resources/3dmodels/SimpleGlasses/ranTry2.obj; sourceTree = SOURCE_ROOT; };
 		89B2EB6E1AD2FF9000D1E27E /* color.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = color.cpp; path = Utilities/GL/color.cpp; sourceTree = "<group>"; };
@@ -351,6 +352,7 @@
 				6FF11C9316A877B100E14D71 /* ShaderUtilities.c */,
 				899A5E811B03DA4F00A080FF /* glasses.h */,
 				899A5E821B03DBE300A080FF /* glasses.cpp */,
+				899A5E871B050A9D00A080FF /* err.h */,
 			);
 			name = GL;
 			sourceTree = "<group>";

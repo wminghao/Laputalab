@@ -1,5 +1,8 @@
 
 /*
+ Howard: 05/13/2015
+         Modified based on Apple code
+ 
      File: ShaderUtilities.c
  Abstract: Shader compiler and linker utilities
   Version: 2.1
@@ -51,6 +54,9 @@
 #include <string.h>
 #include <sys/stat.h>
 #include "ShaderUtilities.h"
+
+#include "err.h"
+
 
 #define LogInfo printf
 #define LogError printf
@@ -157,6 +163,7 @@ GLint glueGetUniformLocation(GLuint program, const GLchar *uniformName)
 
 /* Convenience wrapper that compiles, links, enumerates uniforms and attribs */
 GLint glueCreateProgram(const GLchar *vertSource, const GLchar *fragSource,
+                        const GLchar *fragColorName,
                         GLsizei attribNameCt, const GLchar **attribNames, 
                         const GLint *attribLocations,
                         GLsizei uniformNameCt, const GLchar **uniformNames, 
@@ -187,8 +194,11 @@ GLint glueCreateProgram(const GLchar *vertSource, const GLchar *fragSource,
 			glBindAttribLocation(prog, attribLocations[i], attribNames[i]);
         }
 	}
-	
-    // Link program
+    
+#ifdef DESKTOP_MAC
+    glBindFragDataLocation(prog, 0, fragColorName);
+#endif
+
 	status *= glueLinkProgram(prog);
     
     // Get locations of uniforms
