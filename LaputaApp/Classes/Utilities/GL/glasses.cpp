@@ -125,7 +125,7 @@ bool Glasses::init(const GLchar *vertLSrc, const GLchar *fragLSrc, const GLchar 
                                  vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
                                  );
         // Model matrix : an identity matrix (model will be at the origin)
-        float scaleFactor = ratioH/_pMesh->getWidth() * 0.6; //put the object width the same as portaint mode 9:16
+        float scaleFactor = ((zRotateInDegree == 90)?ratioH:ratioW)/_pMesh->getWidth() * 0.5; //put the object width the same as portaint mode 9:16
         //mat4 Model      = mat4(1.0f);
         mat4 Model_translation = translate(mat4(1.0f), vec3(0,0,0));
         mat4 Model_rotateZ = rotate(mat4(1.0f), radians(zRotateInDegree), vec3(0,0,1)); //rotate z of 90 degree
