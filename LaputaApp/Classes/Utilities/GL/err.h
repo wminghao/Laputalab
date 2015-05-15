@@ -13,7 +13,7 @@
 
 inline void getGLErr(const char* prefix){
     int err = glGetError();
-    if( err != 0 ) {
+    if( err != GL_NO_ERROR ) {
         printf("%s err=%d\r\n", prefix, err);
     }
 }

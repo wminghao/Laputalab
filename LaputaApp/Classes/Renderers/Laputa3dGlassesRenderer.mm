@@ -45,7 +45,7 @@ using namespace glm;
     CMFormatDescriptionRef _outputFormatDescription;
     
     /*glasses*/
-    Glasses glasses_;
+    Glasses* glasses_;
     
     /*core image context*/
     CIContext* _coreImageContext;
@@ -188,7 +188,7 @@ using namespace glm;
         NSLog( @"Error at CVOpenGLESTextureCacheCreateTextureFromImage %d", err );
     } else {
         assert(CVOpenGLESTextureGetTarget( dstTexture ) == GL_TEXTURE_2D);
-        if( !glasses_.render( srcDimensions.width, srcDimensions.height, CVOpenGLESTextureGetName( dstTexture ) ) ) {
+        if( !glasses_->render( CVOpenGLESTextureGetName( dstTexture ) ) ) {
             NSLog( @"Error at glasses_.Render");
         }
     }
@@ -237,10 +237,11 @@ bail:
     /////////////////////////
     //Instantiate glasses model
     /////////////////////////
+    glasses_ = new Glasses( outputDimensions.width, outputDimensions.height );
     const GLchar *vertLSrc = [Tools readFile:@"3dGlassesVertexShader.vsh"];
     const GLchar *fragLSrc = [Tools readFile:@"3dGlassesFragmentShader.fsh"];
     NSString *glassesFilePath = [[NSBundle mainBundle] pathForResource:@"RanGlass" ofType:@"obj"];
-    if( !glasses_.init(vertLSrc, fragLSrc, [glassesFilePath UTF8String], 90.0f)) {
+    if( !glasses_->init(vertLSrc, fragLSrc, NULL, [glassesFilePath UTF8String], 90.0f, ASPECT_RATIO_16_9)) {
         NSLog( @"Problem initializing the _programIDL." );
         success = NO;
         [self cleanup:success oldContext:oldContext];
@@ -294,7 +295,7 @@ bail:
             return;
         }
     }
-    glasses_.deinit();
+    delete(glasses_);
     if ( _renderTextureCache ) {
         CFRelease( _renderTextureCache );
         _renderTextureCache = 0;

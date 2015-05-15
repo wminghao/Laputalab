@@ -25,6 +25,11 @@
 #include "reflectionTexture.h"
 #include "color.h"
 
+#ifdef DESKTOP_MAC
+// Vertex Array Objects Identifiers
+static GLuint vao;
+#endif
+
 Mesh::MeshEntry::MeshEntry()
 {
     VB = INVALID_OGL_VALUE;
@@ -58,6 +63,10 @@ void Mesh::MeshEntry::Init(const std::vector<Vertex>& Vertices,
     glGenBuffers(1, &IB);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * NumIndices, &Indices[0], GL_STATIC_DRAW);
+    
+#ifdef DESKTOP_MAC
+    glGenVertexArrays(1, &vao);
+#endif
 }
 
 Mesh::Mesh()
@@ -289,11 +298,18 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
 
 void Mesh::Render()
 {
+#ifdef DESKTOP_MAC
+    //according to http://stackoverflow.com/questions/24643027/opengl-invalid-operation-following-glenablevertexattribarray
+    //enable core profile
+    glBindVertexArray( vao );
+#endif
+    
     glEnableVertexAttribArray(m_positionLocation);
     glEnableVertexAttribArray(m_texCoordLocation);
     glEnableVertexAttribArray(m_normalLocation);
     
-    for (unsigned int i = 0 ; i < m_Entries.size() ; i++) {
+    unsigned int totalMeshes = (unsigned int)m_Entries.size();
+    for (unsigned int i = 0 ; i <  totalMeshes; i++) {
         glBindBuffer(GL_ARRAY_BUFFER, m_Entries[i].VB);
         glVertexAttribPointer(m_positionLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
         glVertexAttribPointer(m_texCoordLocation, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)12);

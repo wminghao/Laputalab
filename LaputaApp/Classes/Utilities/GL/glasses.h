@@ -40,15 +40,25 @@ enum {
     NUM_UNIFORMS
 };
 
+typedef enum {
+    ASPECT_RATIO_4_3,
+    ASPECT_RATIO_16_9,
+}ASPECT_RATIO;
+
 class Glasses{
 public:
-    Glasses();
+    Glasses(int srcWidth, int srcHeight);
     ~Glasses();
     
-    bool init(const GLchar *vertLSrc, const GLchar *fragLSrc, const char* glassesFilePath, float zRotateInDegree);
+    bool init(const GLchar *vertLSrc, const GLchar *fragLSrc, const GLchar *fragColorName,
+              const char* glassesFilePath, float zRotateInDegree, ASPECT_RATIO ratio);
     
-    bool render(int srcWidth, int srcHeight, GLuint dstTextureName);
+    bool render(GLuint dstTextureName);
     
+#ifdef DESKTOP_MAC
+    void readPixels(unsigned char* pixels);
+#endif
+private:
     void deinit();
 private:
     /*mesh*/
@@ -67,6 +77,14 @@ private:
     mat4 _ViewInverse; //view inverse matrix matrix for rotation
     GLuint _offscreenBufferHandle; //offscreen buffer
     GLuint _depthRenderbuffer; //depth render buffer
+    
+    int srcWidth_;
+    int srcHeight_;
+    
+#ifdef DESKTOP_MAC
+    GLuint _readBufferHandle; //read buffer
+    GLuint _renderColorbuffer;
+#endif
 };
 
 #endif

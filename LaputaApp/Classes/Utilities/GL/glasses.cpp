@@ -12,7 +12,7 @@
 #include "ShaderUtilities.h"
 #include "err.h"
 
-Glasses::Glasses()
+Glasses::Glasses(int srcWidth, int srcHeight):srcWidth_(srcWidth), srcHeight_(srcHeight)
 {
     _pMesh = new Mesh();
 }
@@ -23,7 +23,8 @@ Glasses::~Glasses()
     delete(_pMesh);
 }
 
-bool Glasses::init(const GLchar *vertLSrc, const GLchar *fragLSrc, const char* glassesFilePath, float zRotateInDegree)
+bool Glasses::init(const GLchar *vertLSrc, const GLchar *fragLSrc, const GLchar *fragColorName,
+                   const char* glassesFilePath, float zRotateInDegree, ASPECT_RATIO ratio)
 {
     bool ret = false;
     
@@ -41,6 +42,14 @@ bool Glasses::init(const GLchar *vertLSrc, const GLchar *fragLSrc, const char* g
     
     glGenRenderbuffers(1, &_depthRenderbuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, _depthRenderbuffer);
+    
+#ifdef DESKTOP_MAC
+    glGenFramebuffers( 1, &_readBufferHandle );
+    glBindFramebuffer( GL_FRAMEBUFFER, _readBufferHandle );
+    glGenRenderbuffers(1, &_renderColorbuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, _renderColorbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, srcWidth_, srcHeight_);
+#endif //DESKTOP_MAC
     
     /////////////////
     // shader program
@@ -72,7 +81,7 @@ bool Glasses::init(const GLchar *vertLSrc, const GLchar *fragLSrc, const char* g
     
     // Load vertex and fragment shaders
     // Load vertex and fragment shaders for glasses    
-    glueCreateProgram( vertLSrc, fragLSrc, NULL,
+    glueCreateProgram( vertLSrc, fragLSrc, fragColorName,
                       NUM_ATTRIBUTES, (const GLchar **)&attribName[0], attribLocation,
                       NUM_UNIFORMS, (const GLchar **)&uniformName[0], uniformLocation,
                       &_programID );
@@ -95,8 +104,18 @@ bool Glasses::init(const GLchar *vertLSrc, const GLchar *fragLSrc, const char* g
         ////////////////////////
         //Set the matrices
         ////////////////////////
+        float ratioW = 0;
+        float ratioH = 0;
+        if( ratio == ASPECT_RATIO_4_3 ) {
+            ratioW = 4;
+            ratioH = 3;
+        } else {
+            ratioW = 16;
+            ratioH = 9;
+        }
+        
         // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-        mat4 Projection = perspective(radians(45.0f), 16.0f/9.0f, 0.5f, 100.0f); //for portrait mode, front/back camera, is: 16:9
+        mat4 Projection = perspective(radians(45.0f), ratioW/ratioH, 0.5f, 100.0f); //for portrait mode, front/back camera, is: 16:9
         // Or, for an ortho camera :
         //mat4 Projection = ortho(-8.0f,8.0f,-4.5f,4.5f,0.0f,100.0f); // In world coordinates, x/y =16/9 ratio, far-near is big enough
         
@@ -106,7 +125,7 @@ bool Glasses::init(const GLchar *vertLSrc, const GLchar *fragLSrc, const char* g
                                  vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
                                  );
         // Model matrix : an identity matrix (model will be at the origin)
-        float scaleFactor = 9.0/_pMesh->getWidth() * 0.6; //put the object width the same as portaint mode 9:16
+        float scaleFactor = ratioH/_pMesh->getWidth() * 0.6; //put the object width the same as portaint mode 9:16
         //mat4 Model      = mat4(1.0f);
         mat4 Model_translation = translate(mat4(1.0f), vec3(0,0,0));
         mat4 Model_rotateZ = rotate(mat4(1.0f), radians(zRotateInDegree), vec3(0,0,1)); //rotate z of 90 degree
@@ -133,6 +152,17 @@ void Glasses::deinit()
         glDeleteFramebuffers( 1, &_offscreenBufferHandle );
         _offscreenBufferHandle = 0;
     }
+    
+#ifdef DESKTOP_MAC
+    if ( _readBufferHandle ) {
+        glDeleteFramebuffers( 1, &_readBufferHandle );
+        _readBufferHandle = 0;
+    }
+    if( _renderColorbuffer ) {
+        glDeleteRenderbuffers( 1, &_renderColorbuffer);
+        _renderColorbuffer = 0;
+    }
+#endif
     if ( _depthRenderbuffer ) {
         glDeleteFramebuffers( 1, &_depthRenderbuffer );
         _depthRenderbuffer = 0;
@@ -143,7 +173,7 @@ void Glasses::deinit()
     }
 }
 
-bool Glasses::render(int srcWidth, int srcHeight, GLuint dstTextureName)
+bool Glasses::render(GLuint dstTextureName)
 {
     bool ret = false;
     if ( _offscreenBufferHandle != 0 ) {
@@ -158,15 +188,7 @@ bool Glasses::render(int srcWidth, int srcHeight, GLuint dstTextureName)
         }
         angleInDegree += sign;
         
-        
         mat4 World = rotate(_World, radians(angleInDegree), vec3(0,1,0)); //matrix for rotation on y axis
-        
-#ifdef TAP_TEST
-        if( !shouldRotate ) {
-            World = _World;
-        }
-#endif
-        
         mat4 MVP = _Projection * _View * World;
         
         //////////////////////
@@ -174,11 +196,34 @@ bool Glasses::render(int srcWidth, int srcHeight, GLuint dstTextureName)
         //////////////////////
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
+        glViewport( 0, 0, srcWidth_, srcHeight_);
+        
+#ifdef DESKTOP_MAC
+        //Somehow OpenGL does no support attaching texture as a read and write buffer. (In the background)
+        //We have to create two frame buffers, 1 for read and 1 for write in order to do it properly.
+        //
+        //Step 1. Bind a framebuffer for read
+        glBindFramebuffer( GL_READ_FRAMEBUFFER, _readBufferHandle );
+        // Set up our destination pixel buffer as the framebuffer's render target.
+        glActiveTexture( GL_TEXTURE0 );
+        glBindTexture( GL_TEXTURE_2D, dstTextureName );
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+        glFramebufferTexture2D( GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, dstTextureName, 0 );
+        glBindTexture( GL_TEXTURE_2D, 0 );
+        
+        //Step 2. Bind a framebuffer for write
+        glBindFramebuffer( GL_DRAW_FRAMEBUFFER, _offscreenBufferHandle );
+        glBindRenderbuffer(GL_RENDERBUFFER, _renderColorbuffer);
+        glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _renderColorbuffer);
+        
+        //Step 3. copy from read buffer to write buffer
+        glBlitFramebuffer(0, 0, srcWidth_, srcHeight_, 0, 0, srcWidth_, srcHeight_, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+#else //DESKTOP_MAC
         //Bind a framebuffer
         glBindFramebuffer( GL_FRAMEBUFFER, _offscreenBufferHandle );
-        
-        glViewport( 0, 0, srcWidth, srcHeight);
-        
         // Set up our destination pixel buffer as the framebuffer's render target.
         glActiveTexture( GL_TEXTURE0 );
         glBindTexture( GL_TEXTURE_2D, dstTextureName );
@@ -188,29 +233,43 @@ bool Glasses::render(int srcWidth, int srcHeight, GLuint dstTextureName)
         glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
         glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, dstTextureName, 0 );
         glBindTexture( GL_TEXTURE_2D, 0 );
+#endif //DESKTOP_MAC
         
         glBindRenderbuffer(GL_RENDERBUFFER, _depthRenderbuffer);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, srcWidth, srcHeight);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, srcWidth_, srcHeight_);
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _depthRenderbuffer);
-        glUseProgram( _programID );
+        glBindRenderbuffer(GL_RENDERBUFFER, 0);
         
-        glUniformMatrix4fv(_matrixMVP, 1, GL_FALSE, &MVP[0][0]);
-        glUniformMatrix4fv(_matrixWorld, 1, GL_FALSE, &World[0][0]);
-        glUniformMatrix4fv(_matrixViewInverse, 1, GL_FALSE, &_ViewInverse[0][0]);
-        //glUniformMatrix4fv(_matrixNormalMatrix, 1, GL_FALSE, &_NormalMatrix[0][0]);
+        GLenum framebufferStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+        if( framebufferStatus == GL_FRAMEBUFFER_COMPLETE ) {
+            glUseProgram( _programID );
+            
+            glUniformMatrix4fv(_matrixMVP, 1, GL_FALSE, &MVP[0][0]);
+            glUniformMatrix4fv(_matrixWorld, 1, GL_FALSE, &World[0][0]);
+            glUniformMatrix4fv(_matrixViewInverse, 1, GL_FALSE, &_ViewInverse[0][0]);
+            //glUniformMatrix4fv(_matrixNormalMatrix, 1, GL_FALSE, &_NormalMatrix[0][0]);
+            
+            //render the meshes
+            _pMesh->Render();
+            
+            // Make sure that outstanding GL commands which render to the destination pixel buffer have been submitted.
+            // AVAssetWriter, AVSampleBufferDisplayLayer, and GL will block until the rendering is complete when sourcing from this pixel buffer.
+            glFlush();
+            
+            ret = true;
+        } else {
+            printf("framebufferStatus=%d\r\n", framebufferStatus);
+        }
         
-        getGLErr("render 1");
-        
-        //render the meshes
-        _pMesh->Render();
-        
-        getGLErr("render 2");
-
-        // Make sure that outstanding GL commands which render to the destination pixel buffer have been submitted.
-        // AVAssetWriter, AVSampleBufferDisplayLayer, and GL will block until the rendering is complete when sourcing from this pixel buffer.
-        glFlush();
-
-        ret = true;
     }
     return ret;
 }
+
+#ifdef DESKTOP_MAC
+void Glasses::readPixels(unsigned char* pixels)
+{
+    glBindFramebuffer( GL_FRAMEBUFFER, _offscreenBufferHandle );
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    glReadPixels(0, 0, srcWidth_, srcHeight_, GL_BGR, GL_UNSIGNED_BYTE, pixels);
+}
+#endif
