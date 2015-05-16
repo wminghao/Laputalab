@@ -46,19 +46,9 @@ bool Glasses::init(const GLchar *vertLSrc, const GLchar *fragLSrc, const GLchar 
 #ifdef DESKTOP_MAC
     glGenFramebuffers( 1, &_readBufferHandle );
     glBindFramebuffer( GL_FRAMEBUFFER, _readBufferHandle );
-    
-    glGenTextures(1, &_renderTexture);
-    glBindTexture(GL_TEXTURE_2D, _renderTexture);
-    glTexImage2D(GL_TEXTURE_2D,     // Type of texture
-                 0,                 // Pyramid level (for mip-mapping) - 0 is the top level
-                 GL_RGBA,           // Internal colour format to convert to
-                 srcWidth_, // Image width  i.e. 640 for Kinect in standard mode
-                 srcHeight_, // Image height i.e. 480 for Kinect in standard mode
-                 0,                 // Border width in pixels (can either be 1 or 0)
-                 GL_RGBA,            // Input image format (i.e. GL_RGB, GL_RGBA, GL_BGR etc.)
-                 GL_UNSIGNED_BYTE,  // Image data type
-                 NULL); // The actual image data itself
-    
+    glGenRenderbuffers(1, &_renderColorbuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, _renderColorbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, srcWidth_, srcHeight_);
 #endif //DESKTOP_MAC
     
     /////////////////
@@ -168,9 +158,9 @@ void Glasses::deinit()
         glDeleteFramebuffers( 1, &_readBufferHandle );
         _readBufferHandle = 0;
     }
-    if( _renderTexture ) {
-        glDeleteTextures(1, &_renderTexture);
-        _renderTexture = 0;
+    if( _renderColorbuffer ) {
+        glDeleteRenderbuffers( 1, &_renderColorbuffer);
+        _renderColorbuffer = 0;
     }
 #endif
     if ( _depthRenderbuffer ) {
@@ -226,13 +216,8 @@ bool Glasses::render(GLuint dstTextureName)
         
         //Step 2. Bind a framebuffer for write
         glBindFramebuffer( GL_DRAW_FRAMEBUFFER, _offscreenBufferHandle );
-        glBindTexture( GL_TEXTURE_2D, _renderTexture );
-        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
-        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
-        glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _renderTexture, 0);
-        glBindTexture( GL_TEXTURE_2D, 0 );
+        glBindRenderbuffer(GL_RENDERBUFFER, _renderColorbuffer);
+        glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _renderColorbuffer);
         
         //Step 3. copy from read buffer to write buffer
         glBlitFramebuffer(0, 0, srcWidth_, srcHeight_, 0, 0, srcWidth_, srcHeight_, GL_COLOR_BUFFER_BIT, GL_LINEAR);
@@ -283,7 +268,8 @@ bool Glasses::render(GLuint dstTextureName)
 #ifdef DESKTOP_MAC
 void Glasses::readPixels(unsigned char* pixels)
 {
-    glBindTexture( GL_TEXTURE_2D, _renderTexture );
-    glGetTexImage(GL_TEXTURE_2D, 0, GL_BGR, GL_BYTE, pixels);
+    glBindFramebuffer( GL_FRAMEBUFFER, _offscreenBufferHandle );
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    glReadPixels(0, 0, srcWidth_, srcHeight_, GL_BGR, GL_UNSIGNED_BYTE, pixels);
 }
 #endif

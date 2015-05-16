@@ -83,7 +83,7 @@ private:
     
 #ifdef DESKTOP_MAC
     GLuint _readBufferHandle; //read buffer
-    GLuint _renderTexture;
+    GLuint _renderColorbuffer;
 #endif
 };
 
