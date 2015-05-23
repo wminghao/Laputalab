@@ -24,6 +24,7 @@
 #include "texture.h"
 #include "reflectionTexture.h"
 #include "color.h"
+#include "err.h"
 
 #ifdef DESKTOP_MAC
 // Vertex Array Objects Identifiers

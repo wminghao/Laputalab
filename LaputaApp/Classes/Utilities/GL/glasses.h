@@ -50,13 +50,14 @@ public:
     Glasses(int srcWidth, int srcHeight);
     ~Glasses();
     
-    bool init(const GLchar *vertLSrc, const GLchar *fragLSrc, const GLchar *fragColorName,
+    bool init(const GLchar *vertLSrc, const GLchar *fragLSrc, const GLchar *fragColorLName,
               const char* glassesFilePath, float zRotateInDegree, ASPECT_RATIO ratio);
     
     bool render(GLuint dstTextureName);
     
 #ifdef DESKTOP_MAC
     void readPixels(unsigned char* pixels);
+    void blitToScreen();
 #endif
 private:
     void deinit();
@@ -82,8 +83,18 @@ private:
     int srcHeight_;
     
 #ifdef DESKTOP_MAC
-    GLuint _readBufferHandle; //read buffer
-    GLuint _renderColorbuffer;
+    //input framebuffer
+    GLuint _inputBufferHandle; //input buffer
+    
+    //output framebuffer
+    GLuint _outputBufferHandle; //output buffer
+    GLuint _outputTexturebuffer; //output buffer
+    GLuint _outputColorbuffer; //output buffer
+    GLuint _outputDepthbuffer; //output buffer
+    
+    //anti-aliased framebuffer
+    GLuint _aaColorbuffer; //anti-aliasing color buffer
+    GLuint _aaTexturebuffer; //anti-aliasing texture buffer
 #endif
 };
 
