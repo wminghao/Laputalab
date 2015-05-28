@@ -124,6 +124,11 @@ private:
     float xMin;
     float yMin;
     float zMin;
+    
+#ifdef DESKTOP_MAC
+    // Vertex Array Objects Identifiers
+    GLuint vao;
+#endif
 };
 
 #endif	/* MESH_H */

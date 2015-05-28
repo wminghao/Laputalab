@@ -60,7 +60,8 @@ bool Candide3::readVertices(string& vertexFile)
 
 void Candide3::drawMeshOnImg_Per(Mat& image)
 {
-    for (int i = 0; i < faces.size(); i++){
+    size_t noOfFaces = faces.size();
+    for (int i = 0; i < noOfFaces; i++){
         vector<Point> contour;
         Vector3f v_a = vertices[faces[i].a];
         Vector3f v_b = vertices[faces[i].b];

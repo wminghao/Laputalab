@@ -293,6 +293,9 @@ bool Glasses::render(GLuint dstTextureName)
         //The default frame buffer has anti-aliased set outside the project
         glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0 );
         
+        ////////////
+        //DOES NOT WORK
+        ////////////
         /* Disable the anti-aliased framebuffer, it does NOT work as expected
         glBindFramebuffer( GL_DRAW_FRAMEBUFFER, _offscreenBufferHandle );
         //glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _aaColorbuffer);
@@ -333,21 +336,6 @@ bool Glasses::render(GLuint dstTextureName)
             // Make sure that outstanding GL commands which render to the destination pixel buffer have been submitted.
             // AVAssetWriter, AVSampleBufferDisplayLayer, and GL will block until the rendering is complete when sourcing from this pixel buffer.
             glFlush();
-            
-#ifdef DESKTOP_MAC
-            /*
-            //render code
-            glUseProgram( _passthruID );
-            
-            glBindBuffer(GL_ARRAY_BUFFER, _quadVbo);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(verticesPassThru), verticesPassThru, GL_STATIC_DRAW);
-            glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
-            glEnableVertexAttribArray(0);
-            //glBindVertexArray(0);
-            glBindVertexArray(_quadVao);
-            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-            */
-#endif
             
             ret = true;
         } else {

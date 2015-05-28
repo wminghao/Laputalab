@@ -26,11 +26,6 @@
 #include "color.h"
 #include "err.h"
 
-#ifdef DESKTOP_MAC
-// Vertex Array Objects Identifiers
-static GLuint vao;
-#endif
-
 Mesh::MeshEntry::MeshEntry()
 {
     VB = INVALID_OGL_VALUE;
@@ -64,10 +59,6 @@ void Mesh::MeshEntry::Init(const std::vector<Vertex>& Vertices,
     glGenBuffers(1, &IB);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * NumIndices, &Indices[0], GL_STATIC_DRAW);
-    
-#ifdef DESKTOP_MAC
-    glGenVertexArrays(1, &vao);
-#endif
 }
 
 Mesh::Mesh()
@@ -124,6 +115,9 @@ bool Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename)
         InitMesh(i, paiMesh);
     }
     
+#ifdef DESKTOP_MAC
+    glGenVertexArrays(1, &vao);
+#endif
     printf("Max vertex coord:%.2f, %.2f, %.2f\n",
            xMax, yMax, zMax);
     
