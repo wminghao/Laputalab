@@ -13,30 +13,59 @@
 #include <vector>
 #include <string>
 
-#include <opencv2/core/core.hpp>
-
+#include "platform.h"
 #include "unit.h"
+#include "candide3Texture.h"
 
 using namespace std;
-using namespace cv;
+
+/*
+ There is only 1 mesh, with multiple faces(triangles), and multiple vertices
+ */
 
 class Candide3
 {
 public:
     Candide3(unsigned int width,
              unsigned int height,
-             unsigned int fl): V_WIDTH(width), V_HEIGHT(height), FL(fl) {}
+             unsigned int fl);
+
+    void setAttrUni(GLint texCountLocation,
+                    GLint textureImageLocation,
+                    GLint positionLocation,
+                    GLint texCoordLocation,
+                    GLint normalLocation);
+    
     bool readFaces(string& faceFile);
     bool readVertices(string& vertexFile);
     
-    void drawMeshOnImg_Per(Mat& image);
+    //void drawMeshOnImg_Per(Mat& image);
+    void draw(GLuint textureObj);
 private:
-    vector<Triangle> faces;
-    vector<Vector3f> vertices;
+    vector<unsigned int> indices;
+    vector<Vertex> vertices;
     
     unsigned int V_WIDTH;
     unsigned int V_HEIGHT;
     unsigned int FL;
+    
+    //shader location
+    GLint m_positionLocation;
+    GLint m_texCoordLocation;
+    GLint m_normalLocation;
+    
+    //texture
+    Candide3Texture* candide3Texture;
+    
+    //vertices and faces
+    GLuint VB;
+    GLuint IB;
+    unsigned int NumIndices;
+#ifdef DESKTOP_MAC
+    // Vertex Array Objects Identifiers
+    GLuint vao;
+#endif
+    
 };
 
 

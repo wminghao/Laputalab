@@ -11,29 +11,49 @@
 #include<iostream>
 #include<fstream>
 
-#include <opencv2/objdetect/objdetect.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-
-#ifdef CV3
-#include <opencv2/xfeatures2d.hpp>
-#else
-#include <opencv2/nonfree/nonfree.hpp>
+Candide3::Candide3(unsigned int width,
+         unsigned int height,
+         unsigned int fl): V_WIDTH(width), V_HEIGHT(height), FL(fl) {
+#ifdef DESKTOP_MAC
+    glGenVertexArrays(1, &vao);
 #endif
+}
+
+void Candide3::setAttrUni(GLint texCountLocation,
+                          GLint textureImageLocation,
+                          GLint positionLocation,
+                          GLint texCoordLocation,
+                          GLint normalLocation) {
+    //map to different uniforms and attributes
+    m_positionLocation = positionLocation;
+    m_texCoordLocation = texCoordLocation;
+    m_normalLocation = normalLocation;
+    
+    candide3Texture = new Candide3Texture(texCountLocation, textureImageLocation);
+}
 
 bool Candide3::readFaces(string& faceFile)
 {
     ifstream ifs;
     ifs.open(faceFile.c_str(), ifstream::in);
     
-    Triangle face;
+    Triangle face; //3 points per face
     
     while (ifs >> face.a >> face.b >> face.c){
-        faces.push_back(face);
+        indices.push_back(face.a);
+        indices.push_back(face.b);
+        indices.push_back(face.c);
     }
     
     ifs.close();
     
+    //load into 
+    NumIndices = (unsigned int)indices.size();
+    
+    glGenBuffers(1, &IB);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * NumIndices, &indices[0], GL_STATIC_DRAW);
+
     return true;
 }
 
@@ -43,47 +63,59 @@ bool Candide3::readVertices(string& vertexFile)
     
     ifs.open(vertexFile.c_str(), ifstream::in);
     
-    Vector3f vertex;
-    
-    while (ifs >> vertex.x >> vertex.y >> vertex.z){
-        vertex.x = -vertex.x;
-        vertex.y = -vertex.y;
-        vertex.z = -vertex.z;
-        vertices.push_back(vertex);
-        //cout << vertex.x << " " << vertex.y << " " << vertex.z << endl;
+    Vector3f vert;
+    Vector2f texture;
+    Vector3f normal;
+    while (ifs >> vert.x >> vert.y >> vert.z){
+        vert.x = -vert.x;
+        vert.y = -vert.y;
+        vert.z = -vert.z;
+        
+        //TODO
+        texture.x = 0;
+        texture.y = 0;
+        
+        Vertex v(vert, texture, normal);
+        
+        vertices.push_back(v);
+        //cout << vert.x << " " << vert.y << " " << vert.z << endl;
     }
     
     ifs.close();
+
+    glGenBuffers(1, &VB);
+    glBindBuffer(GL_ARRAY_BUFFER, VB);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
     
     return true;
 }
 
-void Candide3::drawMeshOnImg_Per(Mat& image)
+void Candide3::draw(GLuint textureObj)
 {
-    size_t noOfFaces = faces.size();
-    for (int i = 0; i < noOfFaces; i++){
-        vector<Point> contour;
-        Vector3f v_a = vertices[faces[i].a];
-        Vector3f v_b = vertices[faces[i].b];
-        Vector3f v_c = vertices[faces[i].c];
-        /*
-         contour.push_back(Point((v_a.x - 320)/v_a.z*DIST + 320,(v_a.y - 240)/v_a.z*DIST + 240));
-         contour.push_back(Point((v_b.x - 320)/v_b.z*DIST + 320,(v_b.y - 240)/v_b.z*DIST + 240));
-         contour.push_back(Point((v_c.x - 320)/v_c.z*DIST + 320,(v_c.y - 240)/v_c.z*DIST + 240));
-         */
-        contour.push_back(Point((v_a.x - V_WIDTH/2)/v_a.z*FL + V_WIDTH/2,(v_a.y - V_HEIGHT/2)/v_a.z*FL + V_HEIGHT/2));
-        contour.push_back(Point((v_b.x - V_WIDTH/2)/v_b.z*FL + V_WIDTH/2,(v_b.y - V_HEIGHT/2)/v_b.z*FL + V_HEIGHT/2));
-        contour.push_back(Point((v_c.x - V_WIDTH/2)/v_c.z*FL + V_WIDTH/2,(v_c.y - V_HEIGHT/2)/v_c.z*FL + V_HEIGHT/2));
-        
-        
-        const cv::Point *pts = (const cv::Point*) Mat(contour).data;
-        int npts = Mat(contour).rows;
-        
-        polylines(image, &pts,&npts, 1,
-                  true, 			// draw closed contour (i.e. joint end to start)
-                  Scalar(0,255,0),// colour RGB ordering (here = green)
-                  1, 		        // line thickness
-                  CV_AA, 0);
-        
-    }
+    
+#ifdef DESKTOP_MAC
+    //according to http://stackoverflow.com/questions/24643027/opengl-invalid-operation-following-glenablevertexattribarray
+    //enable core profile
+    glBindVertexArray( vao );
+#endif
+    
+    glEnableVertexAttribArray(m_positionLocation);
+    glEnableVertexAttribArray(m_texCoordLocation);
+    glEnableVertexAttribArray(m_normalLocation);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, VB);
+    glVertexAttribPointer(m_positionLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0); //3*4
+    glVertexAttribPointer(m_texCoordLocation, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)12); //2*4
+    glVertexAttribPointer(m_normalLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)20); //3*4
+    
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+    
+    //starting from GL_TEXTURE2 to avoid conflict with GL_TEXTURE0 & GL_TEXTURE1 in the base texture.
+    candide3Texture->bind(GL_TEXTURE2, 1, textureObj);
+    
+    glDrawElements(GL_TRIANGLES, NumIndices, GL_UNSIGNED_INT, 0);
+    
+    glDisableVertexAttribArray(m_positionLocation);
+    glDisableVertexAttribArray(m_texCoordLocation);
+    glDisableVertexAttribArray(m_normalLocation);
 }
