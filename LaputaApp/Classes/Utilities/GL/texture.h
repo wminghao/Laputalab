@@ -29,7 +29,7 @@ public:
     }
     bool load();
     
-    void bind(GLenum textureUnit, GLint textureId);
+    void bind(GLint textureId);
 protected:
     std::string m_fileName;
     GLuint m_textureObj; //object id generated

@@ -31,7 +31,7 @@ public:
     virtual ~Color() {}
     bool load();
     
-    void bind(GLenum textureUnit, GLint textureId);
+    void bind(GLint textureId);
 private:
 };
 #endif /* defined(__Laputa__color__) */

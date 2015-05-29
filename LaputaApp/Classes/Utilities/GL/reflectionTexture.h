@@ -31,7 +31,7 @@ public:
     }
     virtual bool load();
     
-    virtual void bind(GLenum textureUnit, GLint textureId);
+    virtual void bind(GLint textureId);
 private:
     GLint m_reflectionTextureImageLocation;
     std::string m_reflectionFileName;

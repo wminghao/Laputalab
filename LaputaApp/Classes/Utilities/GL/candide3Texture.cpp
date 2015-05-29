@@ -11,12 +11,11 @@ Candide3Texture::Candide3Texture(GLint texCountLocation,
                                  GLint textureImageLocation):m_texCountLocation(texCountLocation), m_textureImageLocation(textureImageLocation)
 {}
 
-void Candide3Texture::bind(GLenum textureUnit,
-                           GLint textureId,
+void Candide3Texture::bind(GLint textureId,
                            GLuint textureObj)
 {
     glUniform1i(m_texCountLocation, 3); //3 indicate candide3 Texture
-    glActiveTexture(textureUnit);
+    glActiveTexture( GL_TEXTURE0 + textureId );
     glBindTexture(GL_TEXTURE_2D, textureObj);
     glUniform1i(m_textureImageLocation, textureId); //set the sampler texture to textureId
 }

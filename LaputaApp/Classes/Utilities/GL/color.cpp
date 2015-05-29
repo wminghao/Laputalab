@@ -14,7 +14,7 @@ bool Color::load()
     return true;
 }
 
-void Color::bind(GLenum textureUnit, GLint textureId)
+void Color::bind(GLint textureId)
 {
     glUniform1i(m_texCountLocation, 0);
     glUniform4f(m_diffuseColorLocation, m_diffuseColor.x, m_diffuseColor.y, m_diffuseColor.z, m_diffuseColor.w);

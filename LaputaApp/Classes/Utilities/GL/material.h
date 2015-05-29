@@ -34,7 +34,7 @@ public:
     virtual ~Material(){}
     virtual bool load() = 0;
     
-    virtual void bind(GLenum textureUnit, GLint textureId) = 0;
+    virtual void bind(GLint textureId) = 0;
     
 protected:
     GLint m_texCountLocation;

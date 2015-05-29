@@ -164,17 +164,17 @@ bool ReflectionTexture::load()
     return true;
 }
 
-void ReflectionTexture::bind(GLenum textureUnit, GLint textureId)
+void ReflectionTexture::bind(GLint textureId)
 {
     glUniform1i(m_texCountLocation, 2);
     glUniform4f(m_diffuseColorLocation, m_diffuseColor.x, m_diffuseColor.y, m_diffuseColor.z, m_diffuseColor.w);
     glUniform4f(m_ambientColorLocation, m_ambientColor.x, m_ambientColor.y, m_ambientColor.z, m_ambientColor.w);
     
-    glActiveTexture(textureUnit);
+    glActiveTexture(GL_TEXTURE0 + textureId);
     glBindTexture(GL_TEXTURE_2D, m_textureObj);
     glUniform1i(m_textureImageLocation, textureId); //set the sampler texture to textureId
     
-    glActiveTexture(textureUnit+1);
+    glActiveTexture(GL_TEXTURE0 + textureId + 1);
     glBindTexture(GL_TEXTURE_CUBE_MAP, m_reflectionTextureObj);
     glUniform1i(m_reflectionTextureImageLocation, textureId+1); //set the reflection texture to textureId
 

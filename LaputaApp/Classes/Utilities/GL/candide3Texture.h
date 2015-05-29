@@ -18,8 +18,7 @@ public:
     Candide3Texture(GLint texCountLocation,
                     GLint textureImageLocation);
     
-    virtual void bind(GLenum textureUnit,
-                      GLint textureId,
+    virtual void bind(GLint textureId,
                       GLuint textureObj);
     
 private:

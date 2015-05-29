@@ -122,7 +122,7 @@ void Candide3::render(GLuint textureObj)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
     
     //starting from GL_TEXTURE1 to avoid conflict with GL_TEXTURE0 in the base texture.
-    candide3Texture->bind(GL_TEXTURE1, 1, textureObj);
+    candide3Texture->bind(1, textureObj);
     
     //Use GL_TRIANGLE_FAN instead of GL_TRIANGLES
     glDrawElements(GL_TRIANGLE_FAN, NumIndices, GL_UNSIGNED_INT, 0);
