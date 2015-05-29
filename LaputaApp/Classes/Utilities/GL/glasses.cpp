@@ -17,7 +17,7 @@ const int AA_LEVEL = 4; //4 is normal, 0 means no AA
 
 Glasses::Glasses(int srcWidth, int srcHeight):srcWidth_(srcWidth), srcHeight_(srcHeight)
 {
-    _pMesh = new Mesh();
+    _pMesh = new Mesh(srcWidth, srcHeight);
 }
 
 Glasses::~Glasses()
@@ -27,7 +27,10 @@ Glasses::~Glasses()
 }
 
 bool Glasses::init(const GLchar *vertLSrc, const GLchar *fragLSrc, const GLchar *fragColorLName,
-                   const char* glassesFilePath, float zRotateInDegree, ASPECT_RATIO ratio)
+                   const char* glassesFilePath,
+                   const char* candide3FacePath,
+                   const char* candide3VertPath,
+                   float zRotateInDegree, ASPECT_RATIO ratio)
 {
     bool ret = false;
     
@@ -149,11 +152,11 @@ bool Glasses::init(const GLchar *vertLSrc, const GLchar *fragLSrc, const GLchar 
                            uniformLocation[UNIFORM_TEXTUREIMAGE], uniformLocation[UNIFORM_ENVMAP],
                            attribLocation[ATTRIB_POSITION], attribLocation[ATTRIB_TEXCOORD], attribLocation[ATTRIB_NORMAL]);
         
-        
         ////////////////////////
         //Load model with ASSIMP
         ////////////////////////
         _pMesh->LoadMesh(glassesFilePath);
+        _pMesh->loadCandide3(candide3FacePath, candide3VertPath);
         
         ////////////////////////
         //Set the matrices
@@ -331,7 +334,7 @@ bool Glasses::render(GLuint dstTextureName)
             //glUniformMatrix4fv(_matrixNormalMatrix, 1, GL_FALSE, &_NormalMatrix[0][0]);
             
             //render the meshes
-            _pMesh->Render();
+            _pMesh->Render(dstTextureName);
             
             // Make sure that outstanding GL commands which render to the destination pixel buffer have been submitted.
             // AVAssetWriter, AVSampleBufferDisplayLayer, and GL will block until the rendering is complete when sourcing from this pixel buffer.

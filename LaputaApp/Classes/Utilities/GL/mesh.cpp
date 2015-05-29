@@ -61,7 +61,7 @@ void Mesh::MeshEntry::Init(const std::vector<Vertex>& Vertices,
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * NumIndices, &Indices[0], GL_STATIC_DRAW);
 }
 
-Mesh::Mesh()
+Mesh::Mesh(int srcWidth, int srcHeight):_candide3(srcWidth, srcHeight, 500) //TODO
 {
     xMax = 0;
     yMax = 0;
@@ -102,6 +102,18 @@ bool Mesh::LoadMesh(const std::string& Filename)
     }
 
     return Ret;
+}
+
+bool Mesh::loadCandide3(const char*candide3FacePath, const char* candide3VertPath) {
+    
+    ////////////////////////
+    //Load candide3
+    ////////////////////////
+    string candide3FaceP = candide3FacePath;
+    _candide3.readFaces(candide3FaceP);
+    string candide3VertP = candide3VertPath;
+    _candide3.readVertices(candide3VertP);
+    return true;
 }
 
 bool Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename)
@@ -291,7 +303,7 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
     return Ret;
 }
 
-void Mesh::Render()
+void Mesh::Render(GLuint textureObj)
 {
 #ifdef DESKTOP_MAC
     //according to http://stackoverflow.com/questions/24643027/opengl-invalid-operation-following-glenablevertexattribarray
@@ -319,6 +331,9 @@ void Mesh::Render()
         }
         glDrawElements(GL_TRIANGLES, m_Entries[i].NumIndices, GL_UNSIGNED_INT, 0);
     }
+    
+    //render candide3
+    _candide3.render(textureObj);
 
     glDisableVertexAttribArray(m_positionLocation);
     glDisableVertexAttribArray(m_texCoordLocation);

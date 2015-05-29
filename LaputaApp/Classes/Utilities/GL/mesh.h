@@ -34,10 +34,12 @@
 //include materials
 #include "material.h"
 
+#include "candide3.h"
+
 class Mesh
 {
 public:
-    Mesh();
+    Mesh(int srcWidth, int srcHeight);
 
     ~Mesh();
     
@@ -58,10 +60,13 @@ public:
         m_positionLocation = positionLocation;
         m_texCoordLocation = texCoordLocation;
         m_normalLocation = normalLocation;
+        
+        _candide3.setAttrUni(texCountLocation, textureImageLocation, positionLocation, texCoordLocation, normalLocation);
     }
     bool LoadMesh(const std::string& Filename);
-
-    void Render();
+    bool loadCandide3(const char*candide3FacePath, const char* candide3VertPath);
+    
+    void Render(GLuint textureObj);
     
     float getWidth() { return xMax-xMin;}
 
@@ -113,6 +118,8 @@ private:
     // Vertex Array Objects Identifiers
     GLuint vao;
 #endif
+    
+    Candide3 _candide3;
 };
 
 #endif	/* MESH_H */

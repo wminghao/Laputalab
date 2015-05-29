@@ -51,7 +51,10 @@ public:
     ~Glasses();
     
     bool init(const GLchar *vertLSrc, const GLchar *fragLSrc, const GLchar *fragColorLName,
-              const char* glassesFilePath, float zRotateInDegree, ASPECT_RATIO ratio);
+              const char* glassesFilePath,
+              const char* candide3FacePath,
+              const char* candide3VertPath,
+              float zRotateInDegree, ASPECT_RATIO ratio);
     
     bool render(GLuint dstTextureName);
     

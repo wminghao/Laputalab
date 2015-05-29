@@ -39,8 +39,7 @@ public:
     bool readFaces(string& faceFile);
     bool readVertices(string& vertexFile);
     
-    //void drawMeshOnImg_Per(Mat& image);
-    void draw(GLuint textureObj);
+    void render(GLuint textureObj);
 private:
     vector<unsigned int> indices;
     vector<Vertex> vertices;
@@ -60,12 +59,7 @@ private:
     //vertices and faces
     GLuint VB;
     GLuint IB;
-    unsigned int NumIndices;
-#ifdef DESKTOP_MAC
-    // Vertex Array Objects Identifiers
-    GLuint vao;
-#endif
-    
+    unsigned int NumIndices;    
 };
 
 

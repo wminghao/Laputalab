@@ -73,6 +73,7 @@ bool Texture::load()
     
     return true;
 }
+#include "err.h"
 
 void Texture::bind(GLenum textureUnit, GLint textureId)
 {
