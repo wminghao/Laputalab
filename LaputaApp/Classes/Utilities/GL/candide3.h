@@ -26,9 +26,7 @@ using namespace std;
 class Candide3
 {
 public:
-    Candide3(unsigned int width,
-             unsigned int height,
-             unsigned int fl);
+    Candide3(){}
 
     void setAttrUni(GLint texCountLocation,
                     GLint textureImageLocation,
@@ -37,16 +35,12 @@ public:
                     GLint normalLocation);
     
     bool readFaces(string& faceFile);
-    bool readVertices(string& vertexFile);
+    bool readVertices(string& vertexFile, float glassesWidth);
     
     void render(GLuint textureObj);
 private:
     vector<unsigned int> indices;
     vector<Vertex> vertices;
-    
-    unsigned int V_WIDTH;
-    unsigned int V_HEIGHT;
-    unsigned int FL;
     
     //shader location
     GLint m_positionLocation;

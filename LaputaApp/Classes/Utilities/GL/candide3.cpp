@@ -12,10 +12,8 @@
 #include<iostream>
 #include<fstream>
 
-Candide3::Candide3(unsigned int width,
-         unsigned int height,
-         unsigned int fl): V_WIDTH(width), V_HEIGHT(height), FL(fl) {
-}
+const float DELTA_BEHIND_GLASSES = 5.0; //delta face behind the glasses
+const float DELTA_SMALLER_GLASSES = 1.0; //delta face width smaller than glasses
 
 void Candide3::setAttrUni(GLint texCountLocation,
                           GLint textureImageLocation,
@@ -56,7 +54,7 @@ bool Candide3::readFaces(string& faceFile)
     return true;
 }
 
-bool Candide3::readVertices(string& vertexFile)
+bool Candide3::readVertices(string& vertexFile, float glassesWidth)
 {
     ifstream ifs;
     
@@ -65,17 +63,37 @@ bool Candide3::readVertices(string& vertexFile)
     Vector3f vert;
     Vector2f texture;
     Vector3f normal;
+    
+    float xMin = 0;
+    float xMax = 0;
+    
+    //first read the width of the mesh
     while (ifs >> vert.x >> vert.y >> vert.z){
-        
+        if( vert.x > xMax ) {
+            xMax = vert.x;
+        }
+        if( vert.x < xMin ) {
+            xMin = vert.x;
+        }
+    }
+    
+    float width = xMax - xMin;
+    float ratio = (glassesWidth-DELTA_SMALLER_GLASSES)/width; //inside the width
+    
+    cout <<"candide width=" << width << " glasses width="<<glassesWidth << " ratio="<<ratio<<endl;
+    
+    //then seek to the beginning
+    ifs.clear();
+    ifs.seekg(0, ios::beg);
+    while (ifs >> vert.x >> vert.y >> vert.z){
         //map directly into texture
         texture.x = (vert.x+1)/2;
         texture.y = (vert.y+1)/2;
         
-        //TODO
-        vert.x *= 30;
-        vert.y *= 30;
-        vert.z = -10;
-        //vert.z = vert.z*25 - 10;
+        vert.x *= ratio;
+        vert.y *= ratio;
+        //vert.z = -DELTA_BEHIND_GLASSES;
+        vert.z = vert.z*ratio - DELTA_BEHIND_GLASSES;
         
         Vertex v(vert, texture, normal);
         
@@ -106,6 +124,6 @@ void Candide3::render(GLuint textureObj)
     //starting from GL_TEXTURE1 to avoid conflict with GL_TEXTURE0 in the base texture.
     candide3Texture->bind(GL_TEXTURE1, 1, textureObj);
     
-    //TODO GL_TRIANGLE_STRIP or GL_TRIANGLES
-    glDrawElements(GL_TRIANGLE_STRIP, NumIndices, GL_UNSIGNED_INT, 0);
+    //Use GL_TRIANGLE_FAN instead of GL_TRIANGLES
+    glDrawElements(GL_TRIANGLE_FAN, NumIndices, GL_UNSIGNED_INT, 0);
 }

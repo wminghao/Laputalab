@@ -155,8 +155,7 @@ bool Glasses::init(const GLchar *vertLSrc, const GLchar *fragLSrc, const GLchar 
         ////////////////////////
         //Load model with ASSIMP
         ////////////////////////
-        _pMesh->LoadMesh(glassesFilePath);
-        _pMesh->loadCandide3(candide3FacePath, candide3VertPath);
+        _pMesh->LoadMesh(glassesFilePath, candide3FacePath, candide3VertPath);
         
         ////////////////////////
         //Set the matrices

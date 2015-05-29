@@ -61,7 +61,7 @@ void Mesh::MeshEntry::Init(const std::vector<Vertex>& Vertices,
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * NumIndices, &Indices[0], GL_STATIC_DRAW);
 }
 
-Mesh::Mesh(int srcWidth, int srcHeight):_candide3(srcWidth, srcHeight, 500) //TODO
+Mesh::Mesh(int srcWidth, int srcHeight)
 {
     xMax = 0;
     yMax = 0;
@@ -86,22 +86,22 @@ void Mesh::Clear()
 }
 
 
-bool Mesh::LoadMesh(const std::string& Filename)
+bool Mesh::LoadMesh(const std::string& Filename, const char*candide3FacePath, const char* candide3VertPath)
 {
     // Release the previously loaded mesh (if it exists)
     Clear();
     
-    bool Ret = false;
+    bool ret = false;
     Assimp::Importer Importer;
 
     const aiScene* pScene = Importer.ReadFile(Filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
     if (pScene) {
-        Ret = InitFromScene(pScene, Filename);
+        ret = InitFromScene(pScene, Filename);
     } else {
         printf("Error parsing '%s': '%s'\n", Filename.c_str(), Importer.GetErrorString());
     }
 
-    return Ret;
+    return ret?loadCandide3(candide3FacePath, candide3VertPath):false;
 }
 
 bool Mesh::loadCandide3(const char*candide3FacePath, const char* candide3VertPath) {
@@ -112,7 +112,7 @@ bool Mesh::loadCandide3(const char*candide3FacePath, const char* candide3VertPat
     string candide3FaceP = candide3FacePath;
     _candide3.readFaces(candide3FaceP);
     string candide3VertP = candide3VertPath;
-    _candide3.readVertices(candide3VertP);
+    _candide3.readVertices(candide3VertP, getWidth());
     return true;
 }
 
