@@ -72,9 +72,10 @@ bool Candide3::readVertices(string& vertexFile)
         texture.y = (vert.y+1)/2;
         
         //TODO
-        vert.x *= 20;
-        vert.y *= 20;
-        vert.z = vert.z*10 - 10;
+        vert.x *= 30;
+        vert.y *= 30;
+        vert.z = -10;
+        //vert.z = vert.z*25 - 10;
         
         Vertex v(vert, texture, normal);
         
@@ -94,7 +95,7 @@ bool Candide3::readVertices(string& vertexFile)
 }
 
 void Candide3::render(GLuint textureObj)
-{
+{    
     glBindBuffer(GL_ARRAY_BUFFER, VB);
     glVertexAttribPointer(m_positionLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0); //3*4
     glVertexAttribPointer(m_texCoordLocation, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)12); //2*4

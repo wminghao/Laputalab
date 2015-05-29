@@ -315,6 +315,12 @@ void Mesh::Render(GLuint textureObj)
     glEnableVertexAttribArray(m_texCoordLocation);
     glEnableVertexAttribArray(m_normalLocation);
     
+    //first render invisible candide3
+    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+    _candide3.render(textureObj);
+    
+    //then render visible glasses object
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     unsigned int totalMeshes = (unsigned int)m_Entries.size();
     for (unsigned int i = 0 ; i <  totalMeshes; i++) {
         glBindBuffer(GL_ARRAY_BUFFER, m_Entries[i].VB);
@@ -331,9 +337,6 @@ void Mesh::Render(GLuint textureObj)
         }
         glDrawElements(GL_TRIANGLES, m_Entries[i].NumIndices, GL_UNSIGNED_INT, 0);
     }
-    
-    //render candide3
-    _candide3.render(textureObj);
 
     glDisableVertexAttribArray(m_positionLocation);
     glDisableVertexAttribArray(m_texCoordLocation);

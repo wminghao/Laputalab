@@ -164,8 +164,8 @@ bool Glasses::init(const GLchar *vertLSrc, const GLchar *fragLSrc, const GLchar 
         float ratioW = 0;
         float ratioH = 0;
         if( ratio == ASPECT_RATIO_4_3 ) {
-            ratioW = 16;
-            ratioH = 12;
+            ratioW = 12;
+            ratioH = 9;
         } else {
             ratioW = 16;
             ratioH = 9;
@@ -259,9 +259,9 @@ bool Glasses::render(GLuint dstTextureName)
         //TODO below is the test code to do rotation.
         static float angleInDegree = 0.0f;
         static int sign = -1;
-        if(angleInDegree >= 90) {
+        if(angleInDegree >= 60) {
             sign = -1;
-        } else if(angleInDegree <= -90) {
+        } else if(angleInDegree <= -60) {
             sign = 1;
         }
         angleInDegree += sign;
@@ -272,7 +272,7 @@ bool Glasses::render(GLuint dstTextureName)
         //////////////////////
         //Draw the lens
         //////////////////////
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         
         glViewport( 0, 0, srcWidth_, srcHeight_);
         
