@@ -39,12 +39,15 @@ bool Candide3::readFaces(string& faceFile)
         indices.push_back(face.a);
         indices.push_back(face.b);
         indices.push_back(face.c);
+        cout << "faces: "<<face.a << " " << face.b << " " << face.c <<endl;
     }
     
     ifs.close();
     
     //load into 
     NumIndices = (unsigned int)indices.size();
+    
+    cout << "Total faces: " << NumIndices/3 <<endl;
     
     glGenBuffers(1, &IB);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
@@ -69,9 +72,9 @@ bool Candide3::readVertices(string& vertexFile)
         texture.y = (vert.y+1)/2;
         
         //TODO
-        vert.x *= 10;
-        vert.y *= 10;
-        vert.z = vert.z*10 + 10;
+        vert.x *= 20;
+        vert.y *= 20;
+        vert.z = vert.z*10 - 10;
         
         Vertex v(vert, texture, normal);
         
@@ -80,7 +83,9 @@ bool Candide3::readVertices(string& vertexFile)
     }
     
     ifs.close();
-
+    
+    cout << "Total vertices: " << vertices.size() <<endl;
+    
     glGenBuffers(1, &VB);
     glBindBuffer(GL_ARRAY_BUFFER, VB);
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
@@ -100,5 +105,6 @@ void Candide3::render(GLuint textureObj)
     //starting from GL_TEXTURE1 to avoid conflict with GL_TEXTURE0 in the base texture.
     candide3Texture->bind(GL_TEXTURE1, 1, textureObj);
     
-    glDrawElements(GL_TRIANGLES, NumIndices, GL_UNSIGNED_INT, 0);
+    //TODO GL_TRIANGLE_STRIP or GL_TRIANGLES
+    glDrawElements(GL_TRIANGLE_STRIP, NumIndices, GL_UNSIGNED_INT, 0);
 }
