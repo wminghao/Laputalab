@@ -73,6 +73,7 @@
 		899A5E971B167E8100A080FF /* facelist_184.wfm in Resources */ = {isa = PBXBuildFile; fileRef = 899A5E951B167E8100A080FF /* facelist_184.wfm */; };
 		899A5E981B167E8100A080FF /* vertexlist_113.wfm in Resources */ = {isa = PBXBuildFile; fileRef = 899A5E961B167E8100A080FF /* vertexlist_113.wfm */; };
 		899A5E9B1B167EA100A080FF /* candide3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 899A5E991B167EA100A080FF /* candide3.cpp */; };
+		899A5F181B18F33300A080FF /* candide3Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 899A5F161B18F33300A080FF /* candide3Texture.cpp */; };
 		89B2EB6C1AD2F7D200D1E27E /* ranTry2.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 89B2EB6A1AD2F7D200D1E27E /* ranTry2.mtl */; };
 		89B2EB6D1AD2F7D200D1E27E /* ranTry2.obj in Resources */ = {isa = PBXBuildFile; fileRef = 89B2EB6B1AD2F7D200D1E27E /* ranTry2.obj */; };
 		89B2EB701AD2FF9000D1E27E /* color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89B2EB6E1AD2FF9000D1E27E /* color.cpp */; };
@@ -173,6 +174,8 @@
 		899A5E991B167EA100A080FF /* candide3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = candide3.cpp; path = Utilities/GL/candide3.cpp; sourceTree = "<group>"; };
 		899A5E9A1B167EA100A080FF /* candide3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = candide3.h; path = Utilities/GL/candide3.h; sourceTree = "<group>"; };
 		899A5EA21B1690D300A080FF /* unit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = unit.h; path = Utilities/GL/unit.h; sourceTree = "<group>"; };
+		899A5F161B18F33300A080FF /* candide3Texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = candide3Texture.cpp; path = Utilities/GL/candide3Texture.cpp; sourceTree = "<group>"; };
+		899A5F171B18F33300A080FF /* candide3Texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = candide3Texture.h; path = Utilities/GL/candide3Texture.h; sourceTree = "<group>"; };
 		89B2EB6A1AD2F7D200D1E27E /* ranTry2.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ranTry2.mtl; path = Resources/3dmodels/SimpleGlasses/ranTry2.mtl; sourceTree = SOURCE_ROOT; };
 		89B2EB6B1AD2F7D200D1E27E /* ranTry2.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ranTry2.obj; path = Resources/3dmodels/SimpleGlasses/ranTry2.obj; sourceTree = SOURCE_ROOT; };
 		89B2EB6E1AD2FF9000D1E27E /* color.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = color.cpp; path = Utilities/GL/color.cpp; sourceTree = "<group>"; };
@@ -345,6 +348,8 @@
 		6FF11C9016A877A100E14D71 /* GL */ = {
 			isa = PBXGroup;
 			children = (
+				899A5F161B18F33300A080FF /* candide3Texture.cpp */,
+				899A5F171B18F33300A080FF /* candide3Texture.h */,
 				899A5EA21B1690D300A080FF /* unit.h */,
 				891082571ACF114500D5314C /* mesh.h */,
 				891082561ACF114500D5314C /* mesh.cpp */,
@@ -577,6 +582,7 @@
 				6F90DDE61395CAAA00125BDA /* main.m in Sources */,
 				6F90DDEA1395CAAA00125BDA /* LaputaAppDelegate.m in Sources */,
 				6F90DDEE1395CAAA00125BDA /* LaputaViewController.m in Sources */,
+				899A5F181B18F33300A080FF /* candide3Texture.cpp in Sources */,
 				6F90DE141395CD9C00125BDA /* LaputaCapturePipeline.m in Sources */,
 				89120A241AC9FEAD0086174B /* Laputa3dGlassesRenderer.mm in Sources */,
 				6FF11C8E16A8779D00E14D71 /* MovieRecorder.m in Sources */,

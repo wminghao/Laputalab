@@ -241,7 +241,11 @@ bail:
     const GLchar *vertLSrc = [Tools readFile:@"3dGlassesVertexShader.vsh"];
     const GLchar *fragLSrc = [Tools readFile:@"3dGlassesFragmentShader.fsh"];
     NSString *glassesFilePath = [[NSBundle mainBundle] pathForResource:@"RanGlass" ofType:@"obj"];
-    if( !glasses_->init(vertLSrc, fragLSrc, NULL, [glassesFilePath UTF8String], 90.0f, ASPECT_RATIO_16_9)) {
+    NSString *candide3FacePath = [[NSBundle mainBundle] pathForResource:@"facelist_184" ofType:@"wfm"];
+    NSString *candide3VerticesPath = [[NSBundle mainBundle] pathForResource:@"vertexlist_113" ofType:@"wfm"];
+    if( !glasses_->init(vertLSrc, fragLSrc, NULL,
+                        [glassesFilePath UTF8String], [candide3FacePath UTF8String], [candide3VerticesPath UTF8String],
+                        90.0f, ASPECT_RATIO_16_9)) {
         NSLog( @"Problem initializing the _programIDL." );
         success = NO;
         [self cleanup:success oldContext:oldContext];
