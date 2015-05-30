@@ -9,7 +9,6 @@
 #include <stdio.h>
 #include "glasses.h"
 #include "mesh.h"
-#include "ShaderUtilities.h"
 #include "err.h"
 
 //TODO aa does not work in the code.
@@ -26,13 +25,18 @@ Glasses::~Glasses()
     delete(_pMesh);
 }
 
-bool Glasses::init(const GLchar *vertLSrc, const GLchar *fragLSrc, const GLchar *fragColorLName,
+bool Glasses::init(const char* vertLFilePath,
+                   const char* fragLFilePath,
+                   const char *fragColorLName,
                    const char* glassesFilePath,
                    const char* candide3FacePath,
                    const char* candide3VertPath,
                    float zRotateInDegree, ASPECT_RATIO ratio)
 {
     bool ret = false;
+    
+    char* vertLSrc = readAllocFile("/Users/howard/AR_lib/LaputaDesktop/LaputaDesktop/3dGlasses/3dGlassesVertexShaderGL.vsh");
+    char* fragLSrc = readAllocFile("/Users/howard/AR_lib/LaputaDesktop/LaputaDesktop/3dGlasses/3dGlassesFragmentShaderGL.fsh");
     
     /////////////////////
     // offscreen buffer
@@ -200,6 +204,10 @@ bool Glasses::init(const GLchar *vertLSrc, const GLchar *fragLSrc, const GLchar 
 
         ret = true;
     }
+    
+    free(vertLSrc);
+    free(fragLSrc);
+    
     return ret;
 }
 

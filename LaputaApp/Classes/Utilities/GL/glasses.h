@@ -10,6 +10,7 @@
 #define Laputa_glasses_h
 
 #include "ShaderUtilities.h"
+#include "glUtilities.h"
 #include "matrix.h"
 
 //math library
@@ -50,7 +51,9 @@ public:
     Glasses(int srcWidth, int srcHeight);
     ~Glasses();
     
-    bool init(const GLchar *vertLSrc, const GLchar *fragLSrc, const GLchar *fragColorLName,
+    bool init(const char* vertLFilePath,
+              const char* fragLFilePath,
+              const char* fragColorLName,
               const char* glassesFilePath,
               const char* candide3FacePath,
               const char* candide3VertPath,
