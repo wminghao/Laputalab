@@ -61,6 +61,10 @@ public:
     
     bool render(GLuint dstTextureName);
     
+    void getInitModel(mat4& initModel) { initModel = _initModel; }
+    
+    void setModel(mat4& curModel) { _curModel = curModel; }
+    
 #ifdef DESKTOP_MAC
     void readPixels(unsigned char* pixels);
     void blitToScreen();
@@ -85,8 +89,12 @@ private:
     GLuint _offscreenBufferHandle; //offscreen buffer
     GLuint _depthRenderbuffer; //depth render buffer
     
-    int srcWidth_;
-    int srcHeight_;
+    int _srcWidth;
+    int _srcHeight;
+    
+    //initial model
+    mat4 _initModel;
+    mat4 _curModel;
     
 #ifdef DESKTOP_MAC
     //input framebuffer

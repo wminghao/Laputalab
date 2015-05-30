@@ -14,7 +14,7 @@
 //TODO aa does not work in the code.
 const int AA_LEVEL = 4; //4 is normal, 0 means no AA
 
-Glasses::Glasses(int srcWidth, int srcHeight):srcWidth_(srcWidth), srcHeight_(srcHeight)
+Glasses::Glasses(int srcWidth, int srcHeight):_srcWidth(srcWidth), _srcHeight(srcHeight)
 {
     _pMesh = new Mesh(srcWidth, srcHeight);
 }
@@ -62,17 +62,17 @@ bool Glasses::init(const char* vertLFilePath,
     glBindRenderbuffer(GL_RENDERBUFFER, _depthRenderbuffer);
     
 #ifdef DESKTOP_MAC
-    glRenderbufferStorageMultisample(GL_RENDERBUFFER, AA_LEVEL, GL_DEPTH24_STENCIL8, srcWidth_, srcHeight_);
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, AA_LEVEL, GL_DEPTH24_STENCIL8, _srcWidth, _srcHeight);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
     
     glGenRenderbuffers(1, &_aaColorbuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, _aaColorbuffer);
-    glRenderbufferStorageMultisample(GL_RENDERBUFFER, AA_LEVEL, GL_RGBA, srcWidth_, srcHeight_);
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, AA_LEVEL, GL_RGBA, _srcWidth, _srcHeight);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
     
     glGenTextures(1, &_aaTexturebuffer);
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, _aaTexturebuffer);
-    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, AA_LEVEL, GL_RGBA, srcWidth_, srcHeight_, GL_TRUE);
+    glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, AA_LEVEL, GL_RGBA, _srcWidth, _srcHeight, GL_TRUE);
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
     
     //input frame buffer
@@ -85,12 +85,12 @@ bool Glasses::init(const char* vertLFilePath,
     
     glGenRenderbuffers(1, &_outputColorbuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, _outputColorbuffer);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, srcWidth_, srcHeight_);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, _srcWidth, _srcHeight);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
     
     glGenTextures(1, &_outputTexturebuffer);
     glBindTexture(GL_TEXTURE_2D, _outputTexturebuffer);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, srcWidth_, srcHeight_, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _srcWidth, _srcHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
     glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
@@ -99,7 +99,7 @@ bool Glasses::init(const char* vertLFilePath,
     
     glGenRenderbuffers(1, &_outputDepthbuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, _outputDepthbuffer);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, srcWidth_, srcHeight_);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, _srcWidth, _srcHeight);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
     
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _outputColorbuffer);
@@ -108,7 +108,7 @@ bool Glasses::init(const char* vertLFilePath,
     //default framebuffer
     glBindFramebuffer( GL_FRAMEBUFFER, 0 ); //default framebuffer, screen
 #else //DESKTOP_MAC
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, srcWidth_, srcHeight_);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, _srcWidth, _srcHeight);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
 #endif //DESKTOP_MAC
     
@@ -191,11 +191,11 @@ bool Glasses::init(const char* vertLFilePath,
         mat4 Model_rotateZ = rotate(mat4(1.0f), radians(zRotateInDegree), vec3(0,0,1)); //rotate z of 90 degree
         mat4 Model_rotateX = rotate(mat4(1.0f), radians(10.0f), vec3(1,0,0)); //rotate x of 10 degree
         mat4 Model_scale = scale(mat4(1.0f), vec3(scaleFactor,scaleFactor,scaleFactor));
-        mat4 Model = Model_translation * Model_rotateZ * Model_rotateX * Model_scale;
+        _initModel = _curModel = Model_translation * Model_rotateZ * Model_rotateX * Model_scale;
         
         _ViewInverse = inverse(View); //inverse of the view matrix
         //_NormalMatrix = transpose(inverse(mat3(Model)));
-        _World = Model; //world coordinate.
+        _World = _initModel; //world coordinate.
         _View = View;
         
         // Our ModelViewProjection : multiplication of our 3 matrices
@@ -262,26 +262,14 @@ bool Glasses::render(GLuint dstTextureName)
 {
     bool ret = false;
     if ( _offscreenBufferHandle != 0 ) {
-        
-        //TODO below is the test code to do rotation.
-        static float angleInDegree = 0.0f;
-        static int sign = -1;
-        if(angleInDegree >= 60) {
-            sign = -1;
-        } else if(angleInDegree <= -60) {
-            sign = 1;
-        }
-        angleInDegree += sign;
-        
-        mat4 World = rotate(_World, radians(angleInDegree), vec3(0,1,0)); //matrix for rotation on y axis
-        mat4 MVP = _Projection * _View * World;
+        mat4 MVP = _Projection * _View * _curModel;
         
         //////////////////////
         //Draw the lens
         //////////////////////
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         
-        glViewport( 0, 0, srcWidth_, srcHeight_);
+        glViewport( 0, 0, _srcWidth, _srcHeight);
         
 #ifdef DESKTOP_MAC
         //Somehow OpenGL does no support attaching texture as a read and write buffer. (In the background)
@@ -314,7 +302,7 @@ bool Glasses::render(GLuint dstTextureName)
         */
         
         //Step 3. copy from read buffer to write buffer
-        glBlitFramebuffer(0, 0, srcWidth_, srcHeight_, 0, 0, srcWidth_, srcHeight_, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        glBlitFramebuffer(0, 0, _srcWidth, _srcHeight, 0, 0, _srcWidth, _srcHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
         
 #else //DESKTOP_MAC
         //Bind a framebuffer
@@ -336,7 +324,7 @@ bool Glasses::render(GLuint dstTextureName)
             glUseProgram( _programID );
             
             glUniformMatrix4fv(_matrixMVP, 1, GL_FALSE, &MVP[0][0]);
-            glUniformMatrix4fv(_matrixWorld, 1, GL_FALSE, &World[0][0]);
+            glUniformMatrix4fv(_matrixWorld, 1, GL_FALSE, &_curModel[0][0]);
             glUniformMatrix4fv(_matrixViewInverse, 1, GL_FALSE, &_ViewInverse[0][0]);
             //glUniformMatrix4fv(_matrixNormalMatrix, 1, GL_FALSE, &_NormalMatrix[0][0]);
             
@@ -376,7 +364,7 @@ void Glasses::readPixels(unsigned char* pixels)
     if( glCheckFramebufferStatus(GL_READ_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE &&
         glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE ) {
         //do blitting here
-        glBlitFramebuffer(0, 0, srcWidth_, srcHeight_, 0, 0, srcWidth_, srcHeight_, GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+        glBlitFramebuffer(0, 0, _srcWidth, _srcHeight, 0, 0, _srcWidth, _srcHeight, GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
         
         //then blit it to pixels buffer
         glBindFramebuffer(GL_READ_FRAMEBUFFER, _outputBufferHandle);
@@ -388,7 +376,7 @@ void Glasses::readPixels(unsigned char* pixels)
         if( framebufferStatus == GL_FRAMEBUFFER_COMPLETE ) {
             glReadBuffer(GL_COLOR_ATTACHMENT0);
             //getGLErr("GL_COLOR_ATTACHMENT0");
-            glReadPixels(0, 0, srcWidth_, srcHeight_, GL_BGR, GL_UNSIGNED_BYTE, pixels);
+            glReadPixels(0, 0, _srcWidth, _srcHeight, GL_BGR, GL_UNSIGNED_BYTE, pixels);
             //glBindTexture(GL_TEXTURE_2D, _outputTexturebuffer);
             //glGetTexImage(GL_TEXTURE_2D, 0, GL_BGR, GL_UNSIGNED_BYTE, pixels);
             //getGLErr("glGetTexImage");
@@ -409,7 +397,7 @@ void Glasses::readPixels(unsigned char* pixels)
     glFramebufferRenderbuffer(GL_READ_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _depthRenderbuffer);
     GLenum framebufferStatus = glCheckFramebufferStatus(GL_READ_FRAMEBUFFER);
     if( framebufferStatus == GL_FRAMEBUFFER_COMPLETE ) {
-        glReadPixels(0, 0, srcWidth_, srcHeight_, GL_BGR, GL_UNSIGNED_BYTE, pixels);
+        glReadPixels(0, 0, _srcWidth, _srcHeight, GL_BGR, GL_UNSIGNED_BYTE, pixels);
     }
     */
 }
@@ -425,7 +413,7 @@ void Glasses::blitToScreen()
     if( glCheckFramebufferStatus(GL_READ_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE &&
        glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE ) {
         //do blitting here
-        glBlitFramebuffer(0, 0, srcWidth_, srcHeight_, 0, 0, srcWidth_, srcHeight_, GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+        glBlitFramebuffer(0, 0, _srcWidth, _srcHeight, 0, 0, _srcWidth, _srcHeight, GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
         glBindFramebuffer( GL_FRAMEBUFFER, 0 ); //default framebuffer for both read and write, screen
     } else {
         printf("error");
