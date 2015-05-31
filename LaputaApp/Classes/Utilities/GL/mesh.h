@@ -39,7 +39,7 @@
 class Mesh
 {
 public:
-    Mesh(int srcWidth, int srcHeight);
+    Mesh();
 
     ~Mesh();
     

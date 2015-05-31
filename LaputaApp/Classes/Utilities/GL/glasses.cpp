@@ -16,7 +16,7 @@ const int AA_LEVEL = 4; //4 is normal, 0 means no AA
 
 Glasses::Glasses(int srcWidth, int srcHeight):_srcWidth(srcWidth), _srcHeight(srcHeight)
 {
-    _pMesh = new Mesh(srcWidth, srcHeight);
+    _pMesh = new Mesh();
 }
 
 Glasses::~Glasses()

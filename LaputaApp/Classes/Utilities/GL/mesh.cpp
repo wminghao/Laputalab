@@ -61,7 +61,7 @@ void Mesh::MeshEntry::Init(const std::vector<Vertex>& Vertices,
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * NumIndices, &Indices[0], GL_STATIC_DRAW);
 }
 
-Mesh::Mesh(int srcWidth, int srcHeight)
+Mesh::Mesh()
 {
     xMax = 0;
     yMax = 0;
