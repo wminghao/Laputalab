@@ -61,9 +61,13 @@ public:
     
     bool render(GLuint dstTextureName);
     
-    void getInitModel(mat4& initModel) { initModel = _initModel; }
+    void getInitMat(mat4& initMat) { initMat = _initMVP; }
     
-    void setModel(mat4& curModel) { _curModel = curModel; }
+    void setMat(mat4& curMat){
+        _curMVP = curMat;
+        //TODO
+        _World = _ViewInverse * inverse( _Projection ) * curMat;
+    }
     
 #ifdef DESKTOP_MAC
     void readPixels(unsigned char* pixels);
@@ -92,9 +96,9 @@ private:
     int _srcWidth;
     int _srcHeight;
     
-    //initial model
-    mat4 _initModel;
-    mat4 _curModel;
+    //initial
+    mat4 _initMVP;
+    mat4 _curMVP;
     
 #ifdef DESKTOP_MAC
     //input framebuffer

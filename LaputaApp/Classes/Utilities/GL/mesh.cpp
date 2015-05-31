@@ -318,9 +318,9 @@ void Mesh::Render(GLuint textureObj)
     //first render invisible candide3
     glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
     _candide3.render(textureObj);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     
     //then render visible glasses object
-    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     unsigned int totalMeshes = (unsigned int)m_Entries.size();
     for (unsigned int i = 0 ; i <  totalMeshes; i++) {
         glBindBuffer(GL_ARRAY_BUFFER, m_Entries[i].VB);

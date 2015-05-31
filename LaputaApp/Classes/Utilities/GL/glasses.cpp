@@ -35,8 +35,8 @@ bool Glasses::init(const char* vertLFilePath,
 {
     bool ret = false;
     
-    char* vertLSrc = readAllocFile("/Users/howard/AR_lib/LaputaDesktop/LaputaDesktop/3dGlasses/3dGlassesVertexShaderGL.vsh");
-    char* fragLSrc = readAllocFile("/Users/howard/AR_lib/LaputaDesktop/LaputaDesktop/3dGlasses/3dGlassesFragmentShaderGL.fsh");
+    char* vertLSrc = readAllocFile(vertLFilePath);
+    char* fragLSrc = readAllocFile(fragLFilePath);
     
     /////////////////////
     // offscreen buffer
@@ -185,22 +185,24 @@ bool Glasses::init(const char* vertLFilePath,
                                  vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
                                  );
         // Model matrix : an identity matrix (model will be at the origin)
-        float scaleFactor = ((zRotateInDegree == 90)?ratioH:ratioW)/_pMesh->getWidth() * 0.5; //put the object width the same as portaint mode 9:16
+        float scaleFactor = ((zRotateInDegree == 90)?ratioH * 0.5:ratioW * 0.35)/_pMesh->getWidth(); //put the object width the same as portaint mode 9:16
         //mat4 Model      = mat4(1.0f);
         mat4 Model_translation = translate(mat4(1.0f), vec3(0,0,0));
         mat4 Model_rotateZ = rotate(mat4(1.0f), radians(zRotateInDegree), vec3(0,0,1)); //rotate z of 90 degree
         mat4 Model_rotateX = rotate(mat4(1.0f), radians(10.0f), vec3(1,0,0)); //rotate x of 10 degree
         mat4 Model_scale = scale(mat4(1.0f), vec3(scaleFactor,scaleFactor,scaleFactor));
-        _initModel = _curModel = Model_translation * Model_rotateZ * Model_rotateX * Model_scale;
+        mat4 Model = Model_translation * Model_rotateZ * Model_rotateX * Model_scale;
         
         _ViewInverse = inverse(View); //inverse of the view matrix
         //_NormalMatrix = transpose(inverse(mat3(Model)));
-        _World = _initModel; //world coordinate.
+        _World = Model; //world coordinate.
         _View = View;
         
         // Our ModelViewProjection : multiplication of our 3 matrices
         // Remember, matrix multiplication is the other way around
         _Projection = Projection;
+        
+        _initMVP = _curMVP = _Projection * _View * _World;
 
         ret = true;
     }
@@ -262,7 +264,6 @@ bool Glasses::render(GLuint dstTextureName)
 {
     bool ret = false;
     if ( _offscreenBufferHandle != 0 ) {
-        mat4 MVP = _Projection * _View * _curModel;
         
         //////////////////////
         //Draw the lens
@@ -323,8 +324,8 @@ bool Glasses::render(GLuint dstTextureName)
         if( framebufferStatus == GL_FRAMEBUFFER_COMPLETE ) {
             glUseProgram( _programID );
             
-            glUniformMatrix4fv(_matrixMVP, 1, GL_FALSE, &MVP[0][0]);
-            glUniformMatrix4fv(_matrixWorld, 1, GL_FALSE, &_curModel[0][0]);
+            glUniformMatrix4fv(_matrixMVP, 1, GL_FALSE, &_curMVP[0][0]);
+            glUniformMatrix4fv(_matrixWorld, 1, GL_FALSE, &_World[0][0]);
             glUniformMatrix4fv(_matrixViewInverse, 1, GL_FALSE, &_ViewInverse[0][0]);
             //glUniformMatrix4fv(_matrixNormalMatrix, 1, GL_FALSE, &_NormalMatrix[0][0]);
             
