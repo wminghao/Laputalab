@@ -68,6 +68,7 @@
 		895656E11ACE08AD004AE70A /* logo1small.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 895656D81ACE08AC004AE70A /* logo1small.jpg */; };
 		895656E31ACE08AD004AE70A /* RanGlass.dae in Resources */ = {isa = PBXBuildFile; fileRef = 895656DA1ACE08AC004AE70A /* RanGlass.dae */; };
 		895656E41ACE08AD004AE70A /* RanGlass.obj in Resources */ = {isa = PBXBuildFile; fileRef = 895656DB1ACE08AC004AE70A /* RanGlass.obj */; };
+		8968D38D1B1CCCCF00FAFBDC /* glUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8968D38B1B1CCCCF00FAFBDC /* glUtilities.cpp */; };
 		896E7E211ADC789F0002205C /* Brooklyn_Bridge_Planks_1k.hdr in Resources */ = {isa = PBXBuildFile; fileRef = 896E7E201ADC789F0002205C /* Brooklyn_Bridge_Planks_1k.hdr */; };
 		899A5E831B03DBE300A080FF /* glasses.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 899A5E821B03DBE300A080FF /* glasses.cpp */; };
 		899A5E971B167E8100A080FF /* facelist_184.wfm in Resources */ = {isa = PBXBuildFile; fileRef = 899A5E951B167E8100A080FF /* facelist_184.wfm */; };
@@ -164,6 +165,8 @@
 		895656D81ACE08AC004AE70A /* logo1small.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = logo1small.jpg; path = Resources/3dmodels/3dGlasses/logo1small.jpg; sourceTree = SOURCE_ROOT; };
 		895656DA1ACE08AC004AE70A /* RanGlass.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; name = RanGlass.dae; path = Resources/3dmodels/3dGlasses/RanGlass.dae; sourceTree = SOURCE_ROOT; };
 		895656DB1ACE08AC004AE70A /* RanGlass.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = RanGlass.obj; path = Resources/3dmodels/3dGlasses/RanGlass.obj; sourceTree = SOURCE_ROOT; };
+		8968D38B1B1CCCCF00FAFBDC /* glUtilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = glUtilities.cpp; path = Utilities/GL/glUtilities.cpp; sourceTree = "<group>"; };
+		8968D38C1B1CCCCF00FAFBDC /* glUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = glUtilities.h; path = Utilities/GL/glUtilities.h; sourceTree = "<group>"; };
 		896E7E201ADC789F0002205C /* Brooklyn_Bridge_Planks_1k.hdr */ = {isa = PBXFileReference; lastKnownFileType = file; name = Brooklyn_Bridge_Planks_1k.hdr; path = Resources/3dmodels/3dGlasses/Brooklyn_Bridge_Planks_1k.hdr; sourceTree = SOURCE_ROOT; };
 		899A5E671B03D1E400A080FF /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = SOURCE_ROOT; };
 		899A5E811B03DA4F00A080FF /* glasses.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = glasses.h; path = Utilities/GL/glasses.h; sourceTree = "<group>"; };
@@ -348,6 +351,8 @@
 		6FF11C9016A877A100E14D71 /* GL */ = {
 			isa = PBXGroup;
 			children = (
+				8968D38B1B1CCCCF00FAFBDC /* glUtilities.cpp */,
+				8968D38C1B1CCCCF00FAFBDC /* glUtilities.h */,
 				899A5F161B18F33300A080FF /* candide3Texture.cpp */,
 				899A5F171B18F33300A080FF /* candide3Texture.h */,
 				899A5EA21B1690D300A080FF /* unit.h */,
@@ -587,6 +592,7 @@
 				89120A241AC9FEAD0086174B /* Laputa3dGlassesRenderer.mm in Sources */,
 				6FF11C8E16A8779D00E14D71 /* MovieRecorder.m in Sources */,
 				6FF11C8F16A8779D00E14D71 /* OpenGLPixelBufferView.m in Sources */,
+				8968D38D1B1CCCCF00FAFBDC /* glUtilities.cpp in Sources */,
 				89120A2B1AC9FFA60086174B /* Tools.m in Sources */,
 				6FF11C9516A877B100E14D71 /* matrix.c in Sources */,
 				8910825A1ACF114500D5314C /* mesh.cpp in Sources */,
@@ -726,6 +732,7 @@
 					thirdpartylib/libassimp/include,
 					"thirdpartylib/iOSMagick-6.8.8-9-libs/include",
 					thirdpartylib/cvanalyzer/include,
+					../../AR_lib/CVAnalyzerLib/CVAnalyzerLib/utilities,
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/LaputaApp-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -765,6 +772,7 @@
 					thirdpartylib/libassimp/include,
 					"thirdpartylib/iOSMagick-6.8.8-9-libs/include",
 					thirdpartylib/cvanalyzer/include,
+					../../AR_lib/CVAnalyzerLib/CVAnalyzerLib/utilities,
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/LaputaApp-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;

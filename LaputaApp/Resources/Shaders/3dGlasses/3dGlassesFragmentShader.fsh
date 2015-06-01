@@ -37,6 +37,10 @@ void main()
         color = texture2D(textureImage, texCoordFrag);
         amb = color * 0.33;
         gl_FragColor = vec4(color.rgb*brightness, color.a) + amb;
+    } else if( texCount == 3 ) {
+        //candide3 simple mask
+        gl_FragColor = texture2D(textureImage, texCoordFrag);
+        //gl_FragColor = vec4(0, 1, 0, 1); //green
     } else {
         color = diffuseColor;
         amb = ambientColor;

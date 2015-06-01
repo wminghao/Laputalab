@@ -65,10 +65,9 @@ static void getMat(CVPixelBufferRef pixelBuffer, Mat& image) {
     return self;
 }
 
--(void)processImage:(CVPixelBufferRef)pixelBuffer andOnTap:(bool)onTap
+-(void)processImage:(CVPixelBufferRef)pixelBuffer
 {
     __block Mat image;
-    __block bool onTapped = onTap;
     getMat(pixelBuffer, image);
     
     if ( !image.empty() ) {
@@ -87,7 +86,7 @@ static void getMat(CVPixelBufferRef pixelBuffer, Mat& image) {
             }
             if( idleAnalyzer != -1 ) {
                 NSLog(@"idleAnalyzer %d starts, total queue size=%ld", idleAnalyzer, (unsigned long)[myQueue.operations count]);
-                cvAnalyzer_[idleAnalyzer].processImage(image, onTapped);
+                cvAnalyzer_[idleAnalyzer].processImage(image, false); //TODO later
                 /*
                  // Update UI on the main thread.
                  [[NSOperationQueue mainQueue] addOperationWithBlock: ^ {

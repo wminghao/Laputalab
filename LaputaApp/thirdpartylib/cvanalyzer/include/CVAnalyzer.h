@@ -30,7 +30,10 @@
 #include <opencv2/nonfree/nonfree.hpp>
 #endif
 
+#include "utilities.h"
+
 #include "platform.h"
+#include "glUtilities.h"
 
 #define PCADIM 20
 #define FEATUREDIM 128
@@ -46,6 +49,8 @@ public:
     CVAnalyzer();
     bool init(const char* prefix);
     bool processImage(Mat& frame, bool onTap);
+    
+    void onKeyPress();
     
 private:
     //constant
@@ -79,6 +84,9 @@ private:
     Mat meanDescriptorRef;
     queue<Mat> desQueue;
     queue<Mat> desQueueRef;
+    
+    //perf calc
+    PerfCalc perfCalc;
 };
 
 #endif /* defined(__Laputa__CVAnalyzer__) */

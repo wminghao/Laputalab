@@ -9,5 +9,5 @@
 #import <Foundation/Foundation.h>
 
 @interface CVAnalyzerOperation : NSObject
--(void)processImage:(CVPixelBufferRef) pixelBuffer andOnTap:(bool) onTap;
+-(void)processImage:(CVPixelBufferRef) pixelBuffer;
 @end

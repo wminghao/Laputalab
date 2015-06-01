@@ -24,7 +24,6 @@
 
 #ifdef TAP_TEST
 static bool shouldRotate = true;
-static bool onTapped = false;
 #endif
 
 using namespace std;
@@ -46,6 +45,7 @@ using namespace glm;
     
     /*glasses*/
     Glasses* glasses_;
+    mat4 initMat;
     
     /*core image context*/
     CIContext* _coreImageContext;
@@ -84,7 +84,7 @@ using namespace glm;
             return nil;
         }
         
-        cvAnalyzer_ = [[CVAnalyzerOperation alloc]init];
+        //cvAnalyzer_ = [[CVAnalyzerOperation alloc]init];
     }
     return self;
 }
@@ -135,11 +135,25 @@ using namespace glm;
 {
     CVReturn err = noErr;
     CVPixelBufferRef  dstPixelBuffer = origPixelBuffer;
-    [cvAnalyzer_ processImage:dstPixelBuffer andOnTap:onTapped];
-    if( onTapped ) {
-        printf("-----on Tapped---\r\n");
-        onTapped = false;
+    
+    //[cvAnalyzer_ processImage:dstPixelBuffer];
+    
+    //TODO below is the test code to transformation
+    static float angleInDegree = 0.0f;
+    static int sign = -1;
+    if(angleInDegree >= 60) {
+        sign = -1;
+    } else if(angleInDegree <= -60) {
+        sign = 1;
     }
+    angleInDegree += sign;
+    mat4 curMat;
+    if( !shouldRotate ) {
+        curMat = initMat;
+    } else {
+        curMat = rotate(initMat, radians(angleInDegree), vec3(0,1,0)); //matrix for rotation on y axis
+    }
+    glasses_->setMat(curMat);
     
     if ( dstPixelBuffer == nil ) {
         @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"NULL pixel buffer" userInfo:nil];
@@ -238,18 +252,19 @@ bail:
     //Instantiate glasses model
     /////////////////////////
     glasses_ = new Glasses( outputDimensions.width, outputDimensions.height );
-    const GLchar *vertLSrc = [Tools readFile:@"3dGlassesVertexShader.vsh"];
-    const GLchar *fragLSrc = [Tools readFile:@"3dGlassesFragmentShader.fsh"];
+    NSString *vertLSrcPath = [[NSBundle mainBundle] pathForResource:@"3dGlassesVertexShader" ofType:@"vsh"];
+    NSString *fragLSrcPath = [[NSBundle mainBundle] pathForResource:@"3dGlassesFragmentShader" ofType:@"fsh"];
     NSString *glassesFilePath = [[NSBundle mainBundle] pathForResource:@"RanGlass" ofType:@"obj"];
     NSString *candide3FacePath = [[NSBundle mainBundle] pathForResource:@"facelist_184" ofType:@"wfm"];
     NSString *candide3VerticesPath = [[NSBundle mainBundle] pathForResource:@"vertexlist_113" ofType:@"wfm"];
-    if( !glasses_->init(vertLSrc, fragLSrc, NULL,
+    if( !glasses_->init([vertLSrcPath UTF8String], [fragLSrcPath UTF8String], NULL,
                         [glassesFilePath UTF8String], [candide3FacePath UTF8String], [candide3VerticesPath UTF8String],
                         90.0f, ASPECT_RATIO_16_9)) {
         NSLog( @"Problem initializing the _programIDL." );
         success = NO;
         [self cleanup:success oldContext:oldContext];
     }
+    glasses_->getInitMat(initMat);
     
     ///////////////////
     //buffer management
@@ -325,7 +340,6 @@ bail:
 - (void)onTap
 {
     shouldRotate = !shouldRotate;
-    onTapped = true;
 }
 #endif
 @end

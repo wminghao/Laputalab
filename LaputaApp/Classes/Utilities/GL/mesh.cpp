@@ -316,7 +316,7 @@ void Mesh::Render(GLuint textureObj)
     glEnableVertexAttribArray(m_normalLocation);
     
     //first render invisible candide3
-    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+    //glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
     _candide3.render(textureObj);
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     

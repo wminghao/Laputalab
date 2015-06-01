@@ -12,8 +12,8 @@
 #include<iostream>
 #include<fstream>
 
-const float DELTA_BEHIND_GLASSES = 5.0; //delta face behind the glasses
-const float DELTA_SMALLER_GLASSES = 1.0; //delta face width smaller than glasses
+const float DELTA_BEHIND_GLASSES = 4.0; //delta face behind the glasses
+const float DELTA_SMALLER_GLASSES = -5.0; //delta face width smaller than glasses
 
 void Candide3::setAttrUni(GLint texCountLocation,
                           GLint textureImageLocation,
@@ -87,8 +87,8 @@ bool Candide3::readVertices(string& vertexFile, float glassesWidth)
     ifs.seekg(0, ios::beg);
     while (ifs >> vert.x >> vert.y >> vert.z){
         //map directly into texture
-        texture.x = (vert.x+1)/2;
-        texture.y = (vert.y+1)/2;
+        texture.x = (0.7*vert.x+1)/2;
+        texture.y = (0.9*vert.y+1)/2;
         
         vert.x *= ratio;
         vert.y *= ratio;
