@@ -212,11 +212,10 @@ using namespace glm;
     glBindTexture(GL_TEXTURE_2D, 0);
     CVPixelBufferUnlockBaseAddress(origPixelBuffer, 0);
     
-    CVOpenGLESTextureRef dstTexture = NULL;
-    
     //////////////////////////////////////////////////
     //destination texture mapped to output pixelbuffer
     //////////////////////////////////////////////////
+    CVOpenGLESTextureRef dstTexture = NULL;
     err = CVOpenGLESTextureCacheCreateTextureFromImage( kCFAllocatorDefault,
                                                        _renderTextureCache,
                                                        dstPixelBuffer,
