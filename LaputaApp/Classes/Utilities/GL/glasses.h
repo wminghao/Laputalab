@@ -59,7 +59,7 @@ public:
               const char* candide3VertPath,
               float zRotateInDegree, ASPECT_RATIO ratio);
     
-    bool render(GLuint dstTextureName);
+    bool render(GLuint dstTextureName, GLuint candide3Texture);
     
     void getInitMat(mat4& initMat) { initMat = _initMVP; }
     

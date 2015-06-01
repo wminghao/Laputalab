@@ -86,7 +86,7 @@ void Mesh::Clear()
 }
 
 
-bool Mesh::LoadMesh(const std::string& Filename, const char*candide3FacePath, const char* candide3VertPath)
+bool Mesh::LoadMesh(const std::string& Filename, const char*candide3FacePath, const char* candide3VertPath, float zRotateInDegree)
 {
     // Release the previously loaded mesh (if it exists)
     Clear();
@@ -101,10 +101,10 @@ bool Mesh::LoadMesh(const std::string& Filename, const char*candide3FacePath, co
         printf("Error parsing '%s': '%s'\n", Filename.c_str(), Importer.GetErrorString());
     }
 
-    return ret?loadCandide3(candide3FacePath, candide3VertPath):false;
+    return ret?loadCandide3(candide3FacePath, candide3VertPath, zRotateInDegree):false;
 }
 
-bool Mesh::loadCandide3(const char*candide3FacePath, const char* candide3VertPath) {
+bool Mesh::loadCandide3(const char*candide3FacePath, const char* candide3VertPath, float zRotateInDegree) {
     
     ////////////////////////
     //Load candide3
@@ -112,7 +112,7 @@ bool Mesh::loadCandide3(const char*candide3FacePath, const char* candide3VertPat
     string candide3FaceP = candide3FacePath;
     _candide3.readFaces(candide3FaceP);
     string candide3VertP = candide3VertPath;
-    _candide3.readVertices(candide3VertP, getWidth());
+    _candide3.readVertices(candide3VertP, getWidth(), zRotateInDegree);
     return true;
 }
 
@@ -318,6 +318,7 @@ void Mesh::Render(GLuint textureObj)
     //first render invisible candide3
     //glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
     _candide3.render(textureObj);
+    
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     
     //then render visible glasses object

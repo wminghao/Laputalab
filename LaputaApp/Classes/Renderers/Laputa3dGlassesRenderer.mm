@@ -16,6 +16,7 @@
 
 //glasses
 #include "glasses.h"
+#include "err.h"
 
 #include "Tools.h"
 
@@ -37,6 +38,7 @@ using namespace glm;
     /* EGL assets */
     EAGLContext *_oglContext; //egl context
     CVOpenGLESTextureCacheRef _renderTextureCache; //destination pixelbuffer texture
+    GLuint _candide3Texture;
     
     /* pixelbuffer pool */
     CVPixelBufferPoolRef _bufferPool;
@@ -45,7 +47,7 @@ using namespace glm;
     
     /*glasses*/
     Glasses* glasses_;
-    mat4 initMat;
+    mat4 _initMat;
     
     /*core image context*/
     CIContext* _coreImageContext;
@@ -134,6 +136,8 @@ using namespace glm;
 - (CVPixelBufferRef)copyRenderedPixelBuffer:(CVPixelBufferRef)origPixelBuffer
 {
     CVReturn err = noErr;
+    //if we apply filter
+    //CVPixelBufferRef  dstPixelBuffer = [_screenRenderer copyRenderedPixelBuffer:origPixelBuffer];;
     CVPixelBufferRef  dstPixelBuffer = origPixelBuffer;
     
     //[cvAnalyzer_ processImage:dstPixelBuffer];
@@ -149,9 +153,9 @@ using namespace glm;
     angleInDegree += sign;
     mat4 curMat;
     if( !shouldRotate ) {
-        curMat = initMat;
+        curMat = _initMat;
     } else {
-        curMat = rotate(initMat, radians(angleInDegree), vec3(0,1,0)); //matrix for rotation on y axis
+        curMat = rotate(_initMat, radians(angleInDegree), vec3(0,1,0)); //matrix for rotation on y axis
     }
     glasses_->setMat(curMat);
     
@@ -180,6 +184,34 @@ using namespace glm;
         }
     }
     
+    ////////////////////////////////////////////////////////////
+    //for OpenGL-ES, a texture can ONLY be used for both read and write
+    //thus, need to copy out the original texture for mapping to candide3
+    ////////////////////////////////////////////////////////////
+    // Lock the base address of the pixel buffer
+    CVPixelBufferLockBaseAddress(origPixelBuffer, 0);
+    // Get the number of bytes per row for the pixel buffer
+    void *baseAddress = CVPixelBufferGetBaseAddress(origPixelBuffer);
+    int w = (int)CVPixelBufferGetWidth( origPixelBuffer );
+    int h = (int)CVPixelBufferGetHeight( origPixelBuffer );
+    glBindTexture(GL_TEXTURE_2D, _candide3Texture);
+    
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
+    glTexImage2D(GL_TEXTURE_2D,     // Type of texture
+                 0,                 // Pyramid level (for mip-mapping) - 0 is the top level
+                 GL_RGBA,           // Internal colour format to convert to
+                 w,
+                 h,
+                 0,                 // Border width in pixels (can either be 1 or 0)
+                 GL_BGRA,            // Input image format (i.e. GL_RGB, GL_RGBA, GL_BGR etc.)
+                 GL_UNSIGNED_BYTE,  // Image data type
+                 baseAddress); // The actual image data itself
+    glBindTexture(GL_TEXTURE_2D, 0);
+    CVPixelBufferUnlockBaseAddress(origPixelBuffer, 0);
+    
     CVOpenGLESTextureRef dstTexture = NULL;
     
     //////////////////////////////////////////////////
@@ -202,7 +234,7 @@ using namespace glm;
         NSLog( @"Error at CVOpenGLESTextureCacheCreateTextureFromImage %d", err );
     } else {
         assert(CVOpenGLESTextureGetTarget( dstTexture ) == GL_TEXTURE_2D);
-        if( !glasses_->render( CVOpenGLESTextureGetName( dstTexture ) ) ) {
+        if( !glasses_->render( CVOpenGLESTextureGetName( dstTexture ), _candide3Texture ) ) {
             NSLog( @"Error at glasses_.Render");
         }
     }
@@ -214,8 +246,10 @@ bail:
     if ( dstTexture ) {
         CFRelease( dstTexture );
     }
-    //if we apply filter
-    //return [_screenRenderer copyRenderedPixelBuffer:dstPixelBuffer];
+    //if we apply filter [_screenRenderer copyRenderedPixelBuffer:dstPixelBuffer];
+    //then return the following:
+    //return dstPixelBuffer;
+    //else return the following:
     return CVPixelBufferRetain( dstPixelBuffer );
 }
 
@@ -264,7 +298,10 @@ bail:
         success = NO;
         [self cleanup:success oldContext:oldContext];
     }
-    glasses_->getInitMat(initMat);
+    glasses_->getInitMat(_initMat);
+    
+    glGenTextures(1, &_candide3Texture);
+    getGLErr("1");
     
     ///////////////////
     //buffer management

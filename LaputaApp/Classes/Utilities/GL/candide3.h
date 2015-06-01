@@ -35,7 +35,7 @@ public:
                     GLint normalLocation);
     
     bool readFaces(string& faceFile);
-    bool readVertices(string& vertexFile, float glassesWidth);
+    bool readVertices(string& vertexFile, float glassesWidth, float zRotateInDegree);
     
     void render(GLuint textureObj);
 private:

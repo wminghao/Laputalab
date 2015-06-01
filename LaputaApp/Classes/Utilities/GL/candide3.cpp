@@ -54,7 +54,7 @@ bool Candide3::readFaces(string& faceFile)
     return true;
 }
 
-bool Candide3::readVertices(string& vertexFile, float glassesWidth)
+bool Candide3::readVertices(string& vertexFile, float glassesWidth, float zRotateInDegree)
 {
     ifstream ifs;
     
@@ -87,8 +87,14 @@ bool Candide3::readVertices(string& vertexFile, float glassesWidth)
     ifs.seekg(0, ios::beg);
     while (ifs >> vert.x >> vert.y >> vert.z){
         //map directly into texture
-        texture.x = (0.7*vert.x+1)/2;
-        texture.y = (0.9*vert.y+1)/2;
+        if( zRotateInDegree == 90 ) {
+            //aspect ratio is 16/9 for 90 mode
+            texture.x = (1-(vert.y+1)/2)*3/4;
+            texture.y = (vert.x+1)/2;
+        } else {
+            texture.x = (0.7*vert.x+1)/2;
+            texture.y = (0.9*vert.y+1)/2;
+        }
         
         vert.x *= ratio;
         vert.y *= ratio;

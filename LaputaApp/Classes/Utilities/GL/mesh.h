@@ -63,7 +63,7 @@ public:
         
         _candide3.setAttrUni(texCountLocation, textureImageLocation, positionLocation, texCoordLocation, normalLocation);
     }
-    bool LoadMesh(const std::string& Filename, const char*candide3FacePath, const char* candide3VertPath);
+    bool LoadMesh(const std::string& Filename, const char*candide3FacePath, const char* candide3VertPath, float zRotateInDegree);
     
     void Render(GLuint textureObj);
     
@@ -74,7 +74,7 @@ private:
     void InitMesh(unsigned int Index, const aiMesh* paiMesh);
     bool InitMaterials(const aiScene* pScene, const std::string& Filename);
     void Clear();
-    bool loadCandide3(const char*candide3FacePath, const char* candide3VertPath);
+    bool loadCandide3(const char*candide3FacePath, const char* candide3VertPath, float zRotateInDegree);
     
 #define INVALID_OGL_VALUE 0xFFFFFFFF
 #define INVALID_MATERIAL 0xFFFFFFFF

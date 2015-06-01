@@ -159,7 +159,7 @@ bool Glasses::init(const char* vertLFilePath,
         ////////////////////////
         //Load model with ASSIMP
         ////////////////////////
-        _pMesh->LoadMesh(glassesFilePath, candide3FacePath, candide3VertPath);
+        _pMesh->LoadMesh(glassesFilePath, candide3FacePath, candide3VertPath, zRotateInDegree);
         
         ////////////////////////
         //Set the matrices
@@ -260,7 +260,7 @@ void Glasses::deinit()
     }
 }
 
-bool Glasses::render(GLuint dstTextureName)
+bool Glasses::render(GLuint dstTextureName, GLuint candide3Texture)
 {
     bool ret = false;
     if ( _offscreenBufferHandle != 0 ) {
@@ -330,7 +330,7 @@ bool Glasses::render(GLuint dstTextureName)
             //glUniformMatrix4fv(_matrixNormalMatrix, 1, GL_FALSE, &_NormalMatrix[0][0]);
             
             //render the meshes
-            _pMesh->Render(dstTextureName);
+            _pMesh->Render(candide3Texture);
             
             // Make sure that outstanding GL commands which render to the destination pixel buffer have been submitted.
             // AVAssetWriter, AVSampleBufferDisplayLayer, and GL will block until the rendering is complete when sourcing from this pixel buffer.
