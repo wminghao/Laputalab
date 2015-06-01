@@ -156,7 +156,7 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh)
         const aiVector3D* pNormal   = &(paiMesh->mNormals[i]);
         const aiVector3D* pTexCoord = paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
 
-        Vertex v(Vector3f(pPos->x, pPos->y, pPos->z),
+        Vertex v(Vector3f(pPos->x, pPos->y+5, pPos->z),
                  Vector2f(pTexCoord->x, pTexCoord->y),
                  Vector3f(pNormal->x, pNormal->y, pNormal->z));
 
@@ -337,7 +337,6 @@ void Mesh::Render(GLuint textureObj)
         }
         glDrawElements(GL_TRIANGLES, m_Entries[i].NumIndices, GL_UNSIGNED_INT, 0);
     }
-
     glDisableVertexAttribArray(m_positionLocation);
     glDisableVertexAttribArray(m_texCoordLocation);
     glDisableVertexAttribArray(m_normalLocation);

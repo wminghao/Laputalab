@@ -89,9 +89,10 @@ struct Vector2f
 
 struct Vertex
 {
-    Vector3f m_pos;
-    Vector2f m_tex;
-    Vector3f m_normal;
+    //0
+    Vector3f m_pos; //12
+    Vector2f m_tex; //20
+    Vector3f m_normal; //32
     
     Vertex() {}
     

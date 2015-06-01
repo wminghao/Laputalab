@@ -113,7 +113,9 @@ bool Candide3::readVertices(string& vertexFile, float glassesWidth)
 }
 
 void Candide3::render(GLuint textureObj)
-{    
+{
+    glDisable( GL_CULL_FACE );
+    
     glBindBuffer(GL_ARRAY_BUFFER, VB);
     glVertexAttribPointer(m_positionLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0); //3*4
     glVertexAttribPointer(m_texCoordLocation, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)12); //2*4
@@ -125,5 +127,7 @@ void Candide3::render(GLuint textureObj)
     candide3Texture->bind(1, textureObj);
     
     //Use GL_TRIANGLE_FAN instead of GL_TRIANGLES
-    glDrawElements(GL_TRIANGLE_FAN, NumIndices, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, NumIndices, GL_UNSIGNED_INT, 0);
+    
+    glEnable( GL_CULL_FACE );
 }
