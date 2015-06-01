@@ -70,8 +70,8 @@ public:
     float getWidth() { return xMax-xMin;}
 
 private:
-    bool InitFromScene(const aiScene* pScene, const std::string& Filename);
-    void InitMesh(unsigned int Index, const aiMesh* paiMesh);
+    bool InitFromScene(const aiScene* pScene, const std::string& Filename, float zRotateInDegree);
+    void InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDegree);
     bool InitMaterials(const aiScene* pScene, const std::string& Filename);
     void Clear();
     bool loadCandide3(const char*candide3FacePath, const char* candide3VertPath, float zRotateInDegree);

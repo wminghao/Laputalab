@@ -96,7 +96,7 @@ bool Mesh::LoadMesh(const std::string& Filename, const char*candide3FacePath, co
 
     const aiScene* pScene = Importer.ReadFile(Filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
     if (pScene) {
-        ret = InitFromScene(pScene, Filename);
+        ret = InitFromScene(pScene, Filename, zRotateInDegree);
     } else {
         printf("Error parsing '%s': '%s'\n", Filename.c_str(), Importer.GetErrorString());
     }
@@ -116,7 +116,7 @@ bool Mesh::loadCandide3(const char*candide3FacePath, const char* candide3VertPat
     return true;
 }
 
-bool Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename)
+bool Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename, float zRotateInDegree)
 {  
     m_Entries.resize(pScene->mNumMeshes);
     m_Materials.resize(pScene->mNumMaterials);
@@ -124,7 +124,7 @@ bool Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename)
     // Initialize the meshes in the scene one by one
     for (unsigned int i = 0 ; i < m_Entries.size() ; i++) {
         const aiMesh* paiMesh = pScene->mMeshes[i];
-        InitMesh(i, paiMesh);
+        InitMesh(i, paiMesh, zRotateInDegree);
     }
     
 #ifdef DESKTOP_MAC
@@ -138,7 +138,7 @@ bool Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename)
     return InitMaterials(pScene, Filename);
 }
 
-void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh)
+void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDegree)
 {
     m_Entries[Index].MaterialIndex = paiMesh->mMaterialIndex;
     
@@ -150,13 +150,17 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh)
     printf("Mesh Index=%d, Material Index='%d', vertices=%d, mNumFaces=%d\n", Index,
            paiMesh->mMaterialIndex, paiMesh->mNumVertices, paiMesh->mNumFaces);
 
+    int yFloatUp = 5;
+    if( zRotateInDegree == 90 ) {
+        yFloatUp = 10;
+    }
     
     for (unsigned int i = 0 ; i < paiMesh->mNumVertices ; i++) {
         const aiVector3D* pPos      = &(paiMesh->mVertices[i]);
         const aiVector3D* pNormal   = &(paiMesh->mNormals[i]);
         const aiVector3D* pTexCoord = paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
 
-        Vertex v(Vector3f(pPos->x, pPos->y+5, pPos->z),
+        Vertex v(Vector3f(pPos->x, pPos->y+yFloatUp, pPos->z),
                  Vector2f(pTexCoord->x, pTexCoord->y),
                  Vector3f(pNormal->x, pNormal->y, pNormal->z));
 
