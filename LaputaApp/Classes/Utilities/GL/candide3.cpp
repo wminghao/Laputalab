@@ -13,7 +13,22 @@
 #include<fstream>
 
 const float DELTA_BEHIND_GLASSES = 4.0; //delta face behind the glasses
+
+#ifdef DESKTOP_MAC
+const float DELTA_SMALLER_GLASSES = 1.0; //delta face width smaller than glasses
+#else
 const float DELTA_SMALLER_GLASSES = -5.0; //delta face width smaller than glasses
+#endif
+
+//Xingze's head
+//Shape Factors
+const int SHAPEUNITS = 14;
+const float shapeFactor[SHAPEUNITS] = //for Xz
+    {0.0f,0.5f,0.4f, //headheight, eyebrows vertical pos, eyes vertical pos;
+    0.1f,0.0f,0.3f, // eyes width, eyes height, eye seperation dis;
+    0.0f,1.0f,0.5f, // cheeks z, nose-z extension, nose vertical pos;
+    0.0f,0.0f,0.3f, // nose pointing up, mouth vertical pos, mouth width;
+    0.0f,0.0f}; // eyes vertical diff, chin width;
 
 void Candide3::setAttrUni(GLint texCountLocation,
                           GLint textureImageLocation,
@@ -92,8 +107,8 @@ bool Candide3::readVertices(string& vertexFile, float glassesWidth, float zRotat
             texture.x = (1-(vert.y+1)/2)*3/4;
             texture.y = (vert.x+1)/2;
         } else {
-            texture.x = (0.7*vert.x+1)/2;
-            texture.y = (0.9*vert.y+1)/2;
+            texture.x = (vert.x+1)/2;
+            texture.y = (vert.y+1)/2;
         }
         
         vert.x *= ratio;
@@ -109,6 +124,9 @@ bool Candide3::readVertices(string& vertexFile, float glassesWidth, float zRotat
     
     ifs.close();
     
+    //adjust the sape
+    adjustShape(NULL, 0, shapeFactor, 1.0, 1.0, 1.0);
+    
     cout << "Total vertices: " << vertices.size() <<endl;
     
     glGenBuffers(1, &VB);
@@ -116,6 +134,57 @@ bool Candide3::readVertices(string& vertexFile, float glassesWidth, float zRotat
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
     
     return true;
+}
+
+void Candide3::adjustShape(const char**shapeUnitFile, int totalShapeUnits, const float shapeUnits[], float xScale, float yScale, float zScale) //To be optimized
+{
+    //TODO for now.
+    const char * shapeUnitFiles[SHAPEUNITS] = {
+        "/Users/howard/AR_lib/LaputaDesktop2/VET/facemodel/headheight_16.wfm",
+        "/Users/howard/AR_lib/LaputaDesktop2/VET/facemodel/eyebrowsvertical_8.wfm",
+        "/Users/howard/AR_lib/LaputaDesktop2/VET/facemodel/eyevertical_36.wfm",
+        
+        "/Users/howard/AR_lib/LaputaDesktop2/VET/facemodel/eyeswidth_20.wfm",
+        "/Users/howard/AR_lib/LaputaDesktop2/VET/facemodel/eyesheight_24.wfm",
+        "/Users/howard/AR_lib/LaputaDesktop2/VET/facemodel/eyeseperation_36.wfm",
+        
+        "/Users/howard/AR_lib/LaputaDesktop2/VET/facemodel/cheeksZ_2.wfm",
+        "/Users/howard/AR_lib/LaputaDesktop2/VET/facemodel/noseZExten_6.wfm",
+        "/Users/howard/AR_lib/LaputaDesktop2/VET/facemodel/nosevertical_17.wfm",
+        
+        "/Users/howard/AR_lib/LaputaDesktop2/VET/facemodel/nosepointup_3.wfm",
+        "/Users/howard/AR_lib/LaputaDesktop2/VET/facemodel/mouthvertical_21.wfm",
+        "/Users/howard/AR_lib/LaputaDesktop2/VET/facemodel/mouthwidth_14.wfm",
+        
+        "/Users/howard/AR_lib/LaputaDesktop2/VET/facemodel/eyesverticaldiff_36.wfm",
+        "/Users/howard/AR_lib/LaputaDesktop2/VET/facemodel/chinwidth_2.wfm",
+        
+    };
+    for (int i = 0; i < SHAPEUNITS; i++){
+        if (shapeUnits[i] != 0){
+            ifstream ifs;
+            ifs.open(shapeUnitFiles[i],ifstream::in);
+            
+            myvec4 elem;
+            
+            while (ifs >> elem.v >> elem.x >> elem.y >> elem.z){
+                vertices[elem.v].m_pos.x -= shapeUnits[i]*elem.x;
+                vertices[elem.v].m_pos.y -= shapeUnits[i]*elem.y;
+                vertices[elem.v].m_pos.z -= shapeUnits[i]*elem.z;
+            }
+            
+            ifs.close();
+        }
+        
+    }
+    
+    for (int i = 0; i < vertices.size(); i++){
+        vertices[i].m_pos.x *= xScale;
+        vertices[i].m_pos.y *= yScale;
+        vertices[i].m_pos.z *= zScale;
+    }
+    
+    return;
 }
 
 void Candide3::render(GLuint textureObj)

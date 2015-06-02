@@ -175,9 +175,14 @@ bool Glasses::init(const char* vertLFilePath,
         }
         
         // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-        mat4 Projection = perspective(radians(45.0f), ratioW/ratioH, 0.5f, 100.0f); //for portrait mode, front/back camera, is: 16:9
+        //mat4 Projection = perspective(radians(45.0f), ratioW/ratioH, 0.5f, 100.0f); //for portrait mode, front/back camera, is: 16:9
         // Or, for an ortho camera :
-        //mat4 Projection = ortho(-8.0f,8.0f,-4.5f,4.5f,0.0f,100.0f); // In world coordinates, x/y =16/9 ratio, far-near is big enough
+        mat4 Projection;
+        if( ratio == ASPECT_RATIO_4_3 ) {
+            Projection = ortho(-6.0f,6.0f,-4.5f,4.5f,0.0f,100.0f); // In world coordinates, x/y =16/9 ratio, far-near is big enough
+        } else {
+            Projection = ortho(-8.0f,8.0f,-4.5f,4.5f,0.0f,100.0f); // In world coordinates, x/y =16/9 ratio, far-near is big enough
+        }
         
         // Camera matrix
         mat4 View       = lookAt(vec3(0,0,10), // Camera is at (0, 0, 10), in World Space
@@ -185,7 +190,7 @@ bool Glasses::init(const char* vertLFilePath,
                                  vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
                                  );
         // Model matrix : an identity matrix (model will be at the origin)
-        float scaleFactor = ((zRotateInDegree == 90)?ratioH * 0.7:ratioW * 0.30)/_pMesh->getWidth(); //put the object width the same as portaint mode 9:16
+        float scaleFactor = ((zRotateInDegree == 90)?ratioH * 0.7:ratioW * 0.33)/_pMesh->getWidth(); //put the object width the same as portaint mode 9:16
         //mat4 Model      = mat4(1.0f);
         mat4 Model_translation = translate(mat4(1.0f), vec3(0,0,0));
         mat4 Model_rotateZ = rotate(mat4(1.0f), radians(zRotateInDegree), vec3(0,0,1)); //rotate z of 90 degree

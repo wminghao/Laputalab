@@ -38,6 +38,10 @@ public:
     bool readVertices(string& vertexFile, float glassesWidth, float zRotateInDegree);
     
     void render(GLuint textureObj);
+    
+private:    
+    void adjustShape(const char**shapeUnitFile, int totalShapeUnits, const float shapeUnits[], float xScale, float yScale, float zScale);
+
 private:
     vector<unsigned int> indices;
     vector<Vertex> vertices;

@@ -80,6 +80,8 @@
 		89B2EB701AD2FF9000D1E27E /* color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89B2EB6E1AD2FF9000D1E27E /* color.cpp */; };
 		89B2EB7F1AD7488F00D1E27E /* ramp1-nurbsToPoly1.png in Resources */ = {isa = PBXBuildFile; fileRef = 89B2EB7E1AD7488F00D1E27E /* ramp1-nurbsToPoly1.png */; };
 		89B2EB881AD87DDA00D1E27E /* reflectionTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89B2EB861AD87DDA00D1E27E /* reflectionTexture.cpp */; };
+		89DDECB41B1E388800722506 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89DDECB21B1E388800722506 /* Launch Screen.xib */; };
+		89DDECB61B1E3AA100722506 /* 640*1136.png in Resources */ = {isa = PBXBuildFile; fileRef = 89DDECB51B1E3AA100722506 /* 640*1136.png */; };
 		89DDF75B1AFC2153006222A4 /* CVAnalyzerOperation.mm in Sources */ = {isa = PBXBuildFile; fileRef = 89DDF75A1AFC2153006222A4 /* CVAnalyzerOperation.mm */; };
 		89DDF7861AFD2EC9006222A4 /* libCVAnalyzerLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 89DDF7851AFD2EC9006222A4 /* libCVAnalyzerLib.a */; };
 		89DDF78C1B012765006222A4 /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 892DA8EE1ACB649A00ABA31E /* opencv2.framework */; };
@@ -187,6 +189,8 @@
 		89B2EB7E1AD7488F00D1E27E /* ramp1-nurbsToPoly1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "ramp1-nurbsToPoly1.png"; path = "Resources/3dmodels/3dGlasses/ramp1-nurbsToPoly1.png"; sourceTree = SOURCE_ROOT; };
 		89B2EB861AD87DDA00D1E27E /* reflectionTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = reflectionTexture.cpp; path = Utilities/GL/reflectionTexture.cpp; sourceTree = "<group>"; };
 		89B2EB871AD87DDA00D1E27E /* reflectionTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = reflectionTexture.h; path = Utilities/GL/reflectionTexture.h; sourceTree = "<group>"; };
+		89DDECB31B1E388800722506 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "Resources/en.lproj/Launch Screen.xib"; sourceTree = SOURCE_ROOT; };
+		89DDECB51B1E3AA100722506 /* 640*1136.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "640*1136.png"; sourceTree = "<group>"; };
 		89DDF7591AFC2153006222A4 /* CVAnalyzerOperation.hh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = CVAnalyzerOperation.hh; path = CV/CVAnalyzerOperation.hh; sourceTree = "<group>"; };
 		89DDF75A1AFC2153006222A4 /* CVAnalyzerOperation.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CVAnalyzerOperation.mm; path = CV/CVAnalyzerOperation.mm; sourceTree = "<group>"; };
 		89DDF7851AFD2EC9006222A4 /* libCVAnalyzerLib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCVAnalyzerLib.a; path = thirdpartylib/cvanalyzer/lib/libCVAnalyzerLib.a; sourceTree = "<group>"; };
@@ -320,6 +324,7 @@
 		6F90DDE01395CAAA00125BDA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				89DDECB51B1E3AA100722506 /* 640*1136.png */,
 				895589B51AF97FA60019374C /* Model */,
 				892DA8C91ACA119C00ABA31E /* 3dModels */,
 				89F003FC1AC9C7F500D8EC6D /* LaputaApp-Info.plist */,
@@ -328,6 +333,7 @@
 				281FB47D176694640071511D /* Main.storyboard */,
 				262D247E17177837000E1DBA /* Shaders */,
 				6F90DDE21395CAAA00125BDA /* InfoPlist.strings */,
+				89DDECB21B1E388800722506 /* Launch Screen.xib */,
 			);
 			name = Resources;
 			path = Classes;
@@ -547,6 +553,7 @@
 				895656A01ACE0551004AE70A /* SimpleFragmentShaderF.fragmentshader in Resources */,
 				895656A31ACE0551004AE70A /* SimpleVertexShaderL.vertexshader in Resources */,
 				895589BF1AF97FBD0019374C /* m4.txt in Resources */,
+				89DDECB61B1E3AA100722506 /* 640*1136.png in Resources */,
 				6F90DDEC1395CAAA00125BDA /* LaputaViewController.h in Resources */,
 				28365599139FE71B00D09100 /* ReadMe.txt in Resources */,
 				899A5E971B167E8100A080FF /* facelist_184.wfm in Resources */,
@@ -563,6 +570,7 @@
 				895589BB1AF97FBD0019374C /* haarcascade_frontalface_default.xml in Resources */,
 				895656E41ACE08AD004AE70A /* RanGlass.obj in Resources */,
 				899A5E981B167E8100A080FF /* vertexlist_113.wfm in Resources */,
+				89DDECB41B1E388800722506 /* Launch Screen.xib in Resources */,
 				89120A301ACA011B0086174B /* myFilter.vsh in Resources */,
 				89120A2F1ACA011B0086174B /* myFilter.fsh in Resources */,
 				895656A11ACE0551004AE70A /* SimpleFragmentShaderL.fragmentshader in Resources */,
@@ -629,6 +637,14 @@
 			);
 			name = InfoPlist.strings;
 			path = ../Resources;
+			sourceTree = "<group>";
+		};
+		89DDECB21B1E388800722506 /* Launch Screen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				89DDECB31B1E388800722506 /* en */,
+			);
+			name = "Launch Screen.xib";
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

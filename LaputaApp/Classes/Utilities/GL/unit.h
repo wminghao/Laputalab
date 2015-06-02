@@ -104,4 +104,11 @@ struct Vertex
     }
 };
 
+typedef struct{
+    int v;
+    float x;
+    float y;
+    float z;
+} myvec4;
+
 #endif
