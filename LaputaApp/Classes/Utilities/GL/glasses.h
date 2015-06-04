@@ -12,6 +12,7 @@
 #include "ShaderUtilities.h"
 #include "glUtilities.h"
 #include "matrix.h"
+#include "unit.h"
 
 //math library
 #include <glm/glm.hpp>
@@ -46,6 +47,7 @@ typedef enum {
     ASPECT_RATIO_16_9,
 }ASPECT_RATIO;
 
+
 class Glasses{
 public:
     Glasses(int srcWidth, int srcHeight);
@@ -61,13 +63,12 @@ public:
     
     bool render(GLuint dstTextureName, GLuint candide3Texture);
     
-    void getInitMat(mat4& initMat) { initMat = _initMVP; }
+    void getInitMat(mat4& initMat, mat4& rotTransMat);
+    void getCandide3Vertices(vector<myvec3>& vec);
     
-    void setMat(mat4& curMat){
-        _curMVP = curMat;
-        //TODO
-        _World = _ViewInverse * inverse( _Projection ) * curMat;
-    }
+    void setRotTransMat(mat4 rotTransMat);
+
+    mat4 getMat(mat4& rotTransMat);
     
 #ifdef DESKTOP_MAC
     void readPixels(unsigned char* pixels);
@@ -99,6 +100,12 @@ private:
     //initial
     mat4 _initMVP;
     mat4 _curMVP;
+    mat4 _rotTrans; //rotate translation matrix
+    mat4 _scaling; //scaling matrix
+    
+    //convert from [-1, 1] to [srcWidth, srcHeight]
+    mat4 _mapMat;
+    mat4 _mapMatInv;
     
 #ifdef DESKTOP_MAC
     //input framebuffer

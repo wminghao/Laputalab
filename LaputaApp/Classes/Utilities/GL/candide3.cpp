@@ -104,7 +104,7 @@ bool Candide3::readVertices(string& vertexFile, float glassesWidth, float zRotat
         //map directly into texture
         if( zRotateInDegree == 90 ) {
             //aspect ratio is 16/9 for 90 mode
-            texture.x = (1-(vert.y+1)/2)*3/4;
+            texture.x = (1-(vert.y+1)/2)*9/16;
             texture.y = (vert.x+1)/2;
         } else {
             texture.x = (vert.x+1)/2;
@@ -134,6 +134,15 @@ bool Candide3::readVertices(string& vertexFile, float glassesWidth, float zRotat
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
     
     return true;
+}
+
+void Candide3::getCandide3Vertices(vector<myvec3>& vec)
+{
+    for (int i = 0; i < vertices.size(); i++){
+        myvec3 v = {vertices[i].m_pos.x, vertices[i].m_pos.y, vertices[i].m_pos.z};
+        vec.push_back(v);
+        //cout << "vert "<<i<<" : "<<vertices[i].m_pos.x << " " << vertices[i].m_pos.y << " " << vertices[i].m_pos.z<<endl;
+    }
 }
 
 void Candide3::adjustShape(const char**shapeUnitFile, int totalShapeUnits, const float shapeUnits[], float xScale, float yScale, float zScale) //To be optimized
@@ -182,6 +191,7 @@ void Candide3::adjustShape(const char**shapeUnitFile, int totalShapeUnits, const
         vertices[i].m_pos.x *= xScale;
         vertices[i].m_pos.y *= yScale;
         vertices[i].m_pos.z *= zScale;
+        //cout << "vert "<<i<<" : "<<vertices[i].m_pos.x << " " << vertices[i].m_pos.y << " " << vertices[i].m_pos.z<<endl;
     }
     
     return;

@@ -105,6 +105,12 @@ struct Vertex
 };
 
 typedef struct{
+    float x;
+    float y;
+    float z;
+} myvec3;
+
+typedef struct{
     int v;
     float x;
     float y;

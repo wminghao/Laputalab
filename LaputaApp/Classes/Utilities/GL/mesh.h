@@ -68,6 +68,8 @@ public:
     void Render(GLuint textureObj);
     
     float getWidth() { return xMax-xMin;}
+    
+    void getCandide3Vertices(vector<myvec3>& vec) { _candide3.getCandide3Vertices(vec); }
 
 private:
     bool InitFromScene(const aiScene* pScene, const std::string& Filename, float zRotateInDegree);

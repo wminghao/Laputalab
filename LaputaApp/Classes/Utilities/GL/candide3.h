@@ -39,6 +39,8 @@ public:
     
     void render(GLuint textureObj);
     
+    void getCandide3Vertices(vector<myvec3>& vec);
+    
 private:    
     void adjustShape(const char**shapeUnitFile, int totalShapeUnits, const float shapeUnits[], float xScale, float yScale, float zScale);
 
@@ -57,7 +59,7 @@ private:
     //vertices and faces
     GLuint VB;
     GLuint IB;
-    unsigned int NumIndices;    
+    unsigned int NumIndices;
 };
 
 

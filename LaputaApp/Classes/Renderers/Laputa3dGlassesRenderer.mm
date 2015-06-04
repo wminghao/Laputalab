@@ -157,7 +157,7 @@ using namespace glm;
     } else {
         curMat = rotate(_initMat, radians(angleInDegree), vec3(0,1,0)); //matrix for rotation on y axis
     }
-    glasses_->setMat(curMat);
+    glasses_->setRotTransMat(curMat);
     
     if ( dstPixelBuffer == nil ) {
         @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"NULL pixel buffer" userInfo:nil];
@@ -297,7 +297,8 @@ bail:
         success = NO;
         [self cleanup:success oldContext:oldContext];
     }
-    glasses_->getInitMat(_initMat);
+    mat4 tempMat;
+    glasses_->getInitMat(tempMat, _initMat);
     
     glGenTextures(1, &_candide3Texture);
     getGLErr("1");

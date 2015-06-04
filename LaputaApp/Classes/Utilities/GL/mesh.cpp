@@ -325,7 +325,6 @@ void Mesh::Render(GLuint textureObj)
     glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 #endif
     _candide3.render(textureObj);
-    
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     
     //then render visible glasses object
@@ -345,7 +344,50 @@ void Mesh::Render(GLuint textureObj)
         }
         glDrawElements(GL_TRIANGLES, m_Entries[i].NumIndices, GL_UNSIGNED_INT, 0);
     }
+    
+    /*
+    glLineWidth(2.5);
+    glColor3f(1.0, 0.0, 0.0);
+    
+    unsigned int indices[] = {0, 1};
+    
+    GLuint VB;
+    GLuint IB;
+    std::vector<Vertex> ver;
+    std::vector<unsigned int> ind;
+    ver.push_back(Vertex(Vector3f(-10, 0, 50),
+                         Vector2f(0, 0),
+                         Vector3f(0, 0, 0)));
+    ver.push_back(Vertex(Vector3f(15, -10, 6),
+                         Vector2f(0, 0),
+                         Vector3f(0, 0, 0)));
+    ver.push_back(Vertex(Vector3f(10, -20, 70),
+                         Vector2f(0, 0),
+                         Vector3f(0, 0, 0)));
+    ind.push_back(0);
+    ind.push_back(1);
+    ind.push_back(2);
+    
+    glGenBuffers(1, &VB);
+    glBindBuffer(GL_ARRAY_BUFFER, VB);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 3, &ver[0], GL_STATIC_DRAW);
+    
+    glGenBuffers(1, &IB);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 3, &ind[0], GL_STATIC_DRAW);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, VB);
+    glVertexAttribPointer(m_positionLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0); //3*4
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
+    glDrawElements(GL_LINE_STRIP, 3, GL_UNSIGNED_INT, 0);
+
+    glDeleteBuffers(1, &VB);
+    glDeleteBuffers(1, &IB);
+    */
+    
     glDisableVertexAttribArray(m_positionLocation);
     glDisableVertexAttribArray(m_texCoordLocation);
     glDisableVertexAttribArray(m_normalLocation);
+    
 }

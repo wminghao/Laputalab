@@ -10,19 +10,54 @@
 #include "glasses.h"
 #include "mesh.h"
 #include "err.h"
+#include <glm/gtc/type_ptr.hpp>
 
 //TODO aa does not work in the code.
 const int AA_LEVEL = 4; //4 is normal, 0 means no AA
+const int FOCAL = 500;
 
 Glasses::Glasses(int srcWidth, int srcHeight):_srcWidth(srcWidth), _srcHeight(srcHeight)
 {
     _pMesh = new Mesh();
+    float fWidth = (float)_srcWidth;
+    float fHeight = (float)_srcHeight;
+    float fFocal = (float)FOCAL;
+    
+    float coord[16] = { fWidth/2, 0, 0, 0,
+                        0, fHeight/2, 0, 0,
+                        0, 0, FOCAL/2, 0,
+                        fWidth/2, fHeight/2, FOCAL/2, 1};
+    _mapMat = glm::make_mat4(coord);
+    _mapMatInv = glm::inverse(_mapMat);
 }
 
 Glasses::~Glasses()
 {
     deinit();
     delete(_pMesh);
+}
+
+void Glasses::getInitMat(mat4& initMat, mat4& rotTransMat) {
+    initMat = _mapMat * _initMVP;
+    
+    rotTransMat = _rotTrans;
+}
+
+void Glasses::getCandide3Vertices(vector<myvec3>& vec) {
+    _pMesh->getCandide3Vertices(vec);
+}
+
+void Glasses::setRotTransMat(mat4 rotTransMat){
+    //assert( rotTransMat == _rotTrans);
+    
+    _World = rotTransMat * _scaling;
+    _curMVP = _Projection * _View * _World;
+}
+
+mat4 Glasses::getMat(mat4& rotTransMat)
+{
+    mat4 mvp =  _mapMat * _Projection * _View * rotTransMat * _scaling;
+    return mvp;
 }
 
 bool Glasses::init(const char* vertLFilePath,
@@ -177,12 +212,7 @@ bool Glasses::init(const char* vertLFilePath,
         // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
         //mat4 Projection = perspective(radians(45.0f), ratioW/ratioH, 0.5f, 100.0f); //for portrait mode, front/back camera, is: 16:9
         // Or, for an ortho camera :
-        mat4 Projection;
-        if( ratio == ASPECT_RATIO_4_3 ) {
-            Projection = ortho(-6.0f,6.0f,-4.5f,4.5f,0.0f,100.0f); // In world coordinates, x/y =16/9 ratio, far-near is big enough
-        } else {
-            Projection = ortho(-8.0f,8.0f,-4.5f,4.5f,0.0f,100.0f); // In world coordinates, x/y =16/9 ratio, far-near is big enough
-        }
+        mat4 Projection = ortho(-ratioW/2,ratioW/2,-ratioH/2,ratioH/2,0.0f,100.0f); // In world coordinates, x/y =16/9 ratio, far-near is big enough
         
         // Camera matrix
         mat4 View       = lookAt(vec3(0,0,10), // Camera is at (0, 0, 10), in World Space
@@ -193,10 +223,16 @@ bool Glasses::init(const char* vertLFilePath,
         float scaleFactor = ((zRotateInDegree == 90)?ratioH * 0.7:ratioW * 0.33)/_pMesh->getWidth(); //put the object width the same as portaint mode 9:16
         //mat4 Model      = mat4(1.0f);
         mat4 Model_translation = translate(mat4(1.0f), vec3(0,0,0));
+        
         mat4 Model_rotateZ = rotate(mat4(1.0f), radians(zRotateInDegree), vec3(0,0,1)); //rotate z of 90 degree
-        mat4 Model_rotateX = rotate(mat4(1.0f), radians(10.0f), vec3(1,0,0)); //rotate x of 10 degree
+        mat4 Model_rotateX = rotate(mat4(1.0f), radians(0.0f), vec3(1,0,0)); //rotate x of 0 degree
+        
         mat4 Model_scale = scale(mat4(1.0f), vec3(scaleFactor,scaleFactor,scaleFactor));
+        
         mat4 Model = Model_translation * Model_rotateZ * Model_rotateX * Model_scale;
+        
+        _rotTrans = Model_translation * Model_rotateZ * Model_rotateX;
+        _scaling = Model_scale;
         
         _ViewInverse = inverse(View); //inverse of the view matrix
         //_NormalMatrix = transpose(inverse(mat3(Model)));
