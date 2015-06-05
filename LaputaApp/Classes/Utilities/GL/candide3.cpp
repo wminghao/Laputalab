@@ -136,13 +136,65 @@ bool Candide3::readVertices(string& vertexFile, float glassesWidth, float zRotat
     return true;
 }
 
-void Candide3::getCandide3Vertices(vector<myvec3>& vec)
+//set the candide3 vertices from
+float Candide3::setCandide3Vertices(vector<myvec3>& vec, float zRotateInDegree)
 {
-    for (int i = 0; i < vertices.size(); i++){
-        myvec3 v = {vertices[i].m_pos.x, vertices[i].m_pos.y, vertices[i].m_pos.z};
-        vec.push_back(v);
-        //cout << "vert "<<i<<" : "<<vertices[i].m_pos.x << " " << vertices[i].m_pos.y << " " << vertices[i].m_pos.z<<endl;
+    float xMin = 0;
+    float xMax = 0;
+    float yMin = 0;
+    float yMax = 0;
+    float zMin = 0;
+    float zMax = 0;
+    size_t total = vec.size();
+    vertices.resize(total);
+    for (int i = 0; i < total ; i++){
+        vertices[i].m_pos.x = vec[i].x;
+        vertices[i].m_pos.y = -vec[i].y; //it's up side down, TODO
+        vertices[i].m_pos.z = vec[i].z;
+        
+        if( vec[i].x > xMax ) {
+            xMax = vec[i].x;
+        }
+        if( vec[i].x < xMin ) {
+            xMin = vec[i].x;
+        }
+        if( vec[i].y > yMax ) {
+            yMax = vec[i].y;
+        }
+        if( vec[i].y < yMin ) {
+            yMin = vec[i].y;
+        }
+        if( vec[i].z > zMax ) {
+            zMax = vec[i].z;
+        }
+        if( vec[i].z < zMin ) {
+            zMin = vec[i].z;
+        }
+        cout << "vert "<<i<<" : "<<vertices[i].m_pos.x << " " << vertices[i].m_pos.y << " " << vertices[i].m_pos.z<<endl;
     }
+    float width = (xMax - xMin);
+    cout<<"New xMax="<<xMax<<" xMin="<<xMin << " candide3 width = " << (xMax-xMin)<<endl;
+    cout<<"New yMax="<<yMax<<" yMin="<<yMin << " candide3 height = " << (yMax-yMin)<<endl;
+    cout<<"New zMax="<<zMax<<" zMin="<<zMin << " candide3 depth = " << (zMax-zMin)<<endl;
+    
+    
+    for (int i = 0; i < total ; i++){
+        //map directly into texture
+        if( zRotateInDegree == 90 ) {
+            //aspect ratio is 16/9 for 90 mode
+            vertices[i].m_tex.x = 1-(vertices[i].m_pos.y/width+1)/2;
+            vertices[i].m_tex.y = (vertices[i].m_pos.x/width+1)/2;
+        } else {
+            vertices[i].m_tex.x = (vertices[i].m_pos.x/width+1)/2;
+            vertices[i].m_tex.y = (vertices[i].m_pos.y/width+1)/2;
+        }
+        cout << "vert_tex "<<i<<" : "<<vertices[i].m_tex.x << " " << vertices[i].m_tex.y<<endl;
+    }
+    
+    glGenBuffers(1, &VB);
+    glBindBuffer(GL_ARRAY_BUFFER, VB);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
+    return width;
 }
 
 void Candide3::adjustShape(const char**shapeUnitFile, int totalShapeUnits, const float shapeUnits[], float xScale, float yScale, float zScale) //To be optimized

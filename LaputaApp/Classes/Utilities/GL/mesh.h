@@ -63,20 +63,20 @@ public:
         
         _candide3.setAttrUni(texCountLocation, textureImageLocation, positionLocation, texCoordLocation, normalLocation);
     }
-    bool LoadMesh(const std::string& Filename, const char*candide3FacePath, const char* candide3VertPath, float zRotateInDegree);
+    bool LoadMesh(const std::string& Filename, const char*candide3FacePath, const char* candide3VertPath, float zRotateInDegree,
+                  bool bUploadCandide3Vertices, vector<myvec3>& candide3Vec);
     
     void Render(GLuint textureObj);
     
     float getWidth() { return xMax-xMin;}
-    
-    void getCandide3Vertices(vector<myvec3>& vec) { _candide3.getCandide3Vertices(vec); }
 
 private:
-    bool InitFromScene(const aiScene* pScene, const std::string& Filename, float zRotateInDegree);
-    void InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDegree);
+    bool InitFromScene(const aiScene* pScene, const std::string& Filename, float zRotateInDegree, float widthRatio);
+    void InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDegree, float widthRatio);
     bool InitMaterials(const aiScene* pScene, const std::string& Filename);
     void Clear();
-    bool loadCandide3(const char*candide3FacePath, const char* candide3VertPath, float zRotateInDegree);
+    
+    int getMeshWidthInfo(const aiScene* pScene, const std::string& Filename);
     
 #define INVALID_OGL_VALUE 0xFFFFFFFF
 #define INVALID_MATERIAL 0xFFFFFFFF

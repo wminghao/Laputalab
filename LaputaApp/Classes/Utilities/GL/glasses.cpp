@@ -19,16 +19,6 @@ const int FOCAL = 500;
 Glasses::Glasses(int srcWidth, int srcHeight):_srcWidth(srcWidth), _srcHeight(srcHeight)
 {
     _pMesh = new Mesh();
-    float fWidth = (float)_srcWidth;
-    float fHeight = (float)_srcHeight;
-    float fFocal = (float)FOCAL;
-    
-    float coord[16] = { fWidth/2, 0, 0, 0,
-                        0, fHeight/2, 0, 0,
-                        0, 0, FOCAL/2, 0,
-                        fWidth/2, fHeight/2, FOCAL/2, 1};
-    _mapMat = glm::make_mat4(coord);
-    _mapMatInv = glm::inverse(_mapMat);
 }
 
 Glasses::~Glasses()
@@ -37,27 +27,31 @@ Glasses::~Glasses()
     delete(_pMesh);
 }
 
-void Glasses::getInitMat(mat4& initMat, mat4& rotTransMat) {
-    initMat = _mapMat * _initMVP;
+void Glasses::setMatrices(mat4& projectMat, mat4& rotTransMat) {
+    _Projection = projectMat;
     
-    rotTransMat = _rotTrans;
-}
-
-void Glasses::getCandide3Vertices(vector<myvec3>& vec) {
-    _pMesh->getCandide3Vertices(vec);
-}
-
-void Glasses::setRotTransMat(mat4 rotTransMat){
-    //assert( rotTransMat == _rotTrans);
-    
-    _World = rotTransMat * _scaling;
+    _World = rotTransMat;
+    _View       = lookAt(vec3(0,0,0.01), // Camera is at (0, 0, 0.01), in World Space
+                         vec3(0,0,0), // and looks at the origin
+                         vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+                        );
+    _ViewInverse = inverse(_View);
     _curMVP = _Projection * _View * _World;
-}
-
-mat4 Glasses::getMat(mat4& rotTransMat)
-{
-    mat4 mvp =  _mapMat * _Projection * _View * rotTransMat * _scaling;
-    return mvp;
+    /*
+    //Test
+    glm::vec4 coord = {-10, 0, 50, 1};
+    
+    glm::vec4 resTemp = _curMVP * coord;
+    glm::vec3 res = {resTemp.x/resTemp.w, resTemp.y/resTemp.w, resTemp.y/resTemp.w};
+    
+    glm::vec4 coord2 = { -6.45, -55.44, -21.75, 1};
+    resTemp = _curMVP * coord2;
+    glm::vec3 res2 = {resTemp.x/resTemp.w, resTemp.y/resTemp.w, resTemp.y/resTemp.w};
+    
+    glm::vec4 coord3 = { 15, -10, 6, 1};
+    resTemp = _curMVP * coord3;
+    glm::vec3 res3 = {resTemp.x/resTemp.w, resTemp.y/resTemp.w, resTemp.y/resTemp.w};
+    */
 }
 
 bool Glasses::init(const char* vertLFilePath,
@@ -66,12 +60,15 @@ bool Glasses::init(const char* vertLFilePath,
                    const char* glassesFilePath,
                    const char* candide3FacePath,
                    const char* candide3VertPath,
-                   float zRotateInDegree, ASPECT_RATIO ratio)
+                   float zRotateInDegree, ASPECT_RATIO ratio,
+                   bool bUploadCandide3Vertices, vector<myvec3>& candide3Vec)
 {
     bool ret = false;
     
     char* vertLSrc = readAllocFile(vertLFilePath);
     char* fragLSrc = readAllocFile(fragLFilePath);
+    
+    _zRotationInDegree = zRotateInDegree;
     
     /////////////////////
     // offscreen buffer
@@ -194,7 +191,7 @@ bool Glasses::init(const char* vertLFilePath,
         ////////////////////////
         //Load model with ASSIMP
         ////////////////////////
-        _pMesh->LoadMesh(glassesFilePath, candide3FacePath, candide3VertPath, zRotateInDegree);
+        _pMesh->LoadMesh(glassesFilePath, candide3FacePath, candide3VertPath, zRotateInDegree, bUploadCandide3Vertices, candide3Vec);
         
         ////////////////////////
         //Set the matrices
@@ -210,40 +207,40 @@ bool Glasses::init(const char* vertLFilePath,
         }
         
         // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-        //mat4 Projection = perspective(radians(45.0f), ratioW/ratioH, 0.5f, 100.0f); //for portrait mode, front/back camera, is: 16:9
+        mat4 Projection = perspective(radians(45.0f), ratioW/ratioH, 0.1f, 100.0f); //for portrait mode, front/back camera, is: 16:9
         // Or, for an ortho camera :
-        mat4 Projection = ortho(-ratioW/2,ratioW/2,-ratioH/2,ratioH/2,0.0f,100.0f); // In world coordinates, x/y =16/9 ratio, far-near is big enough
+        //mat4 Projection = ortho(-ratioW/2,ratioW/2,-ratioH/2,ratioH/2,0.0f,100.0f); // In world coordinates, x/y =16/9 ratio, far-near is big enough
         
         // Camera matrix
         mat4 View       = lookAt(vec3(0,0,10), // Camera is at (0, 0, 10), in World Space
                                  vec3(0,0,0), // and looks at the origin
                                  vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
                                  );
-        // Model matrix : an identity matrix (model will be at the origin)
-        float scaleFactor = ((zRotateInDegree == 90)?ratioH * 0.7:ratioW * 0.33)/_pMesh->getWidth(); //put the object width the same as portaint mode 9:16
+        
         //mat4 Model      = mat4(1.0f);
         mat4 Model_translation = translate(mat4(1.0f), vec3(0,0,0));
         
         mat4 Model_rotateZ = rotate(mat4(1.0f), radians(zRotateInDegree), vec3(0,0,1)); //rotate z of 90 degree
         mat4 Model_rotateX = rotate(mat4(1.0f), radians(0.0f), vec3(1,0,0)); //rotate x of 0 degree
         
+        // Model matrix : an identity matrix (model will be at the origin)
+        float scaleFactor = ((zRotateInDegree == 90)?ratioH * 0.7:ratioW * 1/3)/_pMesh->getWidth(); //put the object width the same as portaint mode 9:16
         mat4 Model_scale = scale(mat4(1.0f), vec3(scaleFactor,scaleFactor,scaleFactor));
         
-        mat4 Model = Model_translation * Model_rotateZ * Model_rotateX * Model_scale;
+        _World = Model_translation * Model_rotateZ * Model_rotateX * Model_scale;
+        _scaling = Model_scale;
         
         _rotTrans = Model_translation * Model_rotateZ * Model_rotateX;
-        _scaling = Model_scale;
         
         _ViewInverse = inverse(View); //inverse of the view matrix
         //_NormalMatrix = transpose(inverse(mat3(Model)));
-        _World = Model; //world coordinate.
         _View = View;
         
         // Our ModelViewProjection : multiplication of our 3 matrices
         // Remember, matrix multiplication is the other way around
         _Projection = Projection;
         
-        _initMVP = _curMVP = _Projection * _View * _World;
+        _curMVP = _Projection * _View * _World;
 
         ret = true;
     }

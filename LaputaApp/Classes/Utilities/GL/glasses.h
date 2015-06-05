@@ -59,17 +59,13 @@ public:
               const char* glassesFilePath,
               const char* candide3FacePath,
               const char* candide3VertPath,
-              float zRotateInDegree, ASPECT_RATIO ratio);
+              float zRotateInDegree, ASPECT_RATIO ratio,
+              bool bUploadCandide3Vertices, vector<myvec3>& candide3Vec);
     
     bool render(GLuint dstTextureName, GLuint candide3Texture);
     
-    void getInitMat(mat4& initMat, mat4& rotTransMat);
-    void getCandide3Vertices(vector<myvec3>& vec);
-    
-    void setRotTransMat(mat4 rotTransMat);
+    void setMatrices(mat4& projectMat, mat4& rotTransMat);
 
-    mat4 getMat(mat4& rotTransMat);
-    
 #ifdef DESKTOP_MAC
     void readPixels(unsigned char* pixels);
     void blitToScreen();
@@ -97,15 +93,12 @@ private:
     int _srcWidth;
     int _srcHeight;
     
-    //initial
-    mat4 _initMVP;
-    mat4 _curMVP;
-    mat4 _rotTrans; //rotate translation matrix
-    mat4 _scaling; //scaling matrix
+    int _zRotationInDegree;
     
-    //convert from [-1, 1] to [srcWidth, srcHeight]
-    mat4 _mapMat;
-    mat4 _mapMatInv;
+    //initial
+    mat4 _curMVP;
+    mat4 _scaling; //scaling matrix
+    mat4 _rotTrans;
     
 #ifdef DESKTOP_MAC
     //input framebuffer

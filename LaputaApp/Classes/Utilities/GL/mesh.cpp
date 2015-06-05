@@ -26,6 +26,14 @@
 #include "color.h"
 #include "err.h"
 
+const float DELTA_IN_FRONT_OF_CANDIDE3 = 14.0; //delta face behind the glasses
+
+#ifdef DESKTOP_MAC
+const float DELTA_BIGGER_THAN_CANDIDE3 = 1.0; //delta face width smaller than glasses
+#else
+const float DELTA_BIGGER_THAN_CANDIDE3 = -5.0; //delta face width smaller than glasses
+#endif
+
 Mesh::MeshEntry::MeshEntry()
 {
     VB = INVALID_OGL_VALUE;
@@ -86,37 +94,45 @@ void Mesh::Clear()
 }
 
 
-bool Mesh::LoadMesh(const std::string& Filename, const char*candide3FacePath, const char* candide3VertPath, float zRotateInDegree)
+bool Mesh::LoadMesh(const std::string& Filename, const char*candide3FacePath, const char* candide3VertPath, float zRotateInDegree,
+                    bool bUploadCandide3Vertices, vector<myvec3>& candide3Vec)
 {
     // Release the previously loaded mesh (if it exists)
     Clear();
     
     bool ret = false;
     Assimp::Importer Importer;
-
+    
+    float widthRatio; //width ratio from candide3 to glasses
     const aiScene* pScene = Importer.ReadFile(Filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
     if (pScene) {
-        ret = InitFromScene(pScene, Filename, zRotateInDegree);
+        if( bUploadCandide3Vertices ) {
+            float candide3Width = _candide3.setCandide3Vertices(candide3Vec, zRotateInDegree);
+            getMeshWidthInfo(pScene, Filename);
+            widthRatio = (candide3Width + DELTA_BIGGER_THAN_CANDIDE3)/getWidth(); //glasses is a little bigger than candid3
+        } else {
+            widthRatio = 1;
+        }
+        ret = InitFromScene(pScene, Filename, zRotateInDegree, widthRatio);
     } else {
         printf("Error parsing '%s': '%s'\n", Filename.c_str(), Importer.GetErrorString());
     }
-
-    return ret?loadCandide3(candide3FacePath, candide3VertPath, zRotateInDegree):false;
-}
-
-bool Mesh::loadCandide3(const char*candide3FacePath, const char* candide3VertPath, float zRotateInDegree) {
     
     ////////////////////////
     //Load candide3
     ////////////////////////
     string candide3FaceP = candide3FacePath;
     _candide3.readFaces(candide3FaceP);
-    string candide3VertP = candide3VertPath;
-    _candide3.readVertices(candide3VertP, getWidth(), zRotateInDegree);
-    return true;
+    if( !bUploadCandide3Vertices ) {
+        
+        string candide3VertP = candide3VertPath;
+        _candide3.readVertices(candide3VertP, getWidth(), zRotateInDegree);
+    }
+    
+    return ret;
 }
 
-bool Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename, float zRotateInDegree)
+bool Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename, float zRotateInDegree, float widthRatio)
 {  
     m_Entries.resize(pScene->mNumMeshes);
     m_Materials.resize(pScene->mNumMaterials);
@@ -124,7 +140,7 @@ bool Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename, flo
     // Initialize the meshes in the scene one by one
     for (unsigned int i = 0 ; i < m_Entries.size() ; i++) {
         const aiMesh* paiMesh = pScene->mMeshes[i];
-        InitMesh(i, paiMesh, zRotateInDegree);
+        InitMesh(i, paiMesh, zRotateInDegree, widthRatio);
     }
     
 #ifdef DESKTOP_MAC
@@ -138,7 +154,7 @@ bool Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename, flo
     return InitMaterials(pScene, Filename);
 }
 
-void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDegree)
+void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDegree, float widthRatio)
 {
     m_Entries[Index].MaterialIndex = paiMesh->mMaterialIndex;
     
@@ -155,33 +171,38 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDe
         yFloatUp = 10;
     }
     
+    float deltaInFrontOfCandide3 = 0;
+    if( widthRatio > 0) {
+        deltaInFrontOfCandide3 = DELTA_IN_FRONT_OF_CANDIDE3;
+    }
+    
     for (unsigned int i = 0 ; i < paiMesh->mNumVertices ; i++) {
         const aiVector3D* pPos      = &(paiMesh->mVertices[i]);
         const aiVector3D* pNormal   = &(paiMesh->mNormals[i]);
         const aiVector3D* pTexCoord = paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
 
-        Vertex v(Vector3f(pPos->x, pPos->y+yFloatUp, pPos->z),
+        Vertex v(Vector3f(pPos->x * widthRatio, (pPos->y+yFloatUp) * widthRatio, (pPos->z + deltaInFrontOfCandide3) * widthRatio),
                  Vector2f(pTexCoord->x, pTexCoord->y),
                  Vector3f(pNormal->x, pNormal->y, pNormal->z));
 
-        if( pPos->x > xMax ) {
-            xMax = pPos->x;
+        if( pPos->x * widthRatio > xMax ) {
+            xMax = pPos->x * widthRatio;
         }
-        if( pPos->y > yMax ) {
-            yMax = pPos->y;
+        if( (pPos->y+yFloatUp) * widthRatio > yMax ) {
+            yMax = (pPos->y+yFloatUp)* widthRatio;
         }
-        if( pPos->z > zMax ) {
-            zMax = pPos->z;
+        if( pPos->z * widthRatio > zMax ) {
+            zMax = pPos->z * widthRatio;
         }
         
-        if( pPos->x < xMin ) {
-            xMin = pPos->x;
+        if( pPos->x * widthRatio < xMin ) {
+            xMin = pPos->x * widthRatio;
         }
-        if( pPos->y < yMin ) {
-            yMin = pPos->y;
+        if( (pPos->y+yFloatUp) * widthRatio< yMin ) {
+            yMin = (pPos->y+yFloatUp) * widthRatio;
         }
-        if( pPos->z < zMin ) {
-            zMin = pPos->z;
+        if( pPos->z * widthRatio < zMin ) {
+            zMin = pPos->z * widthRatio;
         }
 
         Vertices.push_back(v);
@@ -320,7 +341,6 @@ void Mesh::Render(GLuint textureObj)
     glEnableVertexAttribArray(m_normalLocation);
     
     //first render invisible candide3
-    
 #ifdef DESKTOP_MAC
     glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 #endif
@@ -390,4 +410,38 @@ void Mesh::Render(GLuint textureObj)
     glDisableVertexAttribArray(m_texCoordLocation);
     glDisableVertexAttribArray(m_normalLocation);
     
+}
+
+int Mesh::getMeshWidthInfo(const aiScene* pScene, const std::string& Filename)
+{
+    // Initialize the meshes in the scene one by one
+    for (unsigned int i = 0 ; i < pScene->mNumMeshes ; i++) {
+        const aiMesh* paiMesh = pScene->mMeshes[i];
+        
+        for (unsigned int i = 0 ; i < paiMesh->mNumVertices ; i++) {
+            const aiVector3D* pPos      = &(paiMesh->mVertices[i]);
+            
+            if( pPos->x > xMax ) {
+                xMax = pPos->x;
+            }
+            if( pPos->y > yMax ) {
+                yMax = pPos->y;
+            }
+            if( pPos->z > zMax ) {
+                zMax = pPos->z;
+            }
+            
+            if( pPos->x < xMin ) {
+                xMin = pPos->x;
+            }
+            if( pPos->y < yMin ) {
+                yMin = pPos->y;
+            }
+            if( pPos->z < zMin ) {
+                zMin = pPos->z;
+            }
+        }
+    }
+    printf("Glasses width:%.2f\r\n", (xMax-xMin));
+    return 1;
 }
