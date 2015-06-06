@@ -33,7 +33,7 @@ enum {
     UNIFORM_MVP, // "MVP" in vertext shader
     UNIFORM_WORLD, // "gWorld" in vertext shader
     UNIFORM_VIEWINVERSE, // "viewInverse" in vertext shader
-    //UNIFORM_NORMALMATRIX, // "NormalMatrix" in vertext shader
+    UNIFORM_NORMALMATRIX, // "NormalMatrix" in vertext shader
     UNIFORM_TEXCOUNT,
     UNIFORM_DIFFUSECOLOR,
     UNIFORM_AMBIENTCOLOR,
@@ -85,7 +85,7 @@ private:
     mat4 _Projection; //projection matrix matrix for rotation
     mat4 _World; //world matrix for rotation
     mat4 _View; //view matrix for rotation
-    //mat3 _NormalMatrix; //normal Matrix matrix
+    mat3 _NormalMatrix; //normal Matrix matrix
     mat4 _ViewInverse; //view inverse matrix matrix for rotation
     GLuint _offscreenBufferHandle; //offscreen buffer
     GLuint _depthRenderbuffer; //depth render buffer
@@ -94,11 +94,6 @@ private:
     int _srcHeight;
     
     int _zRotationInDegree;
-    
-    //initial
-    mat4 _curMVP;
-    mat4 _scaling; //scaling matrix
-    mat4 _rotTrans;
     
 #ifdef DESKTOP_MAC
     //input framebuffer

@@ -125,7 +125,7 @@ bool Candide3::readVertices(string& vertexFile, float glassesWidth, float zRotat
     ifs.close();
     
     //adjust the sape
-    adjustShape(NULL, 0, shapeFactor, 1.0, 1.0, 1.0);
+    //adjustShape(NULL, 0, shapeFactor, 1.0, 1.0, 1.0);
     
     cout << "Total vertices: " << vertices.size() <<endl;
     
@@ -149,7 +149,7 @@ float Candide3::setCandide3Vertices(vector<myvec3>& vec, float zRotateInDegree)
     vertices.resize(total);
     for (int i = 0; i < total ; i++){
         vertices[i].m_pos.x = vec[i].x;
-        vertices[i].m_pos.y = -vec[i].y; //it's up side down, TODO
+        vertices[i].m_pos.y = -vec[i].y; //it's up side down
         vertices[i].m_pos.z = vec[i].z;
         
         if( vec[i].x > xMax ) {
@@ -196,10 +196,9 @@ float Candide3::setCandide3Vertices(vector<myvec3>& vec, float zRotateInDegree)
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
     return width;
 }
-
+/*
 void Candide3::adjustShape(const char**shapeUnitFile, int totalShapeUnits, const float shapeUnits[], float xScale, float yScale, float zScale) //To be optimized
 {
-    //TODO for now.
     const char * shapeUnitFiles[SHAPEUNITS] = {
         "/Users/howard/AR_lib/LaputaDesktop2/VET/facemodel/headheight_16.wfm",
         "/Users/howard/AR_lib/LaputaDesktop2/VET/facemodel/eyebrowsvertical_8.wfm",
@@ -248,6 +247,7 @@ void Candide3::adjustShape(const char**shapeUnitFile, int totalShapeUnits, const
     
     return;
 }
+*/
 
 void Candide3::render(GLuint textureObj)
 {

@@ -14,7 +14,6 @@
 
 //TODO aa does not work in the code.
 const int AA_LEVEL = 4; //4 is normal, 0 means no AA
-const int FOCAL = 500;
 
 Glasses::Glasses(int srcWidth, int srcHeight):_srcWidth(srcWidth), _srcHeight(srcHeight)
 {
@@ -31,25 +30,26 @@ void Glasses::setMatrices(mat4& projectMat, mat4& rotTransMat) {
     _Projection = projectMat;
     
     _World = rotTransMat;
+    _NormalMatrix = transpose(inverse(mat3(_World))); //remove translation
     _View       = lookAt(vec3(0,0,0.01), // Camera is at (0, 0, 0.01), in World Space
                          vec3(0,0,0), // and looks at the origin
                          vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
                         );
     _ViewInverse = inverse(_View);
-    _curMVP = _Projection * _View * _World;
     /*
+     glm::mat4 curMVP = _Projection * _View * _World;
     //Test
     glm::vec4 coord = {-10, 0, 50, 1};
     
-    glm::vec4 resTemp = _curMVP * coord;
+    glm::vec4 resTemp = curMVP * coord;
     glm::vec3 res = {resTemp.x/resTemp.w, resTemp.y/resTemp.w, resTemp.y/resTemp.w};
     
     glm::vec4 coord2 = { -6.45, -55.44, -21.75, 1};
-    resTemp = _curMVP * coord2;
+    resTemp = curMVP * coord2;
     glm::vec3 res2 = {resTemp.x/resTemp.w, resTemp.y/resTemp.w, resTemp.y/resTemp.w};
     
     glm::vec4 coord3 = { 15, -10, 6, 1};
-    resTemp = _curMVP * coord3;
+    resTemp = curMVP * coord3;
     glm::vec3 res3 = {resTemp.x/resTemp.w, resTemp.y/resTemp.w, resTemp.y/resTemp.w};
     */
 }
@@ -164,7 +164,7 @@ bool Glasses::init(const char* vertLFilePath,
         (GLchar *)"MVP",
         (GLchar *)"World",
         (GLchar *)"ViewInverse",
-        //(GLchar *)"NormalMatrix",
+        (GLchar *)"NormalMatrix",
         (GLchar *)"texCount",
         (GLchar *)"diffuseColor",
         (GLchar *)"ambientColor",
@@ -182,7 +182,7 @@ bool Glasses::init(const char* vertLFilePath,
         _matrixMVP = uniformLocation[UNIFORM_MVP];
         _matrixWorld = uniformLocation[UNIFORM_WORLD];
         _matrixViewInverse = uniformLocation[UNIFORM_VIEWINVERSE];
-        //_matrixNormalMatrix = uniformLocation[UNIFORM_NORMALMATRIX];
+        _matrixNormalMatrix = uniformLocation[UNIFORM_NORMALMATRIX];
         
         _pMesh->setAttrUni(uniformLocation[UNIFORM_TEXCOUNT], uniformLocation[UNIFORM_DIFFUSECOLOR], uniformLocation[UNIFORM_AMBIENTCOLOR],
                            uniformLocation[UNIFORM_TEXTUREIMAGE], uniformLocation[UNIFORM_ENVMAP],
@@ -228,19 +228,14 @@ bool Glasses::init(const char* vertLFilePath,
         mat4 Model_scale = scale(mat4(1.0f), vec3(scaleFactor,scaleFactor,scaleFactor));
         
         _World = Model_translation * Model_rotateZ * Model_rotateX * Model_scale;
-        _scaling = Model_scale;
-        
-        _rotTrans = Model_translation * Model_rotateZ * Model_rotateX;
         
         _ViewInverse = inverse(View); //inverse of the view matrix
-        //_NormalMatrix = transpose(inverse(mat3(Model)));
+        _NormalMatrix = transpose(inverse(mat3(_World))); //rotation and scaling, w/o translation
         _View = View;
         
         // Our ModelViewProjection : multiplication of our 3 matrices
         // Remember, matrix multiplication is the other way around
         _Projection = Projection;
-        
-        _curMVP = _Projection * _View * _World;
 
         ret = true;
     }
@@ -362,10 +357,11 @@ bool Glasses::render(GLuint dstTextureName, GLuint candide3Texture)
         if( framebufferStatus == GL_FRAMEBUFFER_COMPLETE ) {
             glUseProgram( _programID );
             
-            glUniformMatrix4fv(_matrixMVP, 1, GL_FALSE, &_curMVP[0][0]);
+            mat4 curMVP = _Projection * _View * _World;
+            glUniformMatrix4fv(_matrixMVP, 1, GL_FALSE, &curMVP[0][0]);
             glUniformMatrix4fv(_matrixWorld, 1, GL_FALSE, &_World[0][0]);
             glUniformMatrix4fv(_matrixViewInverse, 1, GL_FALSE, &_ViewInverse[0][0]);
-            //glUniformMatrix4fv(_matrixNormalMatrix, 1, GL_FALSE, &_NormalMatrix[0][0]);
+            glUniformMatrix4fv(_matrixNormalMatrix, 1, GL_FALSE, &_NormalMatrix[0][0]);
             
             //render the meshes
             _pMesh->Render(candide3Texture);

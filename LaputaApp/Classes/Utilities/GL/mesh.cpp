@@ -26,12 +26,12 @@
 #include "color.h"
 #include "err.h"
 
-const float DELTA_IN_FRONT_OF_CANDIDE3 = 14.0; //delta face behind the glasses
+const float DELTA_IN_FRONT_OF_CANDIDE3 = 15.0; //delta face behind the glasses
 
 #ifdef DESKTOP_MAC
-const float DELTA_BIGGER_THAN_CANDIDE3 = 1.0; //delta face width smaller than glasses
+const float DELTA_BIGGER_THAN_CANDIDE3 = 1.05; //delta face width smaller than glasses
 #else
-const float DELTA_BIGGER_THAN_CANDIDE3 = -5.0; //delta face width smaller than glasses
+const float DELTA_BIGGER_THAN_CANDIDE3 = -1.05; //delta face width smaller than glasses
 #endif
 
 Mesh::MeshEntry::MeshEntry()
@@ -109,7 +109,7 @@ bool Mesh::LoadMesh(const std::string& Filename, const char*candide3FacePath, co
         if( bUploadCandide3Vertices ) {
             float candide3Width = _candide3.setCandide3Vertices(candide3Vec, zRotateInDegree);
             getMeshWidthInfo(pScene, Filename);
-            widthRatio = (candide3Width + DELTA_BIGGER_THAN_CANDIDE3)/getWidth(); //glasses is a little bigger than candid3
+            widthRatio = (candide3Width * DELTA_BIGGER_THAN_CANDIDE3)/getWidth(); //glasses is a little bigger than candid3
         } else {
             widthRatio = 1;
         }
@@ -166,9 +166,9 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDe
     printf("Mesh Index=%d, Material Index='%d', vertices=%d, mNumFaces=%d\n", Index,
            paiMesh->mMaterialIndex, paiMesh->mNumVertices, paiMesh->mNumFaces);
 
-    int yFloatUp = 5;
+    int yFloatUp = 8;
     if( zRotateInDegree == 90 ) {
-        yFloatUp = 10;
+        yFloatUp = 15;
     }
     
     float deltaInFrontOfCandide3 = 0;
