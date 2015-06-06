@@ -184,7 +184,8 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDe
         Vertex v(Vector3f(pPos->x * widthRatio, (pPos->y+yFloatUp) * widthRatio, (pPos->z + deltaInFrontOfCandide3) * widthRatio),
                  Vector2f(pTexCoord->x, pTexCoord->y),
                  Vector3f(pNormal->x, pNormal->y, pNormal->z));
-
+        
+        printf("Mesh vertice x=%.2f, y=%.2f, z=%.2f\r\n", v.m_pos.x, v.m_pos.y, v.m_pos.z);
         printf("Mesh normal x=%.2f, y=%.2f, z=%.2f\r\n", pNormal->x, pNormal->y, pNormal->z);
         
         if( pPos->x * widthRatio > xMax ) {

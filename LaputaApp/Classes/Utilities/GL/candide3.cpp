@@ -159,11 +159,11 @@ float Candide3::setCandide3Vertices(vector<myvec3>* vec, float zRotateInDegree)
         if( vert.x < xMin ) {
             xMin = vert.x;
         }
-        if( vert.y > yMax ) {
-            yMax = vert.y;
+        if( vertices[i].m_pos.y > yMax ) {
+            yMax = vertices[i].m_pos.y;
         }
-        if( vert.y < yMin ) {
-            yMin = vert.y;
+        if( vertices[i].m_pos.y < yMin ) {
+            yMin = vertices[i].m_pos.y;
         }
         if( vert.z > zMax ) {
             zMax = vert.z;
@@ -189,7 +189,7 @@ float Candide3::setCandide3Vertices(vector<myvec3>* vec, float zRotateInDegree)
             vertices[i].m_tex.x = (vertices[i].m_pos.x/width+1)/2;
             vertices[i].m_tex.y = (vertices[i].m_pos.y/width+1)/2;
         }
-        cout << "vert_tex "<<i<<" : "<<vertices[i].m_tex.x << " " << vertices[i].m_tex.y<<endl;
+        cout << "candide3 vert_tex "<<i<<" : "<<vertices[i].m_tex.x << " " << vertices[i].m_tex.y<<endl;
     }
     
     glGenBuffers(1, &VB);

@@ -38,6 +38,7 @@ void Glasses::setMatrices(mat4& projectMat, mat4& rotTransMat) {
                         );
     _ViewInverse = inverse(_View);
     
+    /*
     glm::mat4 curMVP = _Projection * _View * _World;
     //Test
     glm::vec4 coord = {-10, 0, 50, 1};
@@ -60,6 +61,7 @@ void Glasses::setMatrices(mat4& projectMat, mat4& rotTransMat) {
     glm::vec4 coord3 = { 15, -10, 6, 1};
     resTemp = curMVP * coord3;
     glm::vec3 res3 = {resTemp.x/resTemp.w, resTemp.y/resTemp.w, resTemp.y/resTemp.w};
+    */
 }
 
 bool Glasses::init(const char* vertLFilePath,
@@ -365,7 +367,7 @@ bool Glasses::render(GLuint dstTextureName, GLuint candide3Texture, bool shouldR
         if( framebufferStatus == GL_FRAMEBUFFER_COMPLETE ) {
             glUseProgram( _programID );
             
-        #if !defined(DESKTOP)
+        #if !defined(DESKTOP_MAC)
             //TODO below is the test code to transformation
             static float angleInDegree = 0.0f;
             static int sign = -1;
@@ -375,9 +377,21 @@ bool Glasses::render(GLuint dstTextureName, GLuint candide3Texture, bool shouldR
                 sign = 1;
             }
             angleInDegree += sign;
-            mat4 curMat;
+            
+            float ratioW = 12;
+            float ratioH = 9;
+            mat4 Model_rotateX = rotate(mat4(1.0f), radians(10.0f), vec3(1,0,0)); //rotate x of 10 degree
+            mat4 Model_rotateY = rotate(mat4(1.0f), radians(angleInDegree), vec3(0,1,0)); //rotate x of 10 degree
+            mat4 Model_rotateZ = rotate(mat4(1.0f), radians((float)_zRotationInDegree), vec3(0,0,1)); //rotate z of 90 degree
+            
+            // Model matrix : an identity matrix (model will be at the origin)
+            float scaleFactor = ((_zRotationInDegree == 90)?ratioH * 0.7:ratioW * 1/3)/_pMesh->getWidth(); //put the object width the same as portaint mode 9:16
+            mat4 Model_scale = scale(mat4(1.0f), vec3(scaleFactor,scaleFactor,scaleFactor));
+            
             if( shouldRotate ) {
-                _World = rotate(_World, radians(angleInDegree), vec3(0,1,0)); //matrix for rotation on y axis
+                _World = Model_rotateZ * Model_rotateX * Model_rotateY * Model_scale;
+            } else {
+                _World = Model_rotateZ * Model_rotateX * Model_scale;
             }
         #endif
             
