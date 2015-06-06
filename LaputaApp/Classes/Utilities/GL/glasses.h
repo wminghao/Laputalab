@@ -60,9 +60,9 @@ public:
               const char* candide3FacePath,
               const char* candide3VertPath,
               float zRotateInDegree, ASPECT_RATIO ratio,
-              bool bUploadCandide3Vertices, vector<myvec3>& candide3Vec);
+              bool bUploadCandide3Vertices, vector<myvec3>* candide3Vec);
     
-    bool render(GLuint dstTextureName, GLuint candide3Texture);
+    bool render(GLuint dstTextureName, GLuint candide3Texture, bool shouldRotate);
     
     void setMatrices(mat4& projectMat, mat4& rotTransMat);
 

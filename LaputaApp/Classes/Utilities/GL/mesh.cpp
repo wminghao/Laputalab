@@ -26,10 +26,10 @@
 #include "color.h"
 #include "err.h"
 
-const float DELTA_IN_FRONT_OF_CANDIDE3 = 15.0; //delta face behind the glasses
+const float DELTA_IN_FRONT_OF_CANDIDE3 = 12.0; //delta face behind the glasses
 
 #ifdef DESKTOP_MAC
-const float DELTA_BIGGER_THAN_CANDIDE3 = 1.05; //delta face width smaller than glasses
+const float DELTA_BIGGER_THAN_CANDIDE3 = 1.10; //delta face width smaller than glasses
 #else
 const float DELTA_BIGGER_THAN_CANDIDE3 = -1.05; //delta face width smaller than glasses
 #endif
@@ -95,7 +95,7 @@ void Mesh::Clear()
 
 
 bool Mesh::LoadMesh(const std::string& Filename, const char*candide3FacePath, const char* candide3VertPath, float zRotateInDegree,
-                    bool bUploadCandide3Vertices, vector<myvec3>& candide3Vec)
+                    bool bUploadCandide3Vertices, vector<myvec3>* candide3Vec)
 {
     // Release the previously loaded mesh (if it exists)
     Clear();
@@ -185,6 +185,8 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDe
                  Vector2f(pTexCoord->x, pTexCoord->y),
                  Vector3f(pNormal->x, pNormal->y, pNormal->z));
 
+        printf("Mesh normal x=%.2f, y=%.2f, z=%.2f\r\n", pNormal->x, pNormal->y, pNormal->z);
+        
         if( pPos->x * widthRatio > xMax ) {
             xMax = pPos->x * widthRatio;
         }

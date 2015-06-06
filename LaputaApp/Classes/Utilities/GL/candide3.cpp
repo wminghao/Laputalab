@@ -137,7 +137,7 @@ bool Candide3::readVertices(string& vertexFile, float glassesWidth, float zRotat
 }
 
 //set the candide3 vertices from
-float Candide3::setCandide3Vertices(vector<myvec3>& vec, float zRotateInDegree)
+float Candide3::setCandide3Vertices(vector<myvec3>* vec, float zRotateInDegree)
 {
     float xMin = 0;
     float xMax = 0;
@@ -145,30 +145,31 @@ float Candide3::setCandide3Vertices(vector<myvec3>& vec, float zRotateInDegree)
     float yMax = 0;
     float zMin = 0;
     float zMax = 0;
-    size_t total = vec.size();
+    size_t total = vec->size();
     vertices.resize(total);
     for (int i = 0; i < total ; i++){
-        vertices[i].m_pos.x = vec[i].x;
-        vertices[i].m_pos.y = -vec[i].y; //it's up side down
-        vertices[i].m_pos.z = vec[i].z;
+        myvec3 vert = (*vec)[i];
+        vertices[i].m_pos.x = vert.x;
+        vertices[i].m_pos.y = -vert.y; //it's up side down
+        vertices[i].m_pos.z = vert.z;
         
-        if( vec[i].x > xMax ) {
-            xMax = vec[i].x;
+        if( vert.x > xMax ) {
+            xMax = vert.x;
         }
-        if( vec[i].x < xMin ) {
-            xMin = vec[i].x;
+        if( vert.x < xMin ) {
+            xMin = vert.x;
         }
-        if( vec[i].y > yMax ) {
-            yMax = vec[i].y;
+        if( vert.y > yMax ) {
+            yMax = vert.y;
         }
-        if( vec[i].y < yMin ) {
-            yMin = vec[i].y;
+        if( vert.y < yMin ) {
+            yMin = vert.y;
         }
-        if( vec[i].z > zMax ) {
-            zMax = vec[i].z;
+        if( vert.z > zMax ) {
+            zMax = vert.z;
         }
-        if( vec[i].z < zMin ) {
-            zMin = vec[i].z;
+        if( vert.z < zMin ) {
+            zMin = vert.z;
         }
         cout << "vert "<<i<<" : "<<vertices[i].m_pos.x << " " << vertices[i].m_pos.y << " " << vertices[i].m_pos.z<<endl;
     }

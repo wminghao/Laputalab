@@ -29,15 +29,17 @@ Glasses::~Glasses()
 void Glasses::setMatrices(mat4& projectMat, mat4& rotTransMat) {
     _Projection = projectMat;
     
-    _World = rotTransMat;
+    mat4 Model_rotateX = rotate(mat4(1.0f), radians(10.0f), vec3(1,0,0)); //rotate x of 10 degree to align to nose
+    _World = rotTransMat * Model_rotateX;
     _NormalMatrix = transpose(inverse(mat3(_World))); //remove translation
     _View       = lookAt(vec3(0,0,0.01), // Camera is at (0, 0, 0.01), in World Space
                          vec3(0,0,0), // and looks at the origin
                          vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
                         );
     _ViewInverse = inverse(_View);
+    
     /*
-     glm::mat4 curMVP = _Projection * _View * _World;
+    glm::mat4 curMVP = _Projection * _View * _World;
     //Test
     glm::vec4 coord = {-10, 0, 50, 1};
     
@@ -47,6 +49,14 @@ void Glasses::setMatrices(mat4& projectMat, mat4& rotTransMat) {
     glm::vec4 coord2 = { -6.45, -55.44, -21.75, 1};
     resTemp = curMVP * coord2;
     glm::vec3 res2 = {resTemp.x/resTemp.w, resTemp.y/resTemp.w, resTemp.y/resTemp.w};
+    
+    glm::vec3 lightDir = vec3(0, 0, 0) - vec3(_World * coord2);
+    glm::vec3 lightDirWorld = normalize(lightDir);
+    
+    glm::vec3 normal ={ 0.04, 0.11, 0.99 };
+    glm::vec3 normalWord = normalize( _NormalMatrix * normal);
+    
+    float dotNL = dot(normalWord, lightDirWorld);
     
     glm::vec4 coord3 = { 15, -10, 6, 1};
     resTemp = curMVP * coord3;
@@ -61,7 +71,7 @@ bool Glasses::init(const char* vertLFilePath,
                    const char* candide3FacePath,
                    const char* candide3VertPath,
                    float zRotateInDegree, ASPECT_RATIO ratio,
-                   bool bUploadCandide3Vertices, vector<myvec3>& candide3Vec)
+                   bool bUploadCandide3Vertices, vector<myvec3>* candide3Vec)
 {
     bool ret = false;
     
@@ -221,7 +231,7 @@ bool Glasses::init(const char* vertLFilePath,
         mat4 Model_translation = translate(mat4(1.0f), vec3(0,0,0));
         
         mat4 Model_rotateZ = rotate(mat4(1.0f), radians(zRotateInDegree), vec3(0,0,1)); //rotate z of 90 degree
-        mat4 Model_rotateX = rotate(mat4(1.0f), radians(0.0f), vec3(1,0,0)); //rotate x of 0 degree
+        mat4 Model_rotateX = rotate(mat4(1.0f), radians(10.0f), vec3(1,0,0)); //rotate x of 10 degree
         
         // Model matrix : an identity matrix (model will be at the origin)
         float scaleFactor = ((zRotateInDegree == 90)?ratioH * 0.7:ratioW * 1/3)/_pMesh->getWidth(); //put the object width the same as portaint mode 9:16
@@ -293,7 +303,7 @@ void Glasses::deinit()
     }
 }
 
-bool Glasses::render(GLuint dstTextureName, GLuint candide3Texture)
+bool Glasses::render(GLuint dstTextureName, GLuint candide3Texture, bool shouldRotate)
 {
     bool ret = false;
     if ( _offscreenBufferHandle != 0 ) {
@@ -356,6 +366,22 @@ bool Glasses::render(GLuint dstTextureName, GLuint candide3Texture)
         GLenum framebufferStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
         if( framebufferStatus == GL_FRAMEBUFFER_COMPLETE ) {
             glUseProgram( _programID );
+            
+        #if !defined(DESKTOP)
+            //TODO below is the test code to transformation
+            static float angleInDegree = 0.0f;
+            static int sign = -1;
+            if(angleInDegree >= 60) {
+                sign = -1;
+            } else if(angleInDegree <= -60) {
+                sign = 1;
+            }
+            angleInDegree += sign;
+            mat4 curMat;
+            if( shouldRotate ) {
+                _World = rotate(_World, radians(angleInDegree), vec3(0,1,0)); //matrix for rotation on y axis
+            }
+        #endif
             
             mat4 curMVP = _Projection * _View * _World;
             glUniformMatrix4fv(_matrixMVP, 1, GL_FALSE, &curMVP[0][0]);

@@ -142,23 +142,6 @@ using namespace glm;
     
     //[cvAnalyzer_ processImage:dstPixelBuffer];
     
-    //TODO below is the test code to transformation
-    static float angleInDegree = 0.0f;
-    static int sign = -1;
-    if(angleInDegree >= 60) {
-        sign = -1;
-    } else if(angleInDegree <= -60) {
-        sign = 1;
-    }
-    angleInDegree += sign;
-    mat4 curMat;
-    if( !shouldRotate ) {
-        curMat = _initMat;
-    } else {
-        curMat = rotate(_initMat, radians(angleInDegree), vec3(0,1,0)); //matrix for rotation on y axis
-    }
-    glasses_->setRotTransMat(curMat);
-    
     if ( dstPixelBuffer == nil ) {
         @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"NULL pixel buffer" userInfo:nil];
         return NULL;
@@ -233,7 +216,7 @@ using namespace glm;
         NSLog( @"Error at CVOpenGLESTextureCacheCreateTextureFromImage %d", err );
     } else {
         assert(CVOpenGLESTextureGetTarget( dstTexture ) == GL_TEXTURE_2D);
-        if( !glasses_->render( CVOpenGLESTextureGetName( dstTexture ), _candide3Texture ) ) {
+        if( !glasses_->render( CVOpenGLESTextureGetName( dstTexture ), _candide3Texture, shouldRotate ) ) {
             NSLog( @"Error at glasses_.Render");
         }
     }
@@ -292,13 +275,12 @@ bail:
     NSString *candide3VerticesPath = [[NSBundle mainBundle] pathForResource:@"vertexlist_113" ofType:@"wfm"];
     if( !glasses_->init([vertLSrcPath UTF8String], [fragLSrcPath UTF8String], NULL,
                         [glassesFilePath UTF8String], [candide3FacePath UTF8String], [candide3VerticesPath UTF8String],
-                        90.0f, ASPECT_RATIO_16_9)) {
+                        90.0f, ASPECT_RATIO_16_9,
+                        NULL, NULL)) {
         NSLog( @"Problem initializing the _programIDL." );
         success = NO;
         [self cleanup:success oldContext:oldContext];
     }
-    mat4 tempMat;
-    glasses_->getInitMat(tempMat, _initMat);
     
     glGenTextures(1, &_candide3Texture);
     getGLErr("1");

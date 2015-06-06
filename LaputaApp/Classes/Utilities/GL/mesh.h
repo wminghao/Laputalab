@@ -64,7 +64,7 @@ public:
         _candide3.setAttrUni(texCountLocation, textureImageLocation, positionLocation, texCoordLocation, normalLocation);
     }
     bool LoadMesh(const std::string& Filename, const char*candide3FacePath, const char* candide3VertPath, float zRotateInDegree,
-                  bool bUploadCandide3Vertices, vector<myvec3>& candide3Vec);
+                  bool bUploadCandide3Vertices, vector<myvec3>* candide3Vec);
     
     void Render(GLuint textureObj);
     

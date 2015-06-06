@@ -39,7 +39,7 @@ public:
     
     void render(GLuint textureObj);
     
-    float setCandide3Vertices(vector<myvec3>& vec, float zRotateInDegree);
+    float setCandide3Vertices(vector<myvec3>* vec, float zRotateInDegree);
     
 private:    
    // void adjustShape(const char**shapeUnitFile, int totalShapeUnits, const float shapeUnits[], float xScale, float yScale, float zScale);
