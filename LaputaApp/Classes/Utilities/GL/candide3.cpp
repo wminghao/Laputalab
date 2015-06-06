@@ -171,7 +171,7 @@ float Candide3::setCandide3Vertices(vector<myvec3>* vec, float zRotateInDegree)
         if( vert.z < zMin ) {
             zMin = vert.z;
         }
-        cout << "vert "<<i<<" : "<<vertices[i].m_pos.x << " " << vertices[i].m_pos.y << " " << vertices[i].m_pos.z<<endl;
+        cout << "candide3 vert "<<i<<" : "<<vertices[i].m_pos.x << " " << vertices[i].m_pos.y << " " << vertices[i].m_pos.z<<endl;
     }
     float width = (xMax - xMin);
     cout<<"New xMax="<<xMax<<" xMin="<<xMin << " candide3 width = " << (xMax-xMin)<<endl;

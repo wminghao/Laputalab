@@ -38,7 +38,6 @@ void Glasses::setMatrices(mat4& projectMat, mat4& rotTransMat) {
                         );
     _ViewInverse = inverse(_View);
     
-    /*
     glm::mat4 curMVP = _Projection * _View * _World;
     //Test
     glm::vec4 coord = {-10, 0, 50, 1};
@@ -61,7 +60,6 @@ void Glasses::setMatrices(mat4& projectMat, mat4& rotTransMat) {
     glm::vec4 coord3 = { 15, -10, 6, 1};
     resTemp = curMVP * coord3;
     glm::vec3 res3 = {resTemp.x/resTemp.w, resTemp.y/resTemp.w, resTemp.y/resTemp.w};
-    */
 }
 
 bool Glasses::init(const char* vertLFilePath,
