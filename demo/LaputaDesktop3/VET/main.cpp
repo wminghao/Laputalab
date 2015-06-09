@@ -23,9 +23,9 @@ using namespace cv;
 //Facial Model Source File
 string vertexFile = "/Users/howard/AR/demo/LaputaDesktop3/VET/facemodel/vertexlist_113.wfm";
 string faceFile = "/Users/howard/AR/demo/LaputaDesktop3/VET/facemodel/facelist_184.wfm";
-const char* glassesFile = "/Users/howard/AR/LaputaApp/Resources/3dmodels/3dGlasses/RanGlasses2.obj";
-const char* glassesVsh = "/Users/howard/AR/demo/LaputaDesktop3/VET/3dGlasses/3dGlassesVertexShaderGL.vsh";
-const char* glassesFsh = "/Users/howard/AR/demo/LaputaDesktop3/VET/3dGlasses/3dGlassesFragmentShaderGL.fsh";
+const char* glassesFile = "/Users/howard/AR/LaputaApp/Resources/3dmodels/3dGlasses/purpleglasses2.obj";
+const char* glassesVsh = "/Users/howard/AR/demo/LaputaDesktop3/VET/3dGlasses/3dGlassesVertexShaderGL2.1.vsh";
+const char* glassesFsh = "/Users/howard/AR/demo/LaputaDesktop3/VET/3dGlasses/3dGlassesFragmentShaderGL2.1.fsh";
 const char* fragName = "outFrag";
 
 string videoFile = "./demo1.mov";
@@ -119,10 +119,10 @@ int main()
     if (!glfwInit()) {
         exit(EXIT_FAILURE);
     }
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2); //3
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1); //2
+    //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     glfwWindowHint(GLFW_SAMPLES, 32); // 32x antialiasing, very aggressive
     glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
