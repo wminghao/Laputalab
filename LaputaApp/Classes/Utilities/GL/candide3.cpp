@@ -151,7 +151,7 @@ float Candide3::setCandide3Vertices(vector<myvec3>* vec, float zRotateInDegree)
         myvec3 vert = (*vec)[i];
         vertices[i].m_pos.x = vert.x;
         vertices[i].m_pos.y = -vert.y; //it's up side down
-        vertices[i].m_pos.z = vert.z;
+        vertices[i].m_pos.z = -vert.z;
         
         if( vert.x > xMax ) {
             xMax = vert.x;

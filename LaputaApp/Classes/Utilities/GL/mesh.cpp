@@ -26,10 +26,10 @@
 #include "color.h"
 #include "err.h"
 
-const float DELTA_IN_FRONT_OF_CANDIDE3 = 12.0; //delta face behind the glasses
+const float DELTA_IN_FRONT_OF_CANDIDE3 = 3.0; //delta face behind the glasses
 
 #ifdef DESKTOP_MAC
-const float DELTA_BIGGER_THAN_CANDIDE3 = 1.10; //delta face width smaller than glasses
+const float DELTA_BIGGER_THAN_CANDIDE3 = 1.03; //delta face width smaller than glasses
 #else
 const float DELTA_BIGGER_THAN_CANDIDE3 = -1.05; //delta face width smaller than glasses
 #endif
