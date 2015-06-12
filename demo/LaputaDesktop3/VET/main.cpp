@@ -20,15 +20,24 @@ using namespace cv;
 #define GLASSON 0
 #define SHOWTWOWIN 0
 
+
 //Facial Model Source File
 string vertexFile = "/Users/howard/AR/demo/LaputaDesktop3/VET/facemodel/vertexlist_113.wfm";
 string faceFile = "/Users/howard/AR/demo/LaputaDesktop3/VET/facemodel/facelist_184.wfm";
-const char* glassesFile = "/Users/howard/AR/LaputaApp/Resources/3dmodels/3dGlasses/purpleglasses2.obj";
-const char* glassesVsh = "/Users/howard/AR/demo/LaputaDesktop3/VET/3dGlasses/3dGlassesVertexShaderGL2.1.vsh";
-const char* glassesFsh = "/Users/howard/AR/demo/LaputaDesktop3/VET/3dGlasses/3dGlassesFragmentShaderGL2.1.fsh";
+const char* glassesFile[] = {"/Users/howard/AR/LaputaApp/Resources/3dmodels/3dGlasses/RanGlasses2.obj",
+                             "/Users/howard/AR/LaputaApp/Resources/3dmodels/3dGlasses/purpleglasses2.obj",
+                             "/Users/howard/AR/LaputaApp/Resources/3dmodels/3dGlasses/blackglasses2.obj"};
+const char* glassesVsh = "/Users/howard/AR/demo/LaputaDesktop3/VET/3dGlasses/3dGlassesVertexShaderGL.vsh";
+const char* glassesFsh = "/Users/howard/AR/demo/LaputaDesktop3/VET/3dGlasses/3dGlassesFragmentShaderGL.fsh";
 const char* fragName = "outFrag";
 
 string videoFile = "./demo1.mov";
+
+
+//src, 4:3
+const int srcWidth = 640;
+const int srcHeight = 480;
+Glasses glasses(srcWidth, srcHeight);
 
 int calibrated = false;
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -36,6 +45,12 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     if (  action == GLFW_PRESS ) {
         if (key == GLFW_KEY_ESCAPE) {
             glfwSetWindowShouldClose(window, GL_TRUE);
+        } else if( key == GLFW_KEY_1){
+            glasses.reloadGlasses(glassesFile[0]);
+        } else if( key == GLFW_KEY_2){
+            glasses.reloadGlasses(glassesFile[1]);
+        } else if( key == GLFW_KEY_3){
+            glasses.reloadGlasses(glassesFile[2]);
         } else {
             calibrated = !calibrated;
         }
@@ -108,10 +123,6 @@ static void drawOpenGLGlasses(GLuint& dstTexture, Mat& frameOrig, Glasses& glass
 
 int main()
 {
-    //src, 4:3
-    const int srcWidth = 640;
-    const int srcHeight = 480;
-    
     ////////////////
     //glw window
     ////////////////
@@ -119,10 +130,10 @@ int main()
     if (!glfwInit()) {
         exit(EXIT_FAILURE);
     }
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2); //3
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1); //2
-    //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     glfwWindowHint(GLFW_SAMPLES, 32); // 32x antialiasing, very aggressive
     glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
@@ -188,12 +199,11 @@ int main()
     // add error checking here
     GLuint dstTexture;
     glGenTextures(1, &dstTexture);
-    Glasses glasses(srcWidth, srcHeight);
     
     glasses.init(glassesVsh,
                  glassesFsh,
                  fragName,
-                 glassesFile,
+                 glassesFile[0],
                  faceFile.c_str(),
                  vertexFile.c_str(),
                  0, ASPECT_RATIO_4_3,

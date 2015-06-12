@@ -256,6 +256,12 @@ bool Glasses::init(const char* vertLFilePath,
     return ret;
 }
 
+
+bool Glasses::reloadGlasses(const char* glassesFilePath)
+{
+    return _pMesh->reloadMesh(glassesFilePath, _zRotationInDegree);
+}
+
 void Glasses::deinit()
 {
     if ( _offscreenBufferHandle ) {

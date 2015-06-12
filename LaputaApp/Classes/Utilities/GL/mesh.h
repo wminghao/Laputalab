@@ -66,6 +66,8 @@ public:
     bool LoadMesh(const std::string& Filename, const char*candide3FacePath, const char* candide3VertPath, float zRotateInDegree,
                   bool bUploadCandide3Vertices, vector<myvec3>* candide3Vec);
     
+    bool reloadMesh( const std::string& Filename, float zRotateInDegree ); //reload only the glasses, TODO, reset the ratio.
+    
     void Render(GLuint textureObj);
     
     float getWidth() { return xMax-xMin;}
@@ -122,6 +124,7 @@ private:
 #endif
     
     Candide3 _candide3;
+    float _candide3WidthRatio;  //width ratio from candide3 to glasses
 };
 
 #endif	/* MESH_H */

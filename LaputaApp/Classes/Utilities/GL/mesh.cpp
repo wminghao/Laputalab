@@ -91,8 +91,23 @@ void Mesh::Clear()
     for (unsigned int i = 0 ; i < m_Materials.size() ; i++) {
         delete (m_Materials[i]);
     }
+    m_Entries.resize(0);
+    m_Materials.resize(0);
 }
-
+bool Mesh::reloadMesh( const std::string& Filename, float zRotateInDegree )
+{
+    Clear();
+    bool ret = false;
+    Assimp::Importer Importer;
+    
+    const aiScene* pScene = Importer.ReadFile(Filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
+    if (pScene) {
+        ret = InitFromScene(pScene, Filename, zRotateInDegree, _candide3WidthRatio);
+    } else {
+        printf("Error parsing '%s': '%s'\n", Filename.c_str(), Importer.GetErrorString());
+    }
+    return ret;
+}
 
 bool Mesh::LoadMesh(const std::string& Filename, const char*candide3FacePath, const char* candide3VertPath, float zRotateInDegree,
                     bool bUploadCandide3Vertices, vector<myvec3>* candide3Vec)
@@ -113,6 +128,7 @@ bool Mesh::LoadMesh(const std::string& Filename, const char*candide3FacePath, co
         } else {
             widthRatio = 1;
         }
+        _candide3WidthRatio = widthRatio;
         ret = InitFromScene(pScene, Filename, zRotateInDegree, widthRatio);
     } else {
         printf("Error parsing '%s': '%s'\n", Filename.c_str(), Importer.GetErrorString());
@@ -185,8 +201,8 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDe
                  Vector2f(pTexCoord->x, pTexCoord->y),
                  Vector3f(pNormal->x, pNormal->y, pNormal->z));
         
-        printf("Mesh vertice x=%.2f, y=%.2f, z=%.2f\r\n", v.m_pos.x, v.m_pos.y, v.m_pos.z);
-        printf("Mesh normal x=%.2f, y=%.2f, z=%.2f\r\n", pNormal->x, pNormal->y, pNormal->z);
+        //printf("Mesh vertice x=%.2f, y=%.2f, z=%.2f\r\n", v.m_pos.x, v.m_pos.y, v.m_pos.z);
+        //printf("Mesh normal x=%.2f, y=%.2f, z=%.2f\r\n", pNormal->x, pNormal->y, pNormal->z);
         
         if( pPos->x * widthRatio > xMax ) {
             xMax = pPos->x * widthRatio;

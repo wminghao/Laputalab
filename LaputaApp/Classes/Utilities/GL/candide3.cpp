@@ -52,7 +52,7 @@ bool Candide3::readFaces(string& faceFile)
         indices.push_back(face.a);
         indices.push_back(face.b);
         indices.push_back(face.c);
-        cout << "faces: "<<face.a << " " << face.b << " " << face.c <<endl;
+        //cout << "faces: "<<face.a << " " << face.b << " " << face.c <<endl;
     }
     
     ifs.close();
@@ -60,7 +60,7 @@ bool Candide3::readFaces(string& faceFile)
     //load into 
     NumIndices = (unsigned int)indices.size();
     
-    cout << "Total faces: " << NumIndices/3 <<endl;
+    //cout << "Total candide3 faces: " << NumIndices/3 <<endl;
     
     glGenBuffers(1, &IB);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);

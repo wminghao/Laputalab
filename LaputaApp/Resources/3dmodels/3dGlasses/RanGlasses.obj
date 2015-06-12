@@ -1,6 +1,6 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib RanGlass.mtl
+mtllib RanGlasses.mtl
 g default
 v -19.217657 -8.276210 -37.467010
 v -19.217657 -8.511221 -37.030861

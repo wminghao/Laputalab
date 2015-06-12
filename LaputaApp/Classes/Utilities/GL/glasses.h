@@ -62,6 +62,8 @@ public:
               float zRotateInDegree, ASPECT_RATIO ratio,
               bool bUploadCandide3Vertices, vector<myvec3>* candide3Vec);
     
+    bool reloadGlasses(const char* glassesFilePath);
+    
     bool render(GLuint dstTextureName, GLuint candide3Texture, bool shouldRotate);
     
     void setMatrices(mat4& projectMat, mat4& rotTransMat);

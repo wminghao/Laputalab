@@ -19,6 +19,8 @@ void main(){
 
     //mat3 normalMat = transpose(inverse(mat3(World)));//remove translation and scaling
     //normalWorld = normalize(normalMat * normal);
+    //TODO
+    //normalWorld = normalize(NormalMatrix * normal);
     normalWorld = normalize(normal);
 
     //It's point light. different light for different angle.
