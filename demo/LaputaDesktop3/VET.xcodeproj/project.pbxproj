@@ -212,8 +212,6 @@
 		89B05ACF1B264B90004D4106 /* unit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = unit.h; path = ../../../LaputaApp/Classes/Utilities/GL/unit.h; sourceTree = "<group>"; };
 		89B05ADE1B26843F004D4106 /* 3dGlassesFragmentShaderGL.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = 3dGlassesFragmentShaderGL.fsh; path = 3dGlasses/3dGlassesFragmentShaderGL.fsh; sourceTree = "<group>"; };
 		89B05ADF1B26843F004D4106 /* 3dGlassesVertexShaderGL.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = 3dGlassesVertexShaderGL.vsh; path = 3dGlasses/3dGlassesVertexShaderGL.vsh; sourceTree = "<group>"; };
-		89B05AE01B27846C004D4106 /* 3dGlassesFragmentShaderGL2.1.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = 3dGlassesFragmentShaderGL2.1.fsh; path = 3dGlasses/3dGlassesFragmentShaderGL2.1.fsh; sourceTree = "<group>"; };
-		89B05AE11B27846C004D4106 /* 3dGlassesVertexShaderGL2.1.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = 3dGlassesVertexShaderGL2.1.vsh; path = 3dGlasses/3dGlassesVertexShaderGL2.1.vsh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -442,8 +440,6 @@
 		89B05ADD1B2683FF004D4106 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
-				89B05AE01B27846C004D4106 /* 3dGlassesFragmentShaderGL2.1.fsh */,
-				89B05AE11B27846C004D4106 /* 3dGlassesVertexShaderGL2.1.vsh */,
 				89B05ADE1B26843F004D4106 /* 3dGlassesFragmentShaderGL.fsh */,
 				89B05ADF1B26843F004D4106 /* 3dGlassesVertexShaderGL.vsh */,
 			);
