@@ -18,17 +18,16 @@ void main()
     vec4 color;
     vec4 amb;
     float brightness;
-    vec3 lightDir = lightDirWorld;
         
     //calcuate lighting brightness
-    float normalDotL = dot(normalWorld, lightDir);
+    float normalDotL = dot(normalWorld, lightDirWorld);
     brightness = max(normalDotL, 0.0);
     
     if( texCount == 2 ) {
         color = texture(textureImage, texCoordFrag);
         
         //calculate reflection, based on the untransformed normal.
-        vec3 reflection = (2.0 * normalize(normalWorld) * normalDotL) - lightDir;
+        vec3 reflection = (2.0 * normalize(normalWorld) * normalDotL) - lightDirWorld;
         vec4 envColor = texture( envMap, reflection);
         
         //attenuate the src color plus environment color

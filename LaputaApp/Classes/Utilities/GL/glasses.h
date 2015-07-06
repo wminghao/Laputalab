@@ -32,8 +32,6 @@ enum {
 enum {
     UNIFORM_MVP, // "MVP" in vertext shader
     UNIFORM_WORLD, // "gWorld" in vertext shader
-    UNIFORM_VIEWINVERSE, // "viewInverse" in vertext shader
-    UNIFORM_NORMALMATRIX, // "NormalMatrix" in vertext shader
     UNIFORM_TEXCOUNT,
     UNIFORM_DIFFUSECOLOR,
     UNIFORM_AMBIENTCOLOR,
@@ -82,13 +80,9 @@ private:
     GLuint _programID; //compiled shader program for glasses
     GLint _matrixMVP; //matrix for glasses in vertex shader
     GLint _matrixWorld; //matrix for glasses in vertex shader
-    GLint _matrixViewInverse; //matrix for glasses in vertex shader
-    GLint _matrixNormalMatrix; //matrix for glasses in vertex shader
     mat4 _Projection; //projection matrix matrix for rotation
     mat4 _World; //world matrix for rotation
     mat4 _View; //view matrix for rotation
-    mat3 _NormalMatrix; //normal Matrix matrix
-    mat4 _ViewInverse; //view inverse matrix matrix for rotation
     GLuint _offscreenBufferHandle; //offscreen buffer
     GLuint _depthRenderbuffer; //depth render buffer
     

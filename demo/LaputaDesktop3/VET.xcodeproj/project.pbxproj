@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		25350AD41910358100DB3E08 /* objloader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 25350AD21910358100DB3E08 /* objloader.cpp */; };
-		25A474AB18B883F40075F93D /* VET.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 25A474AA18B883F40075F93D /* VET.1 */; };
 		25C3436618BD721D00B0AD8C /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 25C3436518BD721D00B0AD8C /* main.cpp */; };
 		25C3437A18C6DB7400B0AD8C /* utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 25C3437818C6DB7400B0AD8C /* utilities.cpp */; };
 		8968D3521B19825400FAFBDC /* libMagick++-6.Q16.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 899A5F541B19796800A080FF /* libMagick++-6.Q16.a */; };
@@ -96,7 +95,6 @@
 			dstPath = /usr/share/man/man1/;
 			dstSubfolderSpec = 0;
 			files = (
-				25A474AB18B883F40075F93D /* VET.1 in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
@@ -106,7 +104,6 @@
 		25350AD21910358100DB3E08 /* objloader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = objloader.cpp; sourceTree = "<group>"; };
 		25350AD31910358100DB3E08 /* objloader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = objloader.hpp; sourceTree = "<group>"; };
 		25A474A518B883F40075F93D /* VET */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = VET; sourceTree = BUILT_PRODUCTS_DIR; };
-		25A474AA18B883F40075F93D /* VET.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = VET.1; sourceTree = "<group>"; };
 		25C3436518BD721D00B0AD8C /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		25C3437718C6C9A500B0AD8C /* main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
 		25C3437818C6DB7400B0AD8C /* utilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = utilities.cpp; sourceTree = "<group>"; };
@@ -321,7 +318,6 @@
 				25350AD31910358100DB3E08 /* objloader.hpp */,
 				25C3436418B8977000B0AD8C /* lib */,
 				25C3436518BD721D00B0AD8C /* main.cpp */,
-				25A474AA18B883F40075F93D /* VET.1 */,
 				25C3437718C6C9A500B0AD8C /* main.h */,
 				25C3437818C6DB7400B0AD8C /* utilities.cpp */,
 				25C3437918C6DB7400B0AD8C /* utilities.h */,

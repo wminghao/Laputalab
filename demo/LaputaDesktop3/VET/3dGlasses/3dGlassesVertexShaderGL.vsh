@@ -6,8 +6,6 @@ in vec3 normal;
 
 uniform mat4 MVP;
 uniform mat4 World;
-uniform mat4 ViewInverse;
-uniform mat3 NormalMatrix;
 
 out mediump vec2 texCoordFrag;
 out mediump vec3 normalWorld;
