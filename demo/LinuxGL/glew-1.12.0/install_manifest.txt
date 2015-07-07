@@ -1,0 +1,8 @@
+/usr/local/lib/libGLEW.a
+/usr/local/lib/libGLEW.so
+/usr/local/lib/libGLEWmx.a
+/usr/local/lib/libGLEWmx.so
+/usr/local/bin/glewinfo
+/usr/local/bin/visualinfo
+/usr/local/lib/pkgconfig/glew.pc
+/usr/local/lib/pkgconfig/glewmx.pc
