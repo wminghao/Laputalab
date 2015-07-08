@@ -14,7 +14,7 @@
 
 const float DELTA_BEHIND_GLASSES = 4.0; //delta face behind the glasses
 
-#ifdef __MACH__
+#if defined(__MACH__) || defined( __linux__ )
 const float DELTA_SMALLER_GLASSES = 1.0; //delta face width smaller than glasses
 #else
 const float DELTA_SMALLER_GLASSES = -5.0; //delta face width smaller than glasses

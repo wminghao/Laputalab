@@ -28,11 +28,11 @@
 
 const float DELTA_IN_FRONT_OF_CANDIDE3 = 3.0; //delta face behind the glasses
 
-#ifdef __MACH__
+#if defined(__MACH__) || defined( __linux__ )
 const float DELTA_BIGGER_THAN_CANDIDE3 = 1.03; //delta face width smaller than glasses
-#else //__MACH__
+#else //__MACH__ || __linux__
 const float DELTA_BIGGER_THAN_CANDIDE3 = -1.05; //delta face width smaller than glasses
-#endif //__MACH__
+#endif //__MACH__ || __linux__
 
 Mesh::MeshEntry::MeshEntry()
 {
@@ -159,9 +159,9 @@ bool Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename, flo
         InitMesh(i, paiMesh, zRotateInDegree, widthRatio);
     }
     
-#ifdef __MACH__
+#if defined(__MACH__) || defined( __linux__ )
     glGenVertexArrays(1, &vao);
-#endif //__MACH__
+#endif //__MACH__ || __linux__
     printf("Max vertex coord:%.2f, %.2f, %.2f\n",
            xMax, yMax, zMax);
     
@@ -349,20 +349,20 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
 
 void Mesh::Render(GLuint textureObj)
 {
-#ifdef __MACH__
+#if defined(__MACH__) || defined( __linux__ )
     //according to http://stackoverflow.com/questions/24643027/opengl-invalid-operation-following-glenablevertexattribarray
     //enable core profile
     glBindVertexArray( vao );
-#endif //__MACH__
+#endif //__MACH__ || __linux__
     
     glEnableVertexAttribArray(m_positionLocation);
     glEnableVertexAttribArray(m_texCoordLocation);
     glEnableVertexAttribArray(m_normalLocation);
     
     //first render invisible candide3
-#ifdef __MACH__
+#if defined(__MACH__) || defined( __linux__ )
     glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-#endif //__MACH__
+#endif //__MACH__ || __linux__
     _candide3.render(textureObj);
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     

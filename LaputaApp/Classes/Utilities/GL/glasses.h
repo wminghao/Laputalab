@@ -66,10 +66,10 @@ public:
     bool render(GLuint dstTextureName, GLuint candide3Texture, bool shouldRotate);
     
     void setMatrices(mat4& projectMat, mat4& rotTransMat);
-
-#ifdef __MACH__
+    
+#if defined(__MACH__) || defined( __linux__ )
     void readPixels(unsigned char* pixels);
-#endif //__MACH__
+#endif //__MACH__ || __linux__
 private:
     void deinit();
 private:
@@ -93,7 +93,7 @@ private:
     
     int _zRotationInDegree;
     
-#ifdef __MACH__
+#if defined(__MACH__) || defined( __linux__ )
     //input framebuffer
     GLuint _inputBufferHandle; //input buffer
     
@@ -106,7 +106,7 @@ private:
     //anti-aliased framebuffer
     GLuint _aaColorbuffer; //anti-aliasing color buffer
     GLuint _aaTexturebuffer; //anti-aliasing texture buffer
-#endif //__MACH__
+#endif //__MACH__ || __linux__
 };
 
 #endif

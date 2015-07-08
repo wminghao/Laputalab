@@ -9,15 +9,18 @@
 #ifndef __platform_h__
 #define __platform_h__
 
-#ifdef __MACH__
+#if defined( __MACH__ )
 #include <OpenGL/gl.h>
 #include <OpenGL/gl3.h>
 #include <OpenGL/OpenGL.h>
 #include <OpenGL/CGLCurrent.h>
 #include <OpenGL/CGLTypes.h>
-#else //__MACH__
+#elif defined( __linux__ )
+#include <GL/gl.h>
+#include <GL/glext.h>
+#else //iOS
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
-#endif //__MACH__
+#endif
 
 #endif

@@ -34,6 +34,7 @@ const string glassesFile[] = { pathPrefix + "LaputaApp/Resources/3dmodels/3dGlas
                                pathPrefix + "LaputaApp/Resources/3dmodels/3dGlasses/blackglasses2.obj"};
 const char* fragName = "outFrag";
 
+const string savedJpegFilePath = pathPrefix + "saved.jpg";
 string videoFile = "./demo1.mov";
 
 
@@ -95,7 +96,7 @@ static void saveImage(Glasses& glasses) {
     }
     // Fill in the compression parameter structure.
     jpge::params params;
-    jpge::compress_image_to_jpeg_file("/Users/howard/abc.jpg", srcWidth, srcHeight, 3, pImage_flipped, params);
+    jpge::compress_image_to_jpeg_file(savedJpegFilePath.c_str(), srcWidth, srcHeight, 3, pImage_flipped, params);
     free( pImage_flipped );
     free( pImage_orig );
 }
