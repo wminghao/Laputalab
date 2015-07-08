@@ -419,6 +419,7 @@ void Glasses::readPixels(unsigned char* pixels)
     /////////////////////////////////////
     //DOES NOT WORK, with Anti-alias
     ////////////////////////////////////
+    /*
     //first blit multisample framebuffer to normal framebuffer
     glBindFramebuffer( GL_READ_FRAMEBUFFER, _offscreenBufferHandle );
     glFramebufferTexture2D( GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, _aaTexturebuffer, 0 );
@@ -455,6 +456,7 @@ void Glasses::readPixels(unsigned char* pixels)
     } else {
         printf("framebufferStatus wrong\r\n");
     }
+    */
     
     /*
     ////////////
@@ -469,6 +471,18 @@ void Glasses::readPixels(unsigned char* pixels)
         glReadPixels(0, 0, _srcWidth, _srcHeight, GL_BGR, GL_UNSIGNED_BYTE, pixels);
     }
     */
+    
+    glBindFramebuffer( GL_READ_FRAMEBUFFER, 0 );
+    GLenum framebufferStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    if( framebufferStatus == GL_FRAMEBUFFER_COMPLETE ) {
+        glReadBuffer(GL_COLOR_ATTACHMENT0);
+        //getGLErr("GL_COLOR_ATTACHMENT0");
+        glReadPixels(0, 0, _srcWidth, _srcHeight, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+        getGLErr("glGetTexImage");
+    } else {
+        printf("framebufferStatus=%d\r\n", framebufferStatus);
+    }
+
 }
 
 void Glasses::blitToScreen()

@@ -11,6 +11,11 @@
 
 // GLFW
 #include <GLFW/glfw3.h>
+
+//jpeg compressor
+#include "jpge.h"
+
+//glasses
 #include "glasses.h"
 
 using namespace std;
@@ -79,6 +84,22 @@ glm::mat4 IntrinsicToProjection(Mat* intrinsicMat, int W, int H)
         0,0,-(zmax+zmin)/(zmax-zmin),-1,
         0,0,2*zmax*zmin/(zmin-zmax),0};
     return projectionMat;
+}
+
+static void saveImage(Glasses& glasses) {
+    uint8 *pImage_orig = (uint8*)malloc( srcWidth * srcHeight * 3 );
+    glasses.readPixels(pImage_orig);
+    uint8 *pImage_flipped = (uint8*)malloc( srcWidth * srcHeight * 3 );
+    for( int i = 0; i < srcHeight; i++) {
+        for( int j = 0; j < srcWidth; j++ ) {
+            memcpy( pImage_flipped + (i * srcWidth + j) * 3, pImage_orig + ( (srcHeight-i)*srcWidth + srcWidth - j )*3, 3);
+        }
+    }
+    // Fill in the compression parameter structure.
+    jpge::params params;
+    jpge::compress_image_to_jpeg_file("/Users/howard/abc.jpg", srcWidth, srcHeight, 3, pImage_flipped, params);
+    free( pImage_flipped );
+    free( pImage_orig );
 }
 
 static void drawOpenGLGlasses(GLuint& dstTexture, Mat& frameOrig, Glasses& glasses, GLFWwindow* window, mat4& projectionMat, mat4& rotTransMat, bool shouldCopy ) {
@@ -331,6 +352,7 @@ int main()
                 //if (waitKey(1) > 0)
                 if ( calibrated )
                 {
+                    saveImage(glasses);
                     cvtColor(frame, image, CV_BGR2GRAY);
                     //tell the scaling factor of candide3, 3d mapping of vertices = vertices_1st and matrix. 3*4 matrix
                     //output sfImgRef.

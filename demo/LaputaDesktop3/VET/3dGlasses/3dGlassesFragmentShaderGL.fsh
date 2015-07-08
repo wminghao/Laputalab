@@ -38,8 +38,8 @@ void main()
         outFrag = vec4(color.rgb*brightness, color.a) + amb;
     } else if( texCount == 3 ) {
         //candide3 simple mask
-	outFrag = texture(textureImage, texCoordFrag); 
-	//outFrag = vec4(0, 1, 0, 1); //green
+        outFrag = texture(textureImage, texCoordFrag);
+        //outFrag = vec4(0, 1, 0, 1); //green
     } else {
         color = diffuseColor;
         amb = ambientColor;

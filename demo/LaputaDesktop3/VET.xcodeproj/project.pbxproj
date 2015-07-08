@@ -10,6 +10,8 @@
 		25350AD41910358100DB3E08 /* objloader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 25350AD21910358100DB3E08 /* objloader.cpp */; };
 		25C3436618BD721D00B0AD8C /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 25C3436518BD721D00B0AD8C /* main.cpp */; };
 		25C3437A18C6DB7400B0AD8C /* utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 25C3437818C6DB7400B0AD8C /* utilities.cpp */; };
+		8954176A1B4D9C910058B5C9 /* jpge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 895417631B4D9C910058B5C9 /* jpge.cpp */; };
+		8954176D1B4D9C910058B5C9 /* timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 895417671B4D9C910058B5C9 /* timer.cpp */; };
 		8968D3521B19825400FAFBDC /* libMagick++-6.Q16.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 899A5F541B19796800A080FF /* libMagick++-6.Q16.a */; };
 		8968D3531B19825400FAFBDC /* libMagickCore-6.Q16.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 899A5F581B19796800A080FF /* libMagickCore-6.Q16.a */; };
 		8968D3541B19825400FAFBDC /* libMagickWand-6.Q16.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 899A5F5C1B19796800A080FF /* libMagickWand-6.Q16.a */; };
@@ -108,6 +110,10 @@
 		25C3437718C6C9A500B0AD8C /* main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
 		25C3437818C6DB7400B0AD8C /* utilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = utilities.cpp; sourceTree = "<group>"; };
 		25C3437918C6DB7400B0AD8C /* utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utilities.h; sourceTree = "<group>"; };
+		895417631B4D9C910058B5C9 /* jpge.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = jpge.cpp; path = "thirdparty/jpeg-compressor_v104_r1/jpge.cpp"; sourceTree = SOURCE_ROOT; };
+		895417641B4D9C910058B5C9 /* jpge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jpge.h; path = "thirdparty/jpeg-compressor_v104_r1/jpge.h"; sourceTree = SOURCE_ROOT; };
+		895417671B4D9C910058B5C9 /* timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = timer.cpp; path = "thirdparty/jpeg-compressor_v104_r1/timer.cpp"; sourceTree = SOURCE_ROOT; };
+		895417681B4D9C910058B5C9 /* timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = timer.h; path = "thirdparty/jpeg-compressor_v104_r1/timer.h"; sourceTree = SOURCE_ROOT; };
 		899A5EA81B18F10100A080FF /* libopencv_calib3d.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.10.dylib; path = ../../../../../usr/local/lib/libopencv_calib3d.2.4.10.dylib; sourceTree = "<group>"; };
 		899A5EA91B18F10100A080FF /* libopencv_calib3d.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.10.dylib; path = ../../../../../usr/local/lib/libopencv_calib3d.2.4.10.dylib; sourceTree = "<group>"; };
 		899A5EAA1B18F10100A080FF /* libopencv_calib3d.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.10.dylib; path = ../../../../../usr/local/lib/libopencv_calib3d.2.4.10.dylib; sourceTree = "<group>"; };
@@ -311,6 +317,7 @@
 		25A474A718B883F40075F93D /* VET */ = {
 			isa = PBXGroup;
 			children = (
+				8954175F1B4D9C600058B5C9 /* jpegcompressor */,
 				89B05ADD1B2683FF004D4106 /* Shaders */,
 				899A5F441B1977D000A080FF /* platform.h */,
 				899A5F1C1B19769000A080FF /* GL */,
@@ -401,6 +408,17 @@
 				899A5EDE1B18F10100A080FF /* libopencv_videostab.2.4.10.dylib */,
 			);
 			name = lib;
+			sourceTree = "<group>";
+		};
+		8954175F1B4D9C600058B5C9 /* jpegcompressor */ = {
+			isa = PBXGroup;
+			children = (
+				895417631B4D9C910058B5C9 /* jpge.cpp */,
+				895417641B4D9C910058B5C9 /* jpge.h */,
+				895417671B4D9C910058B5C9 /* timer.cpp */,
+				895417681B4D9C910058B5C9 /* timer.h */,
+			);
+			name = jpegcompressor;
 			sourceTree = "<group>";
 		};
 		899A5F1C1B19769000A080FF /* GL */ = {
@@ -501,11 +519,13 @@
 				25C3437A18C6DB7400B0AD8C /* utilities.cpp in Sources */,
 				89B05AD71B264B90004D4106 /* matrix.c in Sources */,
 				89B05ADB1B264B90004D4106 /* texture.cpp in Sources */,
+				8954176A1B4D9C910058B5C9 /* jpge.cpp in Sources */,
 				89B05AD91B264B90004D4106 /* reflectionTexture.cpp in Sources */,
 				89B05AD21B264B90004D4106 /* color.cpp in Sources */,
 				89B05AD11B264B90004D4106 /* candide3Texture.cpp in Sources */,
 				25350AD41910358100DB3E08 /* objloader.cpp in Sources */,
 				89B05AD61B264B90004D4106 /* glUtilities.cpp in Sources */,
+				8954176D1B4D9C910058B5C9 /* timer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
