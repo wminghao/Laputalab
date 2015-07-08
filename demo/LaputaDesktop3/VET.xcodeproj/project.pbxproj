@@ -114,6 +114,7 @@
 		895417641B4D9C910058B5C9 /* jpge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jpge.h; path = "thirdparty/jpeg-compressor_v104_r1/jpge.h"; sourceTree = SOURCE_ROOT; };
 		895417671B4D9C910058B5C9 /* timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = timer.cpp; path = "thirdparty/jpeg-compressor_v104_r1/timer.cpp"; sourceTree = SOURCE_ROOT; };
 		895417681B4D9C910058B5C9 /* timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = timer.h; path = "thirdparty/jpeg-compressor_v104_r1/timer.h"; sourceTree = SOURCE_ROOT; };
+		895417741B4DC3180058B5C9 /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = platform.h; path = ../../../LaputaApp/platform.h; sourceTree = "<group>"; };
 		899A5EA81B18F10100A080FF /* libopencv_calib3d.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.10.dylib; path = ../../../../../usr/local/lib/libopencv_calib3d.2.4.10.dylib; sourceTree = "<group>"; };
 		899A5EA91B18F10100A080FF /* libopencv_calib3d.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.10.dylib; path = ../../../../../usr/local/lib/libopencv_calib3d.2.4.10.dylib; sourceTree = "<group>"; };
 		899A5EAA1B18F10100A080FF /* libopencv_calib3d.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.10.dylib; path = ../../../../../usr/local/lib/libopencv_calib3d.2.4.10.dylib; sourceTree = "<group>"; };
@@ -169,7 +170,6 @@
 		899A5EDC1B18F10100A080FF /* libopencv_videostab.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_videostab.2.4.10.dylib; path = ../../../../../usr/local/lib/libopencv_videostab.2.4.10.dylib; sourceTree = "<group>"; };
 		899A5EDD1B18F10100A080FF /* libopencv_videostab.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_videostab.2.4.10.dylib; path = ../../../../../usr/local/lib/libopencv_videostab.2.4.10.dylib; sourceTree = "<group>"; };
 		899A5EDE1B18F10100A080FF /* libopencv_videostab.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_videostab.2.4.10.dylib; path = ../../../../../usr/local/lib/libopencv_videostab.2.4.10.dylib; sourceTree = "<group>"; };
-		899A5F441B1977D000A080FF /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = "<group>"; };
 		899A5F451B1978DB00A080FF /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		899A5F471B1978E100A080FF /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		899A5F491B1978E800A080FF /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
@@ -319,7 +319,6 @@
 			children = (
 				8954175F1B4D9C600058B5C9 /* jpegcompressor */,
 				89B05ADD1B2683FF004D4106 /* Shaders */,
-				899A5F441B1977D000A080FF /* platform.h */,
 				899A5F1C1B19769000A080FF /* GL */,
 				25350AD21910358100DB3E08 /* objloader.cpp */,
 				25350AD31910358100DB3E08 /* objloader.hpp */,
@@ -424,6 +423,7 @@
 		899A5F1C1B19769000A080FF /* GL */ = {
 			isa = PBXGroup;
 			children = (
+				895417741B4DC3180058B5C9 /* platform.h */,
 				89B05AB51B264B90004D4106 /* candide3.cpp */,
 				89B05AB61B264B90004D4106 /* candide3.h */,
 				89B05AB71B264B90004D4106 /* candide3Texture.cpp */,

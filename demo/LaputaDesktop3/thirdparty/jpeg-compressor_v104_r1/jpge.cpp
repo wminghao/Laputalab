@@ -10,14 +10,13 @@
 
 #include "jpge.h"
 
-#include "platform.h"
 #include <stdlib.h>
 #include <string.h>
-#ifdef DESKTOP_MAC
+#ifdef __MACH__
 #include <malloc/malloc.h>
-#else //DESKTOP_MAC
+#else //__MACH__
 #include <malloc.h>
-#endif //DESKTOP_MAC
+#endif //__MACH__
 #define JPGE_MAX(a,b) (((a)>(b))?(a):(b))
 #define JPGE_MIN(a,b) (((a)<(b))?(a):(b))
 

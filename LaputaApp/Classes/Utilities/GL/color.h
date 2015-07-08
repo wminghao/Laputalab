@@ -12,7 +12,6 @@
 #include <stdio.h>
 
 #include "material.h"
-#include "platform.h"
 
 class Color: public Material
 {

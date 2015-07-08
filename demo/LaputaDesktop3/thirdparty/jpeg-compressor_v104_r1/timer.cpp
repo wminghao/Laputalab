@@ -5,7 +5,6 @@
 #include <time.h>
 
 #include "timer.h"
-#include "platform.h"
 
 #if defined(WIN32)
 #include <windows.h>
@@ -27,11 +26,11 @@ inline void query_counter_frequency(timer_ticks *pTicks)
    QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(pTicks));
 }
 #elif defined(__GNUC__)
-#ifdef DESKTOP_MAC
+#ifdef __MACH__
 #include <sys/time.h>
-#else //DESKTOP_MAC
+#else //__MACH__
 #include <sys/timex.h>
-#endif //DESKTOP_MAC
+#endif //__MACH__
 inline void query_counter(timer_ticks *pTicks)
 {
    struct timeval cur_time;

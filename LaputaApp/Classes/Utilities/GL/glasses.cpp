@@ -87,12 +87,12 @@ bool Glasses::init(const char* vertLFilePath,
     glEnable(GL_BLEND); //enable blending
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
-#ifdef DESKTOP_MAC
+#ifdef __MACH__
     glEnable(GL_MULTISAMPLE);
     glEnable(GL_MULTISAMPLE_ARB);
     glDepthMask(GL_TRUE);
     //glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
-#endif //DESKTOP_MAC
+#endif //__MACH__
     
     //offscreen framebuffer
     glGenFramebuffers( 1, &_offscreenBufferHandle );
@@ -101,7 +101,7 @@ bool Glasses::init(const char* vertLFilePath,
     glGenRenderbuffers(1, &_depthRenderbuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, _depthRenderbuffer);
     
-#ifdef DESKTOP_MAC
+#ifdef __MACH__
     glRenderbufferStorageMultisample(GL_RENDERBUFFER, AA_LEVEL, GL_DEPTH24_STENCIL8, _srcWidth, _srcHeight);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
     
@@ -147,10 +147,10 @@ bool Glasses::init(const char* vertLFilePath,
     
     //default framebuffer
     glBindFramebuffer( GL_FRAMEBUFFER, 0 ); //default framebuffer, screen
-#else //DESKTOP_MAC
+#else //__MACH__
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, _srcWidth, _srcHeight);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
-#endif //DESKTOP_MAC
+#endif //__MACH__
     
     /////////////////
     // shader program
@@ -261,7 +261,7 @@ void Glasses::deinit()
         _offscreenBufferHandle = 0;
     }
     
-#ifdef DESKTOP_MAC
+#ifdef __MACH__
     if ( _inputBufferHandle ) {
         glDeleteFramebuffers( 1, &_inputBufferHandle );
         _inputBufferHandle = 0;
@@ -290,7 +290,7 @@ void Glasses::deinit()
         glDeleteTextures(1, &_outputTexturebuffer);
         _outputTexturebuffer = 0;
     }
-#endif
+#endif //__MACH__
     if ( _depthRenderbuffer ) {
         glDeleteFramebuffers( 1, &_depthRenderbuffer );
         _depthRenderbuffer = 0;
@@ -313,7 +313,7 @@ bool Glasses::render(GLuint dstTextureName, GLuint candide3Texture, bool shouldR
         
         glViewport( 0, 0, _srcWidth, _srcHeight);
         
-#ifdef DESKTOP_MAC
+#ifdef __MACH__
         //Somehow OpenGL does no support attaching texture as a read and write buffer. (In the background)
         //We have to create two frame buffers, 1 for read and 1 for write in order to do it properly.
         //
@@ -346,7 +346,7 @@ bool Glasses::render(GLuint dstTextureName, GLuint candide3Texture, bool shouldR
         //Step 3. copy from read buffer to write buffer
         glBlitFramebuffer(0, 0, _srcWidth, _srcHeight, 0, 0, _srcWidth, _srcHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
         
-#else //DESKTOP_MAC
+#else //__MACH__
         //Bind a framebuffer
         glBindFramebuffer( GL_FRAMEBUFFER, _offscreenBufferHandle );
         // Set up our destination pixel buffer as the framebuffer's render target.
@@ -359,13 +359,13 @@ bool Glasses::render(GLuint dstTextureName, GLuint candide3Texture, bool shouldR
         glBindTexture( GL_TEXTURE_2D, 0 );
         glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, dstTextureName, 0 );
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _depthRenderbuffer);
-#endif //DESKTOP_MAC
+#endif //__MACH__
         
         GLenum framebufferStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER);
         if( framebufferStatus == GL_FRAMEBUFFER_COMPLETE ) {
             glUseProgram( _programID );
             
-        #if !defined(DESKTOP_MAC)
+        #if !defined(__MACH__)
             //TODO below is the test code to transformation
             static float angleInDegree = 0.0f;
             static int sign = -1;
@@ -391,7 +391,7 @@ bool Glasses::render(GLuint dstTextureName, GLuint candide3Texture, bool shouldR
             } else {
                 _World = Model_rotateZ * Model_rotateX * Model_scale;
             }
-        #endif
+        #endif //__MACH__
             
             mat4 curMVP = _Projection * _View * _World;
             glUniformMatrix4fv(_matrixMVP, 1, GL_FALSE, &curMVP[0][0]);
@@ -413,7 +413,7 @@ bool Glasses::render(GLuint dstTextureName, GLuint candide3Texture, bool shouldR
     return ret;
 }
 
-#ifdef DESKTOP_MAC
+#ifdef __MACH__
 void Glasses::readPixels(unsigned char* pixels)
 {
     /////////////////////////////////////
@@ -484,4 +484,4 @@ void Glasses::readPixels(unsigned char* pixels)
     }
 
 }
-#endif
+#endif //__MACH__

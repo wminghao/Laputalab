@@ -118,10 +118,10 @@ private:
     float yMin;
     float zMin;
     
-#ifdef DESKTOP_MAC
+#ifdef __MACH__
     // Vertex Array Objects Identifiers
     GLuint vao;
-#endif
+#endif //__MACH__
     
     Candide3 _candide3;
     float _candide3WidthRatio;  //width ratio from candide3 to glasses

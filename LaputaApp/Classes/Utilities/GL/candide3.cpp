@@ -14,12 +14,13 @@
 
 const float DELTA_BEHIND_GLASSES = 4.0; //delta face behind the glasses
 
-#ifdef DESKTOP_MAC
+#ifdef __MACH__
 const float DELTA_SMALLER_GLASSES = 1.0; //delta face width smaller than glasses
 #else
 const float DELTA_SMALLER_GLASSES = -5.0; //delta face width smaller than glasses
 #endif
 
+/*
 //Xingze's head
 //Shape Factors
 const int SHAPEUNITS = 14;
@@ -29,6 +30,7 @@ const float shapeFactor[SHAPEUNITS] = //for Xz
     0.0f,1.0f,0.5f, // cheeks z, nose-z extension, nose vertical pos;
     0.0f,0.0f,0.3f, // nose pointing up, mouth vertical pos, mouth width;
     0.0f,0.0f}; // eyes vertical diff, chin width;
+*/
 
 void Candide3::setAttrUni(GLint texCountLocation,
                           GLint textureImageLocation,

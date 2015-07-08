@@ -195,9 +195,9 @@ GLint glueCreateProgram(const GLchar *vertSource, const GLchar *fragSource,
         }
 	}
     
-#ifdef DESKTOP_MAC
+#ifdef __MACH__
     glBindFragDataLocation(prog, 0, fragColorName);
-#endif
+#endif //__MACH__
 
 	status *= glueLinkProgram(prog);
     

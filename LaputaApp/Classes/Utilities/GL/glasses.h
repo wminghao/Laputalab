@@ -66,9 +66,9 @@ public:
     
     void setMatrices(mat4& projectMat, mat4& rotTransMat);
 
-#ifdef DESKTOP_MAC
+#ifdef __MACH__
     void readPixels(unsigned char* pixels);
-#endif
+#endif //__MACH__
 private:
     void deinit();
 private:
@@ -90,7 +90,7 @@ private:
     
     int _zRotationInDegree;
     
-#ifdef DESKTOP_MAC
+#ifdef __MACH__
     //input framebuffer
     GLuint _inputBufferHandle; //input buffer
     
@@ -103,7 +103,7 @@ private:
     //anti-aliased framebuffer
     GLuint _aaColorbuffer; //anti-aliasing color buffer
     GLuint _aaTexturebuffer; //anti-aliasing texture buffer
-#endif
+#endif //__MACH__
 };
 
 #endif
