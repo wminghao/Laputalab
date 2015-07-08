@@ -71,4 +71,4 @@ env = Environment(CPPPATH=['#'],
 
 progs = []
 Export( ["env", "progs", "CCFLAGS"] )	
-SConscript( "face2d/SConscript" )
+SConscript( "VET/SConscript" )

@@ -22,7 +22,8 @@
 #include <OpenGL/CGLCurrent.h>
 #include <OpenGL/CGLTypes.h>
 #endif //!TARGET_OS_IPHONE
-#elif defined( __linux__ )
+//#elif defined( __linux__ )
+#else //__linux__
 #include <GL/gl.h>
 #include <GL/glext.h>
 #define DESKTOP_GL //define desktop opengl

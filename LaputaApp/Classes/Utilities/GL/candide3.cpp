@@ -6,7 +6,7 @@
 //
 //
 
-#include "Candide3.h"
+#include "candide3.h"
 #include "err.h"
 
 #include<iostream>
