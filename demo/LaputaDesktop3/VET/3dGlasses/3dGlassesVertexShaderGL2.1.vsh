@@ -1,16 +1,16 @@
-#version 150
+#version 120
 
-in vec3 position;
-in mediump vec2 texCoord;
-in vec3 normal;
+attribute vec3 position;
+attribute vec2 texCoord;
+attribute vec3 normal;
 
 uniform mat4 MVP;
 uniform mat4 World;
 uniform mat3 NormalMatrix;
 
-out mediump vec2 texCoordFrag;
-out mediump vec3 normalWorld;
-out mediump vec3 lightDirWorld;
+varying vec2 texCoordFrag;
+varying vec3 normalWorld;
+varying vec3 lightDirWorld;
 
 void main(){
     gl_Position = MVP * vec4(position, 1.0);

@@ -24,6 +24,7 @@ using namespace cv;
 #define REALTIME 1
 #define GLASSON 0
 #define SHOWTWOWIN 0
+#define OPENGL_2_1 1
 
 //Facial Model Source File
 string vertexFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/vertexlist_113.wfm";
@@ -31,8 +32,6 @@ string faceFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/facelist_184.w
 const string glassesFile[] = { pathPrefix + "LaputaApp/Resources/3dmodels/3dGlasses/RanGlasses2.obj",
                                pathPrefix + "LaputaApp/Resources/3dmodels/3dGlasses/purpleglasses2.obj",
                                pathPrefix + "LaputaApp/Resources/3dmodels/3dGlasses/blackglasses2.obj"};
-const string glassesVsh = pathPrefix + "demo/LaputaDesktop3/VET/3dGlasses/3dGlassesVertexShaderGL.vsh";
-const string glassesFsh = pathPrefix + "demo/LaputaDesktop3/VET/3dGlasses/3dGlassesFragmentShaderGL.fsh";
 const char* fragName = "outFrag";
 
 string videoFile = "./demo1.mov";
@@ -146,14 +145,26 @@ int main()
     ////////////////
     //glw window
     ////////////////
+    string glassesVsh;
+    string glassesFsh;
+    
     // Init GLFW
     if (!glfwInit()) {
         exit(EXIT_FAILURE);
     }
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
+    if( OPENGL_2_1 ) {
+        glassesVsh = pathPrefix + "demo/LaputaDesktop3/VET/3dGlasses/3dGlassesVertexShaderGL2.1.vsh";
+        glassesFsh = pathPrefix + "demo/LaputaDesktop3/VET/3dGlasses/3dGlassesFragmentShaderGL2.1.fsh";
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    } else {
+        glassesVsh = pathPrefix + "demo/LaputaDesktop3/VET/3dGlasses/3dGlassesVertexShaderGL.vsh";
+        glassesFsh = pathPrefix + "demo/LaputaDesktop3/VET/3dGlasses/3dGlassesFragmentShaderGL.fsh";
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
+    }
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     glfwWindowHint(GLFW_SAMPLES, 32); // 32x antialiasing, very aggressive
     glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);

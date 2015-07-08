@@ -31,6 +31,7 @@ void Glasses::setMatrices(mat4& projectMat, mat4& rotTransMat) {
     
     mat4 Model_rotateX = rotate(mat4(1.0f), radians(10.0f), vec3(1,0,0)); //rotate x of 10 degree to align to nose
     _World = rotTransMat * Model_rotateX;
+    _NormalMatrix = transpose(inverse(mat3(_World))); //remove translation and scaling
     _View       = lookAt(vec3(0,0,0.01), // Camera is at (0, 0, 0.01), in World Space
                          vec3(0,0,0), // and looks at the origin
                          vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
@@ -171,6 +172,7 @@ bool Glasses::init(const char* vertLFilePath,
     GLchar *uniformName[NUM_UNIFORMS] = {
         (GLchar *)"MVP",
         (GLchar *)"World",
+        (GLchar *)"NormalMatrix",
         (GLchar *)"texCount",
         (GLchar *)"diffuseColor",
         (GLchar *)"ambientColor",
@@ -187,6 +189,7 @@ bool Glasses::init(const char* vertLFilePath,
     if ( _programID ) {
         _matrixMVP = uniformLocation[UNIFORM_MVP];
         _matrixWorld = uniformLocation[UNIFORM_WORLD];
+        _matrixNormalMatrix = uniformLocation[UNIFORM_NORMALMATRIX];
         
         _pMesh->setAttrUni(uniformLocation[UNIFORM_TEXCOUNT], uniformLocation[UNIFORM_DIFFUSECOLOR], uniformLocation[UNIFORM_AMBIENTCOLOR],
                            uniformLocation[UNIFORM_TEXTUREIMAGE], uniformLocation[UNIFORM_ENVMAP],
@@ -232,7 +235,7 @@ bool Glasses::init(const char* vertLFilePath,
         mat4 Model_scale = scale(mat4(1.0f), vec3(scaleFactor,scaleFactor,scaleFactor));
         
         _World = Model_translation * Model_rotateZ * Model_rotateX * Model_scale;
-        
+        _NormalMatrix = transpose(inverse(mat3(_World))); //rotation and scaling, w/o
         _View = View;
         
         // Our ModelViewProjection : multiplication of our 3 matrices
@@ -396,6 +399,7 @@ bool Glasses::render(GLuint dstTextureName, GLuint candide3Texture, bool shouldR
             mat4 curMVP = _Projection * _View * _World;
             glUniformMatrix4fv(_matrixMVP, 1, GL_FALSE, &curMVP[0][0]);
             glUniformMatrix4fv(_matrixWorld, 1, GL_FALSE, &_World[0][0]);
+            glUniformMatrix3fv(_matrixNormalMatrix, 1, GL_FALSE, &_NormalMatrix[0][0]);
             
             //render the meshes
             _pMesh->Render(candide3Texture);

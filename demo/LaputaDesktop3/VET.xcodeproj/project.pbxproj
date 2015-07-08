@@ -115,6 +115,8 @@
 		895417671B4D9C910058B5C9 /* timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = timer.cpp; path = "thirdparty/jpeg-compressor_v104_r1/timer.cpp"; sourceTree = SOURCE_ROOT; };
 		895417681B4D9C910058B5C9 /* timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = timer.h; path = "thirdparty/jpeg-compressor_v104_r1/timer.h"; sourceTree = SOURCE_ROOT; };
 		895417741B4DC3180058B5C9 /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = platform.h; path = ../../../LaputaApp/platform.h; sourceTree = "<group>"; };
+		895417751B4DCD400058B5C9 /* 3dGlassesFragmentShaderGL2.1.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = 3dGlassesFragmentShaderGL2.1.fsh; path = 3dGlasses/3dGlassesFragmentShaderGL2.1.fsh; sourceTree = "<group>"; };
+		895417761B4DCD400058B5C9 /* 3dGlassesVertexShaderGL2.1.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = 3dGlassesVertexShaderGL2.1.vsh; path = 3dGlasses/3dGlassesVertexShaderGL2.1.vsh; sourceTree = "<group>"; };
 		899A5EA81B18F10100A080FF /* libopencv_calib3d.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.10.dylib; path = ../../../../../usr/local/lib/libopencv_calib3d.2.4.10.dylib; sourceTree = "<group>"; };
 		899A5EA91B18F10100A080FF /* libopencv_calib3d.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.10.dylib; path = ../../../../../usr/local/lib/libopencv_calib3d.2.4.10.dylib; sourceTree = "<group>"; };
 		899A5EAA1B18F10100A080FF /* libopencv_calib3d.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.10.dylib; path = ../../../../../usr/local/lib/libopencv_calib3d.2.4.10.dylib; sourceTree = "<group>"; };
@@ -320,11 +322,11 @@
 				8954175F1B4D9C600058B5C9 /* jpegcompressor */,
 				89B05ADD1B2683FF004D4106 /* Shaders */,
 				899A5F1C1B19769000A080FF /* GL */,
-				25350AD21910358100DB3E08 /* objloader.cpp */,
-				25350AD31910358100DB3E08 /* objloader.hpp */,
 				25C3436418B8977000B0AD8C /* lib */,
 				25C3436518BD721D00B0AD8C /* main.cpp */,
 				25C3437718C6C9A500B0AD8C /* main.h */,
+				25350AD21910358100DB3E08 /* objloader.cpp */,
+				25350AD31910358100DB3E08 /* objloader.hpp */,
 				25C3437818C6DB7400B0AD8C /* utilities.cpp */,
 				25C3437918C6DB7400B0AD8C /* utilities.h */,
 			);
@@ -454,6 +456,8 @@
 		89B05ADD1B2683FF004D4106 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
+				895417751B4DCD400058B5C9 /* 3dGlassesFragmentShaderGL2.1.fsh */,
+				895417761B4DCD400058B5C9 /* 3dGlassesVertexShaderGL2.1.vsh */,
 				89B05ADE1B26843F004D4106 /* 3dGlassesFragmentShaderGL.fsh */,
 				89B05ADF1B26843F004D4106 /* 3dGlassesVertexShaderGL.vsh */,
 			);
