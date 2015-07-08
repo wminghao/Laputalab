@@ -478,28 +478,10 @@ void Glasses::readPixels(unsigned char* pixels)
         glReadBuffer(GL_COLOR_ATTACHMENT0);
         //getGLErr("GL_COLOR_ATTACHMENT0");
         glReadPixels(0, 0, _srcWidth, _srcHeight, GL_RGB, GL_UNSIGNED_BYTE, pixels);
-        getGLErr("glGetTexImage");
+        //getGLErr("glGetTexImage");
     } else {
         printf("framebufferStatus=%d\r\n", framebufferStatus);
     }
 
-}
-
-void Glasses::blitToScreen()
-{
-    ////////////
-    //DOES NOT WORK
-    ////////////
-    glBindFramebuffer( GL_READ_FRAMEBUFFER, _offscreenBufferHandle );
-    glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0 ); //default framebuffer, screen
-
-    if( glCheckFramebufferStatus(GL_READ_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE &&
-       glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE ) {
-        //do blitting here
-        glBlitFramebuffer(0, 0, _srcWidth, _srcHeight, 0, 0, _srcWidth, _srcHeight, GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT, GL_NEAREST);
-        glBindFramebuffer( GL_FRAMEBUFFER, 0 ); //default framebuffer for both read and write, screen
-    } else {
-        printf("error");
-    }
 }
 #endif

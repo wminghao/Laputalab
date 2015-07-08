@@ -68,7 +68,6 @@ public:
 
 #ifdef DESKTOP_MAC
     void readPixels(unsigned char* pixels);
-    void blitToScreen();
 #endif
 private:
     void deinit();
