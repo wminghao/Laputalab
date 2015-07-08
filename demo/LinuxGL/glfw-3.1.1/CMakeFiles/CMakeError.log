@@ -1,0 +1,146 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /Laputalab/demo/LinuxGL/glfw-3.1.1/glfw-3.1.1/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec2090164233/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2090164233.dir/build.make CMakeFiles/cmTryCompileExec2090164233.dir/build
+make[1]: Entering directory `/Laputalab/demo/LinuxGL/glfw-3.1.1/glfw-3.1.1/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /Laputalab/demo/LinuxGL/glfw-3.1.1/glfw-3.1.1/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2090164233.dir/CheckSymbolExists.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec2090164233.dir/CheckSymbolExists.c.o   -c /Laputalab/demo/LinuxGL/glfw-3.1.1/glfw-3.1.1/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTryCompileExec2090164233
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2090164233.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTryCompileExec2090164233.dir/CheckSymbolExists.c.o  -o cmTryCompileExec2090164233 -rdynamic 
+CMakeFiles/cmTryCompileExec2090164233.dir/CheckSymbolExists.c.o: In function `main':
+CheckSymbolExists.c:(.text+0x16): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+make[1]: Leaving directory `/Laputalab/demo/LinuxGL/glfw-3.1.1/glfw-3.1.1/CMakeFiles/CMakeTmp'
+make[1]: *** [cmTryCompileExec2090164233] Error 1
+make: *** [cmTryCompileExec2090164233/fast] Error 2
+
+File /Laputalab/demo/LinuxGL/glfw-3.1.1/glfw-3.1.1/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /Laputalab/demo/LinuxGL/glfw-3.1.1/glfw-3.1.1/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec3251400255/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3251400255.dir/build.make CMakeFiles/cmTryCompileExec3251400255.dir/build
+make[1]: Entering directory `/Laputalab/demo/LinuxGL/glfw-3.1.1/glfw-3.1.1/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /Laputalab/demo/LinuxGL/glfw-3.1.1/glfw-3.1.1/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec3251400255.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTryCompileExec3251400255.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-2.8/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec3251400255
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3251400255.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTryCompileExec3251400255.dir/CheckFunctionExists.c.o  -o cmTryCompileExec3251400255 -rdynamic -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+make[1]: Leaving directory `/Laputalab/demo/LinuxGL/glfw-3.1.1/glfw-3.1.1/CMakeFiles/CMakeTmp'
+make[1]: *** [cmTryCompileExec3251400255] Error 1
+make: *** [cmTryCompileExec3251400255/fast] Error 2
+
+
+Determining if the function glXGetProcAddressEXT exists failed with the following output:
+Change Dir: /Laputalab/demo/LinuxGL/glfw-3.1.1/glfw-3.1.1/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec2210660058/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2210660058.dir/build.make CMakeFiles/cmTryCompileExec2210660058.dir/build
+make[1]: Entering directory `/Laputalab/demo/LinuxGL/glfw-3.1.1/glfw-3.1.1/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /Laputalab/demo/LinuxGL/glfw-3.1.1/glfw-3.1.1/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2210660058.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=glXGetProcAddressEXT   -o CMakeFiles/cmTryCompileExec2210660058.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-2.8/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec2210660058
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2210660058.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=glXGetProcAddressEXT    CMakeFiles/cmTryCompileExec2210660058.dir/CheckFunctionExists.c.o  -o cmTryCompileExec2210660058 -rdynamic -lGL 
+CMakeFiles/cmTryCompileExec2210660058.dir/CheckFunctionExists.c.o: In function `main':
+CheckFunctionExists.c:(.text+0x15): undefined reference to `glXGetProcAddressEXT'
+collect2: error: ld returned 1 exit status
+make[1]: Leaving directory `/Laputalab/demo/LinuxGL/glfw-3.1.1/glfw-3.1.1/CMakeFiles/CMakeTmp'
+make[1]: *** [cmTryCompileExec2210660058] Error 1
+make: *** [cmTryCompileExec2210660058/fast] Error 2
+
+
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /Laputalab/demo/LinuxGL/glfw-3.1.1/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec2639608138/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2639608138.dir/build.make CMakeFiles/cmTryCompileExec2639608138.dir/build
+make[1]: Entering directory `/Laputalab/demo/LinuxGL/glfw-3.1.1/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /Laputalab/demo/LinuxGL/glfw-3.1.1/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2639608138.dir/CheckSymbolExists.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec2639608138.dir/CheckSymbolExists.c.o   -c /Laputalab/demo/LinuxGL/glfw-3.1.1/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTryCompileExec2639608138
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2639608138.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTryCompileExec2639608138.dir/CheckSymbolExists.c.o  -o cmTryCompileExec2639608138 -rdynamic 
+CMakeFiles/cmTryCompileExec2639608138.dir/CheckSymbolExists.c.o: In function `main':
+CheckSymbolExists.c:(.text+0x16): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+make[1]: Leaving directory `/Laputalab/demo/LinuxGL/glfw-3.1.1/CMakeFiles/CMakeTmp'
+make[1]: *** [cmTryCompileExec2639608138] Error 1
+make: *** [cmTryCompileExec2639608138/fast] Error 2
+
+File /Laputalab/demo/LinuxGL/glfw-3.1.1/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /Laputalab/demo/LinuxGL/glfw-3.1.1/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec834134195/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec834134195.dir/build.make CMakeFiles/cmTryCompileExec834134195.dir/build
+make[1]: Entering directory `/Laputalab/demo/LinuxGL/glfw-3.1.1/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /Laputalab/demo/LinuxGL/glfw-3.1.1/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec834134195.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTryCompileExec834134195.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-2.8/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec834134195
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec834134195.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTryCompileExec834134195.dir/CheckFunctionExists.c.o  -o cmTryCompileExec834134195 -rdynamic -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+make[1]: Leaving directory `/Laputalab/demo/LinuxGL/glfw-3.1.1/CMakeFiles/CMakeTmp'
+make[1]: *** [cmTryCompileExec834134195] Error 1
+make: *** [cmTryCompileExec834134195/fast] Error 2
+
+
+Determining if the function glXGetProcAddressEXT exists failed with the following output:
+Change Dir: /Laputalab/demo/LinuxGL/glfw-3.1.1/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec3300398643/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3300398643.dir/build.make CMakeFiles/cmTryCompileExec3300398643.dir/build
+make[1]: Entering directory `/Laputalab/demo/LinuxGL/glfw-3.1.1/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /Laputalab/demo/LinuxGL/glfw-3.1.1/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec3300398643.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=glXGetProcAddressEXT   -o CMakeFiles/cmTryCompileExec3300398643.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-2.8/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec3300398643
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3300398643.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=glXGetProcAddressEXT    CMakeFiles/cmTryCompileExec3300398643.dir/CheckFunctionExists.c.o  -o cmTryCompileExec3300398643 -rdynamic -lGL 
+CMakeFiles/cmTryCompileExec3300398643.dir/CheckFunctionExists.c.o: In function `main':
+CheckFunctionExists.c:(.text+0x15): undefined reference to `glXGetProcAddressEXT'
+collect2: error: ld returned 1 exit status
+make[1]: Leaving directory `/Laputalab/demo/LinuxGL/glfw-3.1.1/CMakeFiles/CMakeTmp'
+make[1]: *** [cmTryCompileExec3300398643] Error 1
+make: *** [cmTryCompileExec3300398643/fast] Error 2
+
+
