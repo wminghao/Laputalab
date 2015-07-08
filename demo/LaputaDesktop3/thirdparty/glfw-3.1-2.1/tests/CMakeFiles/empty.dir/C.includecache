@@ -6,9 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/Users/howard/AR/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/deps/tinycthread.c
+/Laputalab/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/deps/tinycthread.c
 tinycthread.h
-/Users/howard/AR/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/deps/tinycthread.h
+/Laputalab/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/deps/tinycthread.h
 stdlib.h
 -
 signal.h
@@ -26,7 +26,7 @@ process.h
 sys/timeb.h
 -
 
-/Users/howard/AR/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/deps/tinycthread.h
+/Laputalab/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/deps/tinycthread.h
 time.h
 -
 pthread.h
@@ -34,9 +34,9 @@ pthread.h
 windows.h
 -
 
-/Users/howard/AR/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/tests/empty.c
+/Laputalab/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/tests/empty.c
 tinycthread.h
-/Users/howard/AR/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/tests/tinycthread.h
+/Laputalab/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/tests/tinycthread.h
 GLFW/glfw3.h
 -
 math.h

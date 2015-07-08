@@ -6,17 +6,17 @@
 
 #IncludeRegexTransform: 
 
-/Users/howard/AR/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/deps/getopt.c
+/Laputalab/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/deps/getopt.c
 getopt.h
-/Users/howard/AR/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/deps/getopt.h
+/Laputalab/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/deps/getopt.h
 stddef.h
 -
 string.h
 -
 
-/Users/howard/AR/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/deps/getopt.h
+/Laputalab/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/deps/getopt.h
 
-/Users/howard/AR/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/tests/clipboard.c
+/Laputalab/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/tests/clipboard.c
 GLFW/glfw3.h
 -
 stdio.h
@@ -24,7 +24,7 @@ stdio.h
 stdlib.h
 -
 getopt.h
-/Users/howard/AR/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/tests/getopt.h
+/Laputalab/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/tests/getopt.h
 
 deps/GL/glext.h
 windows.h

@@ -1,24 +1,24 @@
 # The set of languages for which implicit dependencies are needed:
-set(CMAKE_DEPENDS_LANGUAGES
+SET(CMAKE_DEPENDS_LANGUAGES
   "C"
   )
 # The set of files for implicit dependencies of each language:
-set(CMAKE_DEPENDS_CHECK_C
-  "/Users/howard/AR/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/deps/tinycthread.c" "/Users/howard/AR/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/tests/CMakeFiles/threads.dir/__/deps/tinycthread.c.o"
-  "/Users/howard/AR/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/tests/threads.c" "/Users/howard/AR/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/tests/CMakeFiles/threads.dir/threads.c.o"
+SET(CMAKE_DEPENDS_CHECK_C
+  "/Laputalab/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/deps/tinycthread.c" "/Laputalab/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/tests/CMakeFiles/threads.dir/__/deps/tinycthread.c.o"
+  "/Laputalab/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/tests/threads.c" "/Laputalab/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/tests/CMakeFiles/threads.dir/threads.c.o"
   )
-set(CMAKE_C_COMPILER_ID "Clang")
+SET(CMAKE_C_COMPILER_ID "GNU")
 
 # Targets to which this target links.
-set(CMAKE_TARGET_LINKED_INFO_FILES
-  "/Users/howard/AR/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/src/CMakeFiles/glfw.dir/DependInfo.cmake"
+SET(CMAKE_TARGET_LINKED_INFO_FILES
+  "/Laputalab/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/src/CMakeFiles/glfw.dir/DependInfo.cmake"
   )
 
 # The include file search paths:
-set(CMAKE_C_TARGET_INCLUDE_PATH
+SET(CMAKE_C_TARGET_INCLUDE_PATH
   "include"
   "deps"
   )
-set(CMAKE_CXX_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})
-set(CMAKE_Fortran_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})
-set(CMAKE_ASM_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})
+SET(CMAKE_CXX_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})
+SET(CMAKE_Fortran_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})
+SET(CMAKE_ASM_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})

@@ -1,22 +1,22 @@
 
-if (NOT EXISTS "/Users/howard/AR/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/install_manifest.txt")
-  message(FATAL_ERROR "Cannot find install manifest: \"/Users/howard/AR/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/install_manifest.txt\"")
+if (NOT EXISTS "/Laputalab/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/install_manifest.txt")
+  message(FATAL_ERROR "Cannot find install manifest: \"/Laputalab/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/install_manifest.txt\"")
 endif()
 
-file(READ "/Users/howard/AR/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/install_manifest.txt" files)
+file(READ "/Laputalab/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/install_manifest.txt" files)
 string(REGEX REPLACE "\n" ";" files "${files}")
 
 foreach (file ${files})
   message(STATUS "Uninstalling \"$ENV{DESTDIR}${file}\"")
   if (EXISTS "$ENV{DESTDIR}${file}")
-    exec_program("/Applications/CMake.app/Contents/bin/cmake" ARGS "-E remove \"$ENV{DESTDIR}${file}\""
+    exec_program("/usr/bin/cmake" ARGS "-E remove \"$ENV{DESTDIR}${file}\""
                  OUTPUT_VARIABLE rm_out
                  RETURN_VALUE rm_retval)
     if (NOT "${rm_retval}" STREQUAL 0)
       MESSAGE(FATAL_ERROR "Problem when removing \"$ENV{DESTDIR}${file}\"")
     endif()
   elseif (IS_SYMLINK "$ENV{DESTDIR}${file}")
-    EXEC_PROGRAM("/Applications/CMake.app/Contents/bin/cmake" ARGS "-E remove \"$ENV{DESTDIR}${file}\""
+    EXEC_PROGRAM("/usr/bin/cmake" ARGS "-E remove \"$ENV{DESTDIR}${file}\""
                  OUTPUT_VARIABLE rm_out
                  RETURN_VALUE rm_retval)
     if (NOT "${rm_retval}" STREQUAL 0)

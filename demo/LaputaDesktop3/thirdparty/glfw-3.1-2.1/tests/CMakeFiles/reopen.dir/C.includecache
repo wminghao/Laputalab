@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/Users/howard/AR/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/tests/reopen.c
+/Laputalab/demo/LaputaDesktop3/thirdparty/glfw-3.1-2.1/tests/reopen.c
 GLFW/glfw3.h
 -
 time.h
