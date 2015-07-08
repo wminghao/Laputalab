@@ -126,7 +126,8 @@ bool Candide3::readVertices(string& vertexFile, float glassesWidth, float zRotat
     
     ifs.close();
     
-    //adjust the sape
+    //adjust the shape
+    //TODO
     //adjustShape(NULL, 0, shapeFactor, 1.0, 1.0, 1.0);
     
     cout << "Total vertices: " << vertices.size() <<endl;

@@ -24,6 +24,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+const string pathPrefix = "/Users/howard/AR/";
+
 using namespace std;
 using namespace cv;
 

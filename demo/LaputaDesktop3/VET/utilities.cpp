@@ -569,25 +569,25 @@ void loadAnimationUnit(const char * path, vector<myvec4> &AU, float xScale, floa
 
 void adjustShape(float shapeUnits[], vector<myvec3> & vertices, float xScale, float yScale, float zScale) //To be optimized
 {
-    const char * shapeUnitFile[SHAPEUNITS] = {
-        "/Users/howard/AR/demo/LaputaDesktop3/VET/facemodel/headheight_16.wfm",
-        "/Users/howard/AR/demo/LaputaDesktop3/VET/facemodel/eyebrowsvertical_8.wfm",
-        "/Users/howard/AR/demo/LaputaDesktop3/VET/facemodel/eyevertical_36.wfm",
+    const string shapeUnitFile[SHAPEUNITS] = {
+        pathPrefix + "demo/LaputaDesktop3/VET/facemodel/headheight_16.wfm",
+        pathPrefix + "demo/LaputaDesktop3/VET/facemodel/eyebrowsvertical_8.wfm",
+        pathPrefix + "demo/LaputaDesktop3/VET/facemodel/eyevertical_36.wfm",
         
-        "/Users/howard/AR/demo/LaputaDesktop3/VET/facemodel/eyeswidth_20.wfm",
-        "/Users/howard/AR/demo/LaputaDesktop3/VET/facemodel/eyesheight_24.wfm",
-        "/Users/howard/AR/demo/LaputaDesktop3/VET/facemodel/eyeseperation_36.wfm",
+        pathPrefix + "demo/LaputaDesktop3/VET/facemodel/eyeswidth_20.wfm",
+        pathPrefix + "demo/LaputaDesktop3/VET/facemodel/eyesheight_24.wfm",
+        pathPrefix + "demo/LaputaDesktop3/VET/facemodel/eyeseperation_36.wfm",
         
-        "/Users/howard/AR/demo/LaputaDesktop3/VET/facemodel/cheeksZ_2.wfm",
-        "/Users/howard/AR/demo/LaputaDesktop3/VET/facemodel/noseZExten_6.wfm",
-        "/Users/howard/AR/demo/LaputaDesktop3/VET/facemodel/nosevertical_17.wfm",
+        pathPrefix + "demo/LaputaDesktop3/VET/facemodel/cheeksZ_2.wfm",
+        pathPrefix + "demo/LaputaDesktop3/VET/facemodel/noseZExten_6.wfm",
+        pathPrefix + "demo/LaputaDesktop3/VET/facemodel/nosevertical_17.wfm",
         
-        "/Users/howard/AR/demo/LaputaDesktop3/VET/facemodel/nosepointup_3.wfm",
-        "/Users/howard/AR/demo/LaputaDesktop3/VET/facemodel/mouthvertical_21.wfm",
-        "/Users/howard/AR/demo/LaputaDesktop3/VET/facemodel/mouthwidth_14.wfm",
+        pathPrefix + "demo/LaputaDesktop3/VET/facemodel/nosepointup_3.wfm",
+        pathPrefix + "demo/LaputaDesktop3/VET/facemodel/mouthvertical_21.wfm",
+        pathPrefix + "demo/LaputaDesktop3/VET/facemodel/mouthwidth_14.wfm",
         
-        "/Users/howard/AR/demo/LaputaDesktop3/VET/facemodel/eyesverticaldiff_36.wfm",
-        "/Users/howard/AR/demo/LaputaDesktop3/VET/facemodel/chinwidth_2.wfm",
+        pathPrefix + "demo/LaputaDesktop3/VET/facemodel/eyesverticaldiff_36.wfm",
+        pathPrefix + "demo/LaputaDesktop3/VET/facemodel/chinwidth_2.wfm",
         
     };
     

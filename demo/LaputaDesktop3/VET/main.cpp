@@ -25,15 +25,14 @@ using namespace cv;
 #define GLASSON 0
 #define SHOWTWOWIN 0
 
-
 //Facial Model Source File
-string vertexFile = "/Users/howard/AR/demo/LaputaDesktop3/VET/facemodel/vertexlist_113.wfm";
-string faceFile = "/Users/howard/AR/demo/LaputaDesktop3/VET/facemodel/facelist_184.wfm";
-const char* glassesFile[] = {"/Users/howard/AR/LaputaApp/Resources/3dmodels/3dGlasses/RanGlasses2.obj",
-                             "/Users/howard/AR/LaputaApp/Resources/3dmodels/3dGlasses/purpleglasses2.obj",
-                             "/Users/howard/AR/LaputaApp/Resources/3dmodels/3dGlasses/blackglasses2.obj"};
-const char* glassesVsh = "/Users/howard/AR/demo/LaputaDesktop3/VET/3dGlasses/3dGlassesVertexShaderGL.vsh";
-const char* glassesFsh = "/Users/howard/AR/demo/LaputaDesktop3/VET/3dGlasses/3dGlassesFragmentShaderGL.fsh";
+string vertexFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/vertexlist_113.wfm";
+string faceFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/facelist_184.wfm";
+const string glassesFile[] = { pathPrefix + "LaputaApp/Resources/3dmodels/3dGlasses/RanGlasses2.obj",
+                               pathPrefix + "LaputaApp/Resources/3dmodels/3dGlasses/purpleglasses2.obj",
+                               pathPrefix + "LaputaApp/Resources/3dmodels/3dGlasses/blackglasses2.obj"};
+const string glassesVsh = pathPrefix + "demo/LaputaDesktop3/VET/3dGlasses/3dGlassesVertexShaderGL.vsh";
+const string glassesFsh = pathPrefix + "demo/LaputaDesktop3/VET/3dGlasses/3dGlassesFragmentShaderGL.fsh";
 const char* fragName = "outFrag";
 
 string videoFile = "./demo1.mov";
@@ -51,11 +50,11 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
         if (key == GLFW_KEY_ESCAPE) {
             glfwSetWindowShouldClose(window, GL_TRUE);
         } else if( key == GLFW_KEY_1){
-            glasses.reloadGlasses(glassesFile[0]);
+            glasses.reloadGlasses(glassesFile[0].c_str());
         } else if( key == GLFW_KEY_2){
-            glasses.reloadGlasses(glassesFile[1]);
+            glasses.reloadGlasses(glassesFile[1].c_str());
         } else if( key == GLFW_KEY_3){
-            glasses.reloadGlasses(glassesFile[2]);
+            glasses.reloadGlasses(glassesFile[2].c_str());
         } else {
             calibrated = !calibrated;
         }
@@ -201,7 +200,7 @@ int main()
     
     if (GLASSON) {
         //Read glasses model
-        bool res = loadOBJ("/Users/howard/AR/demo/LaputaDesktop3/VET/Glasses.obj", verticesGlass);
+        bool res = loadOBJ((pathPrefix+"demo/LaputaDesktop3/VET/Glasses.obj").c_str(), verticesGlass);
         myrotate(verticesGlass, 90, 0, 1, 0);
         myrotate(verticesGlass, 180, 0, 0, 1);
         myscale(verticesGlass, 35, 35, 35);
@@ -221,10 +220,10 @@ int main()
     GLuint dstTexture;
     glGenTextures(1, &dstTexture);
     
-    glasses.init(glassesVsh,
-                 glassesFsh,
+    glasses.init(glassesVsh.c_str(),
+                 glassesFsh.c_str(),
                  fragName,
-                 glassesFile[0],
+                 glassesFile[0].c_str(),
                  faceFile.c_str(),
                  vertexFile.c_str(),
                  0, ASPECT_RATIO_4_3,
