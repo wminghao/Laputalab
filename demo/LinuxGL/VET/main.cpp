@@ -88,16 +88,16 @@ glm::mat4 IntrinsicToProjection(Mat* intrinsicMat, int W, int H)
 static void saveImage(Glasses& glasses) {
     uint8 *pImage_orig = (uint8*)malloc( srcWidth * srcHeight * 3 );
     glasses.readPixels(pImage_orig);
-    uint8 *pImage_flipped = (uint8*)malloc( srcWidth * srcHeight * 3 );
+    uint8 *pImage_flipped_x = (uint8*)malloc( srcWidth * srcHeight * 3 );
     for( int i = 0; i < srcHeight; i++) {
         for( int j = 0; j < srcWidth; j++ ) {
-            memcpy( pImage_flipped + (i * srcWidth + j) * 3, pImage_orig + ( (srcHeight-i)*srcWidth + srcWidth - j )*3, 3);
+            memcpy( pImage_flipped_x + (i * srcWidth + j) * 3, pImage_orig + ( (srcHeight-i)*srcWidth + j )*3, 3);
         }
     }
     // Fill in the compression parameter structure.
     jpge::params params;
-    jpge::compress_image_to_jpeg_file(savedJpegFilePath.c_str(), srcWidth, srcHeight, 3, pImage_flipped, params);
-    free( pImage_flipped );
+    jpge::compress_image_to_jpeg_file(savedJpegFilePath.c_str(), srcWidth, srcHeight, 3, pImage_flipped_x, params);
+    free( pImage_flipped_x );
     free( pImage_orig );
 }
 
