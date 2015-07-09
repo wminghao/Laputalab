@@ -11,10 +11,11 @@
 
 #include<iostream>
 #include<fstream>
+#include "platform.h"
 
 const float DELTA_BEHIND_GLASSES = 4.0; //delta face behind the glasses
 
-#if defined(__MACH__) || defined( __linux__ )
+#if defined(DESKTOP_GL)
 const float DELTA_SMALLER_GLASSES = 1.0; //delta face width smaller than glasses
 #else
 const float DELTA_SMALLER_GLASSES = -5.0; //delta face width smaller than glasses

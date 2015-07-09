@@ -21,6 +21,7 @@
 
 #include <map>
 #include <vector>
+#include "platform.h"
 
 //math library
 #include <glm/glm.hpp>
@@ -118,10 +119,10 @@ private:
     float yMin;
     float zMin;
     
-#if defined(__MACH__) || defined( __linux__ )
+#if defined(DESKTOP_GL)
     // Vertex Array Objects Identifiers
     GLuint vao;
-#endif //__MACH__ || __linux__
+#endif //DESKTOP_GL
     
     Candide3 _candide3;
     float _candide3WidthRatio;  //width ratio from candide3 to glasses

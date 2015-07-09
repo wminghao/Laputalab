@@ -744,7 +744,7 @@
 				COMPRESS_PNG_FILES = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/thirdpartylib/opencv",
+					"$(PROJECT_DIR)/thirdpartylib/iOSopencv",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LaputaApp-Prefix.pch";
@@ -752,7 +752,7 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					thirdpartylib/glm,
-					thirdpartylib/libassimp/include,
+					thirdpartylib/iOSlibassimp/include,
 					"thirdpartylib/iOSMagick-6.8.8-9-libs/include",
 					thirdpartylib/cvanalyzer/include,
 					../../AR_lib/CVAnalyzerLib/CVAnalyzerLib/utilities,
@@ -762,7 +762,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/thirdpartylib",
-					"$(PROJECT_DIR)/thirdpartylib/libassimp/lib",
+					"$(PROJECT_DIR)/thirdpartylib/iOSlibassimp/lib",
 					"$(PROJECT_DIR)/thirdpartylib/iOSMagick-6.8.8-9-libs",
 					"$(PROJECT_DIR)/thirdpartylib/cvanalyzer/lib",
 				);
@@ -783,7 +783,7 @@
 				COMPRESS_PNG_FILES = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/thirdpartylib/opencv",
+					"$(PROJECT_DIR)/thirdpartylib/iOSopencv",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "LaputaApp-Prefix.pch";
@@ -791,7 +791,7 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					thirdpartylib/glm,
-					thirdpartylib/libassimp/include,
+					thirdpartylib/iOSlibassimp/include,
 					"thirdpartylib/iOSMagick-6.8.8-9-libs/include",
 					thirdpartylib/cvanalyzer/include,
 					../../AR_lib/CVAnalyzerLib/CVAnalyzerLib/utilities,
@@ -801,7 +801,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/thirdpartylib",
-					"$(PROJECT_DIR)/thirdpartylib/libassimp/lib",
+					"$(PROJECT_DIR)/thirdpartylib/iOSlibassimp/lib",
 					"$(PROJECT_DIR)/thirdpartylib/iOSMagick-6.8.8-9-libs",
 					"$(PROJECT_DIR)/thirdpartylib/cvanalyzer/lib",
 				);

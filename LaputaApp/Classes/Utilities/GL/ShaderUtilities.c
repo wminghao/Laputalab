@@ -56,6 +56,7 @@
 #include "ShaderUtilities.h"
 
 #include "err.h"
+#include "platform.h"
 
 
 #define LogInfo printf
@@ -195,9 +196,9 @@ GLint glueCreateProgram(const GLchar *vertSource, const GLchar *fragSource,
         }
 	}
     
-#ifdef __MACH__
+#ifdef DESKTOP_GL
     glBindFragDataLocation(prog, 0, fragColorName);
-#endif //__MACH__
+#endif //DESKTOP_GL
 
 	status *= glueLinkProgram(prog);
     

@@ -13,6 +13,7 @@
 #include "glUtilities.h"
 #include "matrix.h"
 #include "unit.h"
+#include "platform.h"
 
 //math library
 #include <glm/glm.hpp>
@@ -67,9 +68,9 @@ public:
     
     void setMatrices(mat4& projectMat, mat4& rotTransMat);
     
-#if defined(__MACH__) || defined( __linux__ )
+#if defined(DESKTOP_GL )
     void readPixels(unsigned char* pixels);
-#endif //__MACH__ || __linux__
+#endif //DESKTOP_GL
 private:
     void deinit();
 private:
@@ -93,7 +94,7 @@ private:
     
     int _zRotationInDegree;
     
-#if defined(__MACH__) || defined( __linux__ )
+#if defined(DESKTOP_GL)
     //input framebuffer
     GLuint _inputBufferHandle; //input buffer
     
@@ -106,7 +107,7 @@ private:
     //anti-aliased framebuffer
     GLuint _aaColorbuffer; //anti-aliasing color buffer
     GLuint _aaTexturebuffer; //anti-aliasing texture buffer
-#endif //__MACH__ || __linux__
+#endif //DESKTOP_GL
 };
 
 #endif

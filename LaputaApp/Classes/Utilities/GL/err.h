@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <assert.h>
+#include "platform.h"
 
 inline void getGLErr(const char* prefix){
     int err = glGetError();
@@ -18,6 +19,8 @@ inline void getGLErr(const char* prefix){
         printf("%s err=%d\r\n", prefix, err);
     }
 }
+
+#ifdef DESKTOP_GL
 inline void readParam(const char* prefix)
 {
     int objectType;
@@ -70,4 +73,5 @@ inline void getReadBuffers()
         printf("GL_COLOR_ATTACHMENT0=%d, data[%d]=%d\r\n", GL_COLOR_ATTACHMENT0, i, data[i]);
     }
 }
+#endif //DESKTOP_GL
 #endif
