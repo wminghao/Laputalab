@@ -91,7 +91,7 @@ static void saveImage(Glasses& glasses) {
     uint8 *pImage_flipped = (uint8*)malloc( srcWidth * srcHeight * 3 );
     for( int i = 0; i < srcHeight; i++) {
         for( int j = 0; j < srcWidth; j++ ) {
-            memcpy( pImage_flipped + (i * srcWidth + j) * 3, pImage_orig + ( (srcHeight-i)*srcWidth + srcWidth - j )*3, 3);
+            memcpy( pImage_flipped + (i * srcWidth + j) * 3, pImage_orig + ( (srcHeight-i)*srcWidth + j )*3, 3);
         }
     }
     // Fill in the compression parameter structure.
