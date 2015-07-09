@@ -24,8 +24,11 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#ifdef __MACH__
 const string pathPrefix = "/Users/howard/AR/";
-
+#else
+const string pathPrefix = "/Laputalab/";
+#endif //__MACH__
 using namespace std;
 using namespace cv;
 

@@ -5,7 +5,6 @@
 //  Created by Howard Wang on 15-5-27.
 //
 //
-
 #include "candide3.h"
 #include "err.h"
 
@@ -151,7 +150,7 @@ float Candide3::setCandide3Vertices(vector<myvec3>* vec, float zRotateInDegree)
     float zMax = 0;
     size_t total = vec->size();
     vertices.resize(total);
-    for (int i = 0; i < total ; i++){
+    for (size_t i = 0; i < total ; i++){
         myvec3 vert = (*vec)[i];
         vertices[i].m_pos.x = vert.x;
         vertices[i].m_pos.y = -vert.y; //it's up side down
@@ -183,7 +182,7 @@ float Candide3::setCandide3Vertices(vector<myvec3>* vec, float zRotateInDegree)
     cout<<"New zMax="<<zMax<<" zMin="<<zMin << " candide3 depth = " << (zMax-zMin)<<endl;
     
     
-    for (int i = 0; i < total ; i++){
+    for (size_t i = 0; i < total ; i++){
         //map directly into texture
         if( zRotateInDegree == 90 ) {
             //aspect ratio is 16/9 for 90 mode

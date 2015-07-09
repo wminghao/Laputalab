@@ -58,6 +58,7 @@ bool Texture::load()
         }
         free(pixels);
     } else {
+      /*
         // Handle the error
         char error_string[256];
         char *description;
@@ -67,6 +68,8 @@ bool Texture::load()
         FormatLocaleString(error_string,250,"%s %s %lu %s\n",GetMagickModule(),description);
         MagickRelinquishMemory(description);
         printf("Warning: cannot read image. error=%s\n", error_string);
+      */
+      printf("Warning: cannot read image. texture\n");
     }
     
     MagickWandTerminus();

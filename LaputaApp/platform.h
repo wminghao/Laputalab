@@ -24,6 +24,7 @@
 #endif //!TARGET_OS_IPHONE
 //#elif defined( __linux__ )
 #else //__linux__
+#define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 #include <GL/glext.h>
 #define DESKTOP_GL //define desktop opengl

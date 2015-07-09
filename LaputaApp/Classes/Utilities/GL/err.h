@@ -11,6 +11,7 @@
 
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
 #include "platform.h"
 
 inline void getGLErr(const char* prefix){
@@ -19,7 +20,7 @@ inline void getGLErr(const char* prefix){
         printf("%s err=%d\r\n", prefix, err);
     }
 }
-
+/*
 #ifdef DESKTOP_GL
 inline void readParam(const char* prefix)
 {
@@ -74,4 +75,5 @@ inline void getReadBuffers()
     }
 }
 #endif //DESKTOP_GL
+*/
 #endif
