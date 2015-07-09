@@ -3,7 +3,8 @@ import os
 
 JpgeCodePath = os.getcwd()+'../../../../../LaputaDesktop3/thirdparty/jpeg-compressor_v104_r1/'
 GLCodePath =  os.getcwd()+'../../../../../../LaputaApp/Classes/Utilities/GL/'
-MainCodePath =  os.getcwd()+'../../../../../LaputaDesktop3/VET/'
+MainCodePath =  os.getcwd()+'../../../../../LinuxGL/VET/'
+UtilitiesCodePath =  os.getcwd()+'../../../../../LaputaDesktop3/VET/'
 GlmCodePath =  os.getcwd()+'../../../../../../LaputaApp/thirdpartylib/glm/'
 PlatformPath =  os.getcwd()+'../../../../../../LaputaApp/'
 ImageMagickPath = '/usr/include/ImageMagick/'
@@ -14,6 +15,7 @@ VETCflags.append( '-Wno-unused' )
 VETCPPPath = []
 VETCPPPath.append( JpgeCodePath )
 VETCPPPath.append( GLCodePath )
+VETCPPPath.append( UtilitiesCodePath )
 VETCPPPath.append( MainCodePath )
 VETCPPPath.append( GlmCodePath )
 VETCPPPath.append( PlatformPath )
@@ -32,8 +34,8 @@ meshObj = env.Object(GLCodePath + 'mesh.cpp', CCFLAGS=VETCflags )
 reflectionTextureObj = env.Object(GLCodePath + 'reflectionTexture.cpp', CCFLAGS=VETCflags )
 ShaderUtilitiesObj = env.Object(GLCodePath + 'ShaderUtilities.c', CCFLAGS=VETCflags )
 textureObj = env.Object(GLCodePath + 'texture.cpp', CCFLAGS=VETCflags )
-objloaderObj = env.Object(MainCodePath + 'objloader.cpp', CCFLAGS=VETCflags )
-utilitiesObj = env.Object(MainCodePath + 'utilities.cpp', CCFLAGS=VETCflags )
+objloaderObj = env.Object(UtilitiesCodePath + 'objloader.cpp', CCFLAGS=VETCflags )
+utilitiesObj = env.Object(UtilitiesCodePath + 'utilities.cpp', CCFLAGS=VETCflags )
 mainObj = env.Object(MainCodePath + 'main.cpp', CCFLAGS=VETCflags )
 
 #target
