@@ -169,6 +169,7 @@ int main()
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     glfwWindowHint(GLFW_SAMPLES, 32); // 32x antialiasing, very aggressive
     glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
+    
     //GLFWwindow* window = glfwCreateWindow(640, 480, "My Title", glfwGetPrimaryMonitor(), NULL);
     GLFWwindow* window = glfwCreateWindow(srcWidth, srcHeight, "OpenGL Mirror ", nullptr, nullptr); // Windowed
     if (!window) {
@@ -327,14 +328,12 @@ int main()
     Mat frame, frame_tmp, image; // "image" to be renamed as "frameG"
     Mat frameFromPic;
     frameFromPic = imread( pathPrefix + "demo/LinuxGL/sample/Tom.jpg", CV_LOAD_IMAGE_COLOR);
-    flip(frameFromPic, frameFromPic, 1); 
+    
     while ( !glfwWindowShouldClose(window) ) 
     {
-        frame = frameFromPic;
+        frame = frameFromPic.clone();
         iF++;
-              
-        flip(frame, frame, 1);
-        
+                
         if (REALTIME) {
             if (trackFlag == 0){
                 glm::mat4 rotTransMat4 = externalToRotTrans(P);
