@@ -167,7 +167,8 @@ int main()
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
     }
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-    glfwWindowHint(GLFW_SAMPLES, 32); // 32x antialiasing, very aggressive
+    //Disable Anti-aliasing here, enable inside the platform independent code.
+    //glfwWindowHint(GLFW_SAMPLES, 32); // 32x antialiasing, very aggressive
     glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
     //GLFWwindow* window = glfwCreateWindow(640, 480, "My Title", glfwGetPrimaryMonitor(), NULL);
     GLFWwindow* window = glfwCreateWindow(srcWidth, srcHeight, "OpenGL Mirror ", nullptr, nullptr); // Windowed
@@ -656,11 +657,12 @@ int main()
          imwrite(outFolder + "/frame-" + convert.str() + ".jpg", frame);
          */
         
-        if(waitKey(1) >= 0) break;
+        //if(waitKey(1) >= 0) break;
         
     }
     
     //------------   Tracking End  ---------------
     
+    glfwTerminate();
     return 0;
 }

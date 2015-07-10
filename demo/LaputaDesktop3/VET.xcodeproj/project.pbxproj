@@ -12,6 +12,7 @@
 		25C3437A18C6DB7400B0AD8C /* utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 25C3437818C6DB7400B0AD8C /* utilities.cpp */; };
 		8954176A1B4D9C910058B5C9 /* jpge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 895417631B4D9C910058B5C9 /* jpge.cpp */; };
 		8954176D1B4D9C910058B5C9 /* timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 895417671B4D9C910058B5C9 /* timer.cpp */; };
+		895417781B508A830058B5C9 /* libGLEW.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 895417771B508A830058B5C9 /* libGLEW.a */; };
 		8968D3521B19825400FAFBDC /* libMagick++-6.Q16.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 899A5F541B19796800A080FF /* libMagick++-6.Q16.a */; };
 		8968D3531B19825400FAFBDC /* libMagickCore-6.Q16.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 899A5F581B19796800A080FF /* libMagickCore-6.Q16.a */; };
 		8968D3541B19825400FAFBDC /* libMagickWand-6.Q16.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 899A5F5C1B19796800A080FF /* libMagickWand-6.Q16.a */; };
@@ -117,6 +118,7 @@
 		895417741B4DC3180058B5C9 /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = platform.h; path = ../../../LaputaApp/platform.h; sourceTree = "<group>"; };
 		895417751B4DCD400058B5C9 /* 3dGlassesFragmentShaderGL2.1.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = 3dGlassesFragmentShaderGL2.1.fsh; path = 3dGlasses/3dGlassesFragmentShaderGL2.1.fsh; sourceTree = "<group>"; };
 		895417761B4DCD400058B5C9 /* 3dGlassesVertexShaderGL2.1.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = 3dGlassesVertexShaderGL2.1.vsh; path = 3dGlasses/3dGlassesVertexShaderGL2.1.vsh; sourceTree = "<group>"; };
+		895417771B508A830058B5C9 /* libGLEW.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGLEW.a; path = ../../../../../opt/local/lib/libGLEW.a; sourceTree = "<group>"; };
 		899A5EA81B18F10100A080FF /* libopencv_calib3d.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.10.dylib; path = ../../../../../usr/local/lib/libopencv_calib3d.2.4.10.dylib; sourceTree = "<group>"; };
 		899A5EA91B18F10100A080FF /* libopencv_calib3d.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.10.dylib; path = ../../../../../usr/local/lib/libopencv_calib3d.2.4.10.dylib; sourceTree = "<group>"; };
 		899A5EAA1B18F10100A080FF /* libopencv_calib3d.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.10.dylib; path = ../../../../../usr/local/lib/libopencv_calib3d.2.4.10.dylib; sourceTree = "<group>"; };
@@ -224,6 +226,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				895417781B508A830058B5C9 /* libGLEW.a in Frameworks */,
 				8968D3521B19825400FAFBDC /* libMagick++-6.Q16.a in Frameworks */,
 				8968D3531B19825400FAFBDC /* libMagickCore-6.Q16.a in Frameworks */,
 				8968D3541B19825400FAFBDC /* libMagickWand-6.Q16.a in Frameworks */,
@@ -299,6 +302,7 @@
 		25A4749C18B883F40075F93D = {
 			isa = PBXGroup;
 			children = (
+				895417771B508A830058B5C9 /* libGLEW.a */,
 				899A5F6B1B1979E100A080FF /* OpenGL.framework */,
 				899A5F491B1978E800A080FF /* IOKit.framework */,
 				899A5F471B1978E100A080FF /* Cocoa.framework */,
@@ -610,6 +614,7 @@
 					/usr/local/include,
 					"/opt/local/include/ImageMagick-6",
 					/Users/howard/AR/LaputaApp/thirdpartylib/glm,
+					/opt/local/include,
 				);
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
@@ -637,6 +642,7 @@
 					"/opt/local/include/ImageMagick-6",
 					/Users/howard/AR/LaputaApp/thirdpartylib/glm,
 					/usr/local/include,
+					/opt/local/include,
 				);
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,

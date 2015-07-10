@@ -98,15 +98,9 @@ private:
     //input framebuffer
     GLuint _inputBufferHandle; //input buffer
     
-    //output framebuffer
-    GLuint _outputBufferHandle; //output buffer
-    GLuint _outputTexturebuffer; //output buffer
-    GLuint _outputColorbuffer; //output buffer
-    GLuint _outputDepthbuffer; //output buffer
-    
     //anti-aliased framebuffer
     GLuint _aaColorbuffer; //anti-aliasing color buffer
-    GLuint _aaTexturebuffer; //anti-aliasing texture buffer
+    //GLuint _aaTexturebuffer; //anti-aliasing texture buffer
 #endif //DESKTOP_GL
 };
 

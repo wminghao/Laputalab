@@ -351,7 +351,7 @@ void Mesh::Render(GLuint textureObj)
 {
 #if defined(DESKTOP_GL)
     //according to http://stackoverflow.com/questions/24643027/opengl-invalid-operation-following-glenablevertexattribarray
-    //enable core profile
+    //enable core profile, 3.2 only
     glBindVertexArray( vao );
 #endif //DESKTOP_GL
     
