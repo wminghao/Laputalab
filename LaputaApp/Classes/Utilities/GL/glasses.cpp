@@ -410,7 +410,7 @@ bool Glasses::render(GLuint dstTextureName, GLuint candide3Texture, bool shouldR
             
             ret = true;
         } else {
-            printf("framebufferStatus=%d\r\n", framebufferStatus);
+            printf("render:framebufferStatus=%d\r\n", framebufferStatus);
         }
         
     }
@@ -484,7 +484,7 @@ void Glasses::readPixels(unsigned char* pixels)
         glReadPixels(0, 0, _srcWidth, _srcHeight, GL_RGB, GL_UNSIGNED_BYTE, pixels);
         //getGLErr("glGetTexImage");
     } else {
-        printf("framebufferStatus=%d\r\n", framebufferStatus);
+        printf("readPixels:framebufferStatus=%d\r\n", framebufferStatus);
     }
 
 }

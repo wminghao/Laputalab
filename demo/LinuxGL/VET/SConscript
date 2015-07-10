@@ -37,8 +37,9 @@ textureObj = env.Object(GLCodePath + 'texture.cpp', CCFLAGS=VETCflags )
 objloaderObj = env.Object(UtilitiesCodePath + 'objloader.cpp', CCFLAGS=VETCflags )
 utilitiesObj = env.Object(UtilitiesCodePath + 'utilities.cpp', CCFLAGS=VETCflags )
 mainObj = env.Object(MainCodePath + 'main.cpp', CCFLAGS=VETCflags )
+mainHeadlessObj = env.Object(MainCodePath + 'mainHeadless.cpp', CCFLAGS=VETCflags )
 
-#target
+#target 1 with Window
 VETProg = File("prog/VET")
 
 progs.append( VETProg )
@@ -60,5 +61,30 @@ env.Program( VETProg,
 	       utilitiesObj,
 	       mainObj],	
 	     LIBS=['glfw3', 'GL', 'GLEW', 'X11', 'Xxf86vm', 'Xrandr', 'Xi', 'Xinerama', 'Xcursor', 'pthread', 'rt', 'dl', 'm', 'assimp', 'MagickWand', 'opencv_calib3d', 'opencv_contrib', 'opencv_core', 'opencv_features2d', 'opencv_flann','opencv_gpu', 'opencv_highgui', 'opencv_imgproc','opencv_legacy', 'opencv_ml', 'opencv_nonfree', 'opencv_objdetect', 'opencv_ocl', 'opencv_photo', 'opencv_stitching', 'opencv_superres', 'opencv_ts', 'opencv_video', 'opencv_videostab'],
-	     LIBPATH = ['/usr/lib', '/usr/local/lib', '/usr/lib/'],
+	     LIBPATH = ['/usr/lib', '/usr/local/lib'],
+	     CCFLAGS = VETCflags)
+
+#target 2 without Window, headless
+VETHeadlessProg = File("prog/VETHeadless")
+
+progs.append( VETHeadlessProg )
+env.Replace( CPPPATH = VETCPPPath )
+env.Program( VETHeadlessProg,
+	     [ jpgeObj,
+	       timerObj,
+	       candide3Obj,
+	       candide3TextureObj,
+	       colorObj,
+	       glassesObj,
+	       glUtilitiesObj,
+	       matrixObj,
+	       meshObj,
+	       reflectionTextureObj,
+	       ShaderUtilitiesObj,
+	       textureObj,
+	       objloaderObj,
+	       utilitiesObj,
+	       mainHeadlessObj],	
+	     LIBS=['GL', 'OSMesa', 'pthread', 'rt', 'dl', 'm', 'assimp', 'MagickWand', 'opencv_calib3d', 'opencv_contrib', 'opencv_core', 'opencv_features2d', 'opencv_flann','opencv_gpu', 'opencv_highgui', 'opencv_imgproc','opencv_legacy', 'opencv_ml', 'opencv_nonfree', 'opencv_objdetect', 'opencv_ocl', 'opencv_photo', 'opencv_stitching', 'opencv_superres', 'opencv_ts', 'opencv_video', 'opencv_videostab'],
+	     LIBPATH = ['/usr/lib', '/usr/local/lib'],
 	     CCFLAGS = VETCflags)
