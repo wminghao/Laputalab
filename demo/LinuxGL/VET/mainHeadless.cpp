@@ -128,7 +128,10 @@ int main()
     ////////////////
     //osmesa context
     ////////////////
-  OSMesaContext ctx = OSMesaCreateContextExt( OSMESA_RGBA, 16, 0, 0, NULL);
+  const GLint zdepth = 24; //24 bits z depth buffer
+  const GLint stencil = 8; //8 bits stencil
+  const GLint accum = 0; //accumulation buffer
+  OSMesaContext ctx = OSMesaCreateContextExt( OSMESA_RGBA, zdepth, stencil, 0, NULL);
   if(!ctx) {
     printf("OSMesaCreateContextExt failed!\n");
     return 0;
