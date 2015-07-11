@@ -85,7 +85,7 @@ static void saveBuffer(void* buffer, string& fileToSave, int srcWidth, int srcHe
     Mat origImage( srcHeight, srcWidth, CV_8UC4, pImage_flipped_x);
     Mat finalImage;
     float ratio = (float)1/(float)AA_FACTOR;
-    resize(origImage, finalImage, Size(), ratio, ratio, INTER_CUBIC);
+    resize(origImage, finalImage, Size(), ratio, ratio, INTER_AREA);
     //finally save the image
     imwrite((pathPrefix+fileToSave).c_str(), finalImage);
     free( pImage_flipped_x );
