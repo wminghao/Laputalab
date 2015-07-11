@@ -25,7 +25,7 @@ using namespace cv;
 #define GLASSON 0
 #define OPENGL_2_1 1
 
-const int AA_FACTOR = 4;
+const int AA_FACTOR = 2;
 
 //Facial Model Source File
 string vertexFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/vertexlist_113.wfm";
