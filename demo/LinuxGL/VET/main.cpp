@@ -41,7 +41,7 @@ string videoFile = "./demo1.mov";
 //src, 4:3
 const int srcWidth = 640;
 const int srcHeight = 480;
-Glasses glasses(srcWidth, srcHeight);
+Glasses glasses(srcWidth, srcHeight, false);
 
 int calibrated = false;
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
