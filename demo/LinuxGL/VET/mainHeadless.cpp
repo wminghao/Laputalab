@@ -181,7 +181,7 @@ int main(int argc, char* argv[])
     ////////////////
     
     //------------Initialization Begin---------------
-    Mat cam_int = (Mat_<float>(3,3) << 650.66, 0, 319.50, 0, 650.94, 239.50, 0, 0, 1);
+    Mat cam_int = (Mat_<float>(3,3) << 650.66, 0, 319.50, 0, 650.94, ( aspectRatio == ASPECT_RATIO_16_9 )?179.5:239.5, 0, 0, 1);
     glm::mat4 projectionMat4 = IntrinsicToProjection(&cam_int, srcWidth, srcHeight);
     
     //Scales
