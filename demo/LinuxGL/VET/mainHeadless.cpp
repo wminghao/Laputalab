@@ -35,9 +35,10 @@ const string glassesFile[] = { pathPrefix + "LaputaApp/Resources/3dmodels/3dGlas
                                pathPrefix + "LaputaApp/Resources/3dmodels/3dGlasses/blackglasses2.obj"};
 const char* fragName = "outFrag";
 
-const string savedJpegFilePath = pathPrefix + "savedHeadless.jpg";
-string videoFile = "./demo1.mov";
+const string defaultInputFile = "Tom.jpg";
+const string defaultOutputFile = "savedHeadless.jpg";
 
+string videoFile = "./demo1.mov";
 
 //src, 4:3
 //manually resize to achive aa
@@ -70,7 +71,7 @@ glm::mat4 IntrinsicToProjection(Mat* intrinsicMat, int W, int H)
     return projectionMat;
 }
 
-static void saveBuffer(void* buffer) {
+static void saveBuffer(void* buffer, string& fileToSave) {
     //first flip the x axis
     uint8 *pImage_flipped_x = (uint8*)malloc( srcWidth * srcHeight * 4 );
     //convert from RGBA to BGRA
@@ -93,24 +94,8 @@ static void saveBuffer(void* buffer) {
     float ratio = (float)1/(float)AA_FACTOR;
     resize(origImage, finalImage, Size(), ratio, ratio, INTER_CUBIC);
     //finally save the image
-    imwrite(savedJpegFilePath.c_str(), finalImage);
+    imwrite((pathPrefix+fileToSave).c_str(), finalImage);
     free( pImage_flipped_x );
-}
-
-static void saveImage(Glasses& glasses) {
-    uint8 *pImage_orig = (uint8*)malloc( srcWidth * srcHeight * 3 );
-    glasses.readPixels(pImage_orig);
-    uint8 *pImage_flipped_x = (uint8*)malloc( srcWidth * srcHeight * 3 );
-    for( int i = 0; i < srcHeight; i++) {
-        for( int j = 0; j < srcWidth; j++ ) {
-            memcpy( pImage_flipped_x + (i * srcWidth + j) * 3, pImage_orig + ( (srcHeight-i)*srcWidth + j )*3, 3);
-        }
-    }
-    // Fill in the compression parameter structure.
-    jpge::params params;
-    jpge::compress_image_to_jpeg_file(savedJpegFilePath.c_str(), srcWidth, srcHeight, 3, pImage_flipped_x, params);
-    free( pImage_flipped_x );
-    free( pImage_orig );
 }
 
 static void drawOpenGLGlasses(GLuint& dstTexture, Mat& frameOrig, Glasses& glasses, mat4& projectionMat, mat4& rotTransMat ) {
@@ -140,8 +125,15 @@ static void drawOpenGLGlasses(GLuint& dstTexture, Mat& frameOrig, Glasses& glass
     glasses.render(dstTexture, dstTexture, false);
 }
 
-int main()
+int main(int argc, char* argv[])
 {
+  string inputFile = defaultInputFile;
+  string outputFile = defaultOutputFile;
+  if( argc == 3 ) {
+    inputFile = argv[1];
+    outputFile = argv[2];
+  }
+
     ////////////////
     //osmesa context
     ////////////////
@@ -313,7 +305,7 @@ int main()
     Mat frame, frame_tmp, image; // "image" to be renamed as "frameG"
     //TODO assume it's 640*480
     Mat frame_orig;
-    frame_orig = imread( pathPrefix + "demo/LinuxGL/sample/Tom.jpg", CV_LOAD_IMAGE_COLOR);
+    frame_orig = imread( pathPrefix + "demo/LinuxGL/sample/" + inputFile, CV_LOAD_IMAGE_COLOR);
     //double the size
     resize(frame_orig, frame, Size(), AA_FACTOR, AA_FACTOR, INTER_CUBIC);
     
@@ -327,7 +319,7 @@ int main()
             if (trackFlag == 0){
                 glm::mat4 rotTransMat4 = externalToRotTrans(P);
                 drawOpenGLGlasses(dstTexture, frame, glasses, projectionMat4, rotTransMat4);
-		saveBuffer(buffer);
+		saveBuffer(buffer, outputFile);
                 if ( 0 ) //disable the calibration
                 {
 		    cvtColor(frame, image, CV_BGR2GRAY);
