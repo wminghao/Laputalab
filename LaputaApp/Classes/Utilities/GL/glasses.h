@@ -50,7 +50,7 @@ typedef enum {
 
 class Glasses{
 public:
-    Glasses(int srcWidth, int srcHeight);
+    Glasses(int srcWidth, int srcHeight, bool bEnableAA);
     ~Glasses();
     
     bool init(const char* vertLFilePath,
@@ -93,6 +93,8 @@ private:
     int _srcHeight;
     
     int _zRotationInDegree;
+    
+    bool _enableAA; //enable anti-aliasing or not
     
 #if defined(DESKTOP_GL)
     //input framebuffer

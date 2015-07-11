@@ -12,9 +12,9 @@
 #include "err.h"
 #include <glm/gtc/type_ptr.hpp>
 
-const int AA_LEVEL = 8; //4 is normal, 0 means no AA, max 8 on Mac
+const int AA_LEVEL = 8; //4 is normal, 0 means no AA, max 8 on Mac, mesa does not support Anti-aliasing.
 
-Glasses::Glasses(int srcWidth, int srcHeight):_srcWidth(srcWidth), _srcHeight(srcHeight)
+Glasses::Glasses(int srcWidth, int srcHeight, bool bEnableAA):_srcWidth(srcWidth), _srcHeight(srcHeight), _enableAA(bEnableAA)
 {
     _pMesh = new Mesh();
 }
@@ -292,7 +292,11 @@ bool Glasses::render(GLuint dstTextureName, GLuint candide3Texture, bool shouldR
         glFramebufferTexture2D( GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, dstTextureName, 0 );
         
         //Step 2. Bind a framebuffer for write
-        glBindFramebuffer( GL_DRAW_FRAMEBUFFER, _offscreenBufferHandle );
+        if( _enableAA ) {
+            glBindFramebuffer( GL_DRAW_FRAMEBUFFER, _offscreenBufferHandle );
+        } else {
+            glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0 ); //bind to target framebuffer directly.
+        }
         //glClear is ALWAYS associated with a framebuffer, should clear it here instead of outside.
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         
@@ -359,15 +363,17 @@ bool Glasses::render(GLuint dstTextureName, GLuint candide3Texture, bool shouldR
             glFlush();
             
 #if defined(DESKTOP_GL)
-            //last blit multisample framebuffer to normal framebuffer 0
-            glBindFramebuffer( GL_READ_FRAMEBUFFER, _offscreenBufferHandle );
-            glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0 );
-            if( glCheckFramebufferStatus(GL_READ_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE &&
-                glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE ) {
-                //do blitting here
-                glBlitFramebuffer(0, 0, _srcWidth, _srcHeight, 0, 0, _srcWidth, _srcHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-            } else {
-                printf("render final fail:framebufferStatus=%d\r\n", framebufferStatus);
+            if( _enableAA ) {
+                //last blit multisample framebuffer to normal framebuffer 0
+                glBindFramebuffer( GL_READ_FRAMEBUFFER, _offscreenBufferHandle );
+                glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0 );
+                if( glCheckFramebufferStatus(GL_READ_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE &&
+                    glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE ) {
+                    //do blitting here
+                    glBlitFramebuffer(0, 0, _srcWidth, _srcHeight, 0, 0, _srcWidth, _srcHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+                } else {
+                    printf("render final fail:framebufferStatus=%d\r\n", framebufferStatus);
+                }
             }
 #endif//DESKTOP_GL
             

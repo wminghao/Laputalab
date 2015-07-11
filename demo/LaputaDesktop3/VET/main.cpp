@@ -25,6 +25,7 @@ using namespace cv;
 #define GLASSON 0
 #define SHOWTWOWIN 0
 #define OPENGL_2_1 1
+#define ENABLE_AA 1
 
 //Facial Model Source File
 string vertexFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/vertexlist_113.wfm";
@@ -41,7 +42,7 @@ string videoFile = "./demo1.mov";
 //src, 4:3
 const int srcWidth = 640;
 const int srcHeight = 480;
-Glasses glasses(srcWidth, srcHeight);
+Glasses glasses(srcWidth, srcHeight, ENABLE_AA);
 
 int calibrated = false;
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
