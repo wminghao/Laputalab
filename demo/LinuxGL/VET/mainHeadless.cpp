@@ -28,23 +28,16 @@ using namespace cv;
 const int AA_FACTOR = 2;
 
 //Facial Model Source File
-string vertexFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/vertexlist_113.wfm";
-string faceFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/facelist_184.wfm";
-const string glassesFile[] = { pathPrefix + "LaputaApp/Resources/3dmodels/3dGlasses/RanGlasses2.obj",
-                               pathPrefix + "LaputaApp/Resources/3dmodels/3dGlasses/purpleglasses2.obj",
-                               pathPrefix + "LaputaApp/Resources/3dmodels/3dGlasses/blackglasses2.obj"};
+const string vertexFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/vertexlist_113.wfm";
+const string faceFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/facelist_184.wfm";
+const string glassesFilePrefix = pathPrefix + "LaputaApp/Resources/3dmodels/3dGlasses/";
 const char* fragName = "outFrag";
 
 const string defaultInputFile = "Tom.jpg";
 const string defaultOutputFile = "savedHeadless.jpg";
+const string defaultGlassesFile = "RanGlasses.obj";
 
 string videoFile = "./demo1.mov";
-
-//src, 4:3
-//manually resize to achive aa
-const int srcWidth = 640 * AA_FACTOR;
-const int srcHeight = 480 * AA_FACTOR; 
-Glasses glasses(srcWidth, srcHeight, false);
 
 glm::mat4 externalToRotTrans(float* P_arr)
 {
@@ -71,7 +64,7 @@ glm::mat4 IntrinsicToProjection(Mat* intrinsicMat, int W, int H)
     return projectionMat;
 }
 
-static void saveBuffer(void* buffer, string& fileToSave) {
+static void saveBuffer(void* buffer, string& fileToSave, int srcWidth, int srcHeight) {
     //first flip the x axis
     uint8 *pImage_flipped_x = (uint8*)malloc( srcWidth * srcHeight * 4 );
     //convert from RGBA to BGRA
@@ -129,14 +122,38 @@ int main(int argc, char* argv[])
 {
   string inputFile = defaultInputFile;
   string outputFile = defaultOutputFile;
-  if( argc == 3 ) {
+  string glassesFile = glassesFilePrefix+defaultGlassesFile;
+  if( argc == 4 ) {
     inputFile = argv[1];
     outputFile = argv[2];
+    glassesFile = glassesFilePrefix+argv[3];
   }
 
-    ////////////////
-    //osmesa context
-    ////////////////
+  Mat frame, frame_orig;
+  frame_orig = imread( pathPrefix + "demo/LinuxGL/sample/" + inputFile, CV_LOAD_IMAGE_COLOR);
+  //double the size
+  resize(frame_orig, frame, Size(), AA_FACTOR, AA_FACTOR, INTER_CUBIC);
+  Size srcSize = frame_orig.size();
+  ASPECT_RATIO aspectRatio = ASPECT_RATIO_4_3;
+  if( srcSize.width * 3 == srcSize.height * 4 ) {
+    aspectRatio = ASPECT_RATIO_4_3;
+    printf("image asepect ratio: 4/3\r\n");
+  } else if(srcSize.width * 9 == srcSize.height * 16 ) {
+    aspectRatio = ASPECT_RATIO_16_9;
+    printf("image asepect ratio: 16/9\r\n");
+  } else {
+    printf("image asepect ratio: unknown\r\n");
+    //TODO
+  }
+  
+  //manually resize to achive aa
+  const int srcWidth = srcSize.width * AA_FACTOR;
+  const int srcHeight = srcSize.height * AA_FACTOR; 
+  Glasses glasses(srcWidth, srcHeight, false);
+
+  ////////////////
+  //osmesa context
+  ////////////////
   const GLint zdepth = 24; //24 bits z depth buffer
   const GLint stencil = 8; //8 bits stencil
   const GLint accum = 16; //accumulation buffer
@@ -218,10 +235,10 @@ int main(int argc, char* argv[])
     glasses.init(glassesVsh.c_str(),
                  glassesFsh.c_str(),
                  fragName,
-                 glassesFile[0].c_str(),
+                 glassesFile.c_str(),
                  faceFile.c_str(),
                  vertexFile.c_str(),
-                 0, ASPECT_RATIO_4_3,
+                 0, aspectRatio,
                  true, &verticesAdjusted ); //read adjusted coordinates directly from opengl.
     ////////////////
     
@@ -302,13 +319,8 @@ int main(int argc, char* argv[])
     float err_next = 0;
     
     vector<myvec3> vertices_last(vertices_1st);
-    Mat frame, frame_tmp, image; // "image" to be renamed as "frameG"
-    //TODO assume it's 640*480
-    Mat frame_orig;
-    frame_orig = imread( pathPrefix + "demo/LinuxGL/sample/" + inputFile, CV_LOAD_IMAGE_COLOR);
-    //double the size
-    resize(frame_orig, frame, Size(), AA_FACTOR, AA_FACTOR, INTER_CUBIC);
-    
+    Mat frame_tmp, image; // "image" to be renamed as "frameG"
+
     //only process once.
     for(int i=0; i<1; i++)
     {
@@ -319,7 +331,7 @@ int main(int argc, char* argv[])
             if (trackFlag == 0){
                 glm::mat4 rotTransMat4 = externalToRotTrans(P);
                 drawOpenGLGlasses(dstTexture, frame, glasses, projectionMat4, rotTransMat4);
-		saveBuffer(buffer, outputFile);
+		saveBuffer(buffer, outputFile, srcWidth, srcHeight);
                 if ( 0 ) //disable the calibration
                 {
 		    cvtColor(frame, image, CV_BGR2GRAY);
