@@ -25,6 +25,8 @@ using namespace cv;
 #define GLASSON 0
 #define OPENGL_2_1 1
 
+const int AA_FACTOR = 2;
+
 //Facial Model Source File
 string vertexFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/vertexlist_113.wfm";
 string faceFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/facelist_184.wfm";
@@ -33,14 +35,16 @@ const string glassesFile[] = { pathPrefix + "LaputaApp/Resources/3dmodels/3dGlas
                                pathPrefix + "LaputaApp/Resources/3dmodels/3dGlasses/blackglasses2.obj"};
 const char* fragName = "outFrag";
 
-const string savedJpegFilePath = pathPrefix + "savedHeadless.jpg";
+const string defaultInputFile = "Tom.jpg";
+const string defaultOutputFile = "savedHeadless.jpg";
+
 string videoFile = "./demo1.mov";
 
-
 //src, 4:3
-const int srcWidth = 640;
-const int srcHeight = 480;
-Glasses glasses(srcWidth, srcHeight);
+//manually resize to achive aa
+const int srcWidth = 640 * AA_FACTOR;
+const int srcHeight = 480 * AA_FACTOR; 
+Glasses glasses(srcWidth, srcHeight, false);
 
 glm::mat4 externalToRotTrans(float* P_arr)
 {
@@ -67,33 +71,31 @@ glm::mat4 IntrinsicToProjection(Mat* intrinsicMat, int W, int H)
     return projectionMat;
 }
 
-static void saveBuffer(void* buffer) {
+static void saveBuffer(void* buffer, string& fileToSave) {
+    //first flip the x axis
     uint8 *pImage_flipped_x = (uint8*)malloc( srcWidth * srcHeight * 4 );
-    for( int i = 0; i < srcHeight; i++) {
-        for( int j = 0; j < srcWidth; j++ ) {
-	  memcpy( pImage_flipped_x + (i * srcWidth + j) * 4, (uint8*)buffer + ( (srcHeight-i)*srcWidth + j )*4, 4);
-        }
-    }
-    // Fill in the compression parameter structure.
-    jpge::params params;
-    jpge::compress_image_to_jpeg_file(savedJpegFilePath.c_str(), srcWidth, srcHeight, 4, pImage_flipped_x, params);
-    free( pImage_flipped_x );
-}
+    //convert from RGBA to BGRA
+    uint8* src;
+    uint8* dst;    
 
-static void saveImage(Glasses& glasses) {
-    uint8 *pImage_orig = (uint8*)malloc( srcWidth * srcHeight * 3 );
-    glasses.readPixels(pImage_orig);
-    uint8 *pImage_flipped_x = (uint8*)malloc( srcWidth * srcHeight * 3 );
     for( int i = 0; i < srcHeight; i++) {
         for( int j = 0; j < srcWidth; j++ ) {
-            memcpy( pImage_flipped_x + (i * srcWidth + j) * 3, pImage_orig + ( (srcHeight-i)*srcWidth + j )*3, 3);
+	  src = (uint8*)buffer + ( (srcHeight-i)*srcWidth + j )*4;
+	  dst = pImage_flipped_x + (i * srcWidth + j) * 4;
+	  *dst = *(src+2);
+	  *(dst+1) = *(src+1);
+	  *(dst+2) = *src;
+	  *(dst+3) = *(src+3);
         }
     }
-    // Fill in the compression parameter structure.
-    jpge::params params;
-    jpge::compress_image_to_jpeg_file(savedJpegFilePath.c_str(), srcWidth, srcHeight, 3, pImage_flipped_x, params);
+    //then resize the image
+    Mat origImage( srcHeight, srcWidth, CV_8UC4, pImage_flipped_x);
+    Mat finalImage;
+    float ratio = (float)1/(float)AA_FACTOR;
+    resize(origImage, finalImage, Size(), ratio, ratio, INTER_CUBIC);
+    //finally save the image
+    imwrite((pathPrefix+fileToSave).c_str(), finalImage);
     free( pImage_flipped_x );
-    free( pImage_orig );
 }
 
 static void drawOpenGLGlasses(GLuint& dstTexture, Mat& frameOrig, Glasses& glasses, mat4& projectionMat, mat4& rotTransMat ) {
@@ -123,14 +125,21 @@ static void drawOpenGLGlasses(GLuint& dstTexture, Mat& frameOrig, Glasses& glass
     glasses.render(dstTexture, dstTexture, false);
 }
 
-int main()
+int main(int argc, char* argv[])
 {
+  string inputFile = defaultInputFile;
+  string outputFile = defaultOutputFile;
+  if( argc == 3 ) {
+    inputFile = argv[1];
+    outputFile = argv[2];
+  }
+
     ////////////////
     //osmesa context
     ////////////////
   const GLint zdepth = 24; //24 bits z depth buffer
   const GLint stencil = 8; //8 bits stencil
-  const GLint accum = 0; //accumulation buffer
+  const GLint accum = 16; //accumulation buffer
   OSMesaContext ctx = OSMesaCreateContextExt( OSMESA_RGBA, zdepth, stencil, 0, NULL);
   if(!ctx) {
     printf("OSMesaCreateContextExt failed!\n");
@@ -294,7 +303,11 @@ int main()
     
     vector<myvec3> vertices_last(vertices_1st);
     Mat frame, frame_tmp, image; // "image" to be renamed as "frameG"
-    frame = imread( pathPrefix + "demo/LinuxGL/sample/Tom.jpg", CV_LOAD_IMAGE_COLOR);
+    //TODO assume it's 640*480
+    Mat frame_orig;
+    frame_orig = imread( pathPrefix + "demo/LinuxGL/sample/" + inputFile, CV_LOAD_IMAGE_COLOR);
+    //double the size
+    resize(frame_orig, frame, Size(), AA_FACTOR, AA_FACTOR, INTER_CUBIC);
     
     //only process once.
     for(int i=0; i<1; i++)
@@ -306,7 +319,7 @@ int main()
             if (trackFlag == 0){
                 glm::mat4 rotTransMat4 = externalToRotTrans(P);
                 drawOpenGLGlasses(dstTexture, frame, glasses, projectionMat4, rotTransMat4);
-		saveBuffer(buffer);
+		saveBuffer(buffer, outputFile);
                 if ( 0 ) //disable the calibration
                 {
 		    cvtColor(frame, image, CV_BGR2GRAY);
