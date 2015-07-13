@@ -39,9 +39,11 @@ const string savedJpegFilePath = pathPrefix + "saved.jpg";
 string videoFile = "./demo1.mov";
 
 
-//src, 4:3
+
 const int srcWidth = 640;
-const int srcHeight = 480;
+const int srcHeight = 360;//src, 16:9
+//const int srcHeight = 480; //src, 4:3
+
 Glasses glasses(srcWidth, srcHeight, ENABLE_AA);
 
 int calibrated = false;
@@ -183,7 +185,8 @@ int main()
     ////////////////
     
     //------------Initialization Begin---------------
-    Mat cam_int = (Mat_<float>(3,3) << 650.66, 0, 319.50, 0, 650.94, 239.50, 0, 0, 1);
+    Mat cam_int = (Mat_<float>(3,3) << 650.66, 0, 319.50, 0, 650.94, srcHeight/2-0.5, 0, 0, 1);
+    
     glm::mat4 projectionMat4 = IntrinsicToProjection(&cam_int, srcWidth, srcHeight);
     
     //Scales
