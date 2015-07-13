@@ -179,8 +179,10 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDe
 
     const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
     
-    printf("Mesh Index=%d, Material Index='%d', vertices=%d, mNumFaces=%d\n", Index,
+    /*
+     printf("Mesh Index=%d, Material Index='%d', vertices=%d, mNumFaces=%d\n", Index,
            paiMesh->mMaterialIndex, paiMesh->mNumVertices, paiMesh->mNumFaces);
+     */
 
     int yFloatUp = 8;
     if( zRotateInDegree == 90 ) {
@@ -316,7 +318,7 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
                     m_Materials[i] = NULL;
                     Ret = false;
                 } else {
-                    printf("Loaded texture index:%d, name %s file: %s coord:%.2f, %.2f, %.2f, %.2f: %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f, %.2f, %d\n",
+                    /*printf("Loaded texture index:%d, name %s file: %s coord:%.2f, %.2f, %.2f, %.2f: %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f, %.2f, %d\n",
                            i, name.C_Str(), Path.data,
                            diffuseColor.x, diffuseColor.y, diffuseColor.z, diffuseColor.w,
                            ambientColor.x, ambientColor.y, ambientColor.z, ambientColor.w,
@@ -324,6 +326,7 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
                            emissive.r, emissive.g, emissive.b, emissive.a,
                            transparent.r, transparent.g, transparent.b, transparent.a,
                            shininess, max);
+                     */
                 }
             }
         } else {
@@ -333,6 +336,7 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
                                        m_textureImageLocation,
                                        diffuseColor,
                                        ambientColor);
+            /*
             printf("Loaded color index:%d, name %s coord:%.2f, %.2f, %.2f, %.2f: %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f, %.2f, %d\n",
                    i, name.C_Str(),
                    diffuseColor.x, diffuseColor.y, diffuseColor.z, diffuseColor.w,
@@ -341,6 +345,7 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
                    emissive.r, emissive.g, emissive.b, emissive.a,
                    transparent.r, transparent.g, transparent.b, transparent.a,
                    shininess, max);
+            */
         }
     }
 

@@ -267,7 +267,7 @@ bail:
     /////////////////////////
     //Instantiate glasses model
     /////////////////////////
-    glasses_ = new Glasses( outputDimensions.width, outputDimensions.height );
+    glasses_ = new Glasses( outputDimensions.width, outputDimensions.height, false ); //TODO for now disable AA
     NSString *vertLSrcPath = [[NSBundle mainBundle] pathForResource:@"3dGlassesVertexShader" ofType:@"vsh"];
     NSString *fragLSrcPath = [[NSBundle mainBundle] pathForResource:@"3dGlassesFragmentShader" ofType:@"fsh"];
     NSString *glassesFilePath = [[NSBundle mainBundle] pathForResource:@"RanGlass" ofType:@"obj"];
