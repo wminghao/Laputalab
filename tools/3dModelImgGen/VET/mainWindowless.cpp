@@ -22,7 +22,7 @@ using namespace cv;
 #define V_HEIGHT 480
 #define DIST 600 //to be verified, need to find the correct value
 
-const int AA_FACTOR = 2;
+const int AA_FACTOR = 1;
 
 //Model file
 const string pathPrefix = "/Laputalab/";
@@ -114,8 +114,12 @@ static void saveBuffer(void* buffer, string& fileToSave, int srcWidth, int srcHe
     //then resize the image
     Mat origImage( srcHeight, srcWidth, CV_8UC4, pImage_flipped_x);
     Mat finalImage;
-    float ratio = (float)1/(float)AA_FACTOR;
-    resize(origImage, finalImage, Size(), ratio, ratio, INTER_AREA);
+    if( AA_FACTOR != 1 ) { 
+      float ratio = (float)1/(float)AA_FACTOR;
+      resize(origImage, finalImage, Size(), ratio, ratio, INTER_AREA);
+    } else {
+      finalImage = origImage.clone();
+    }
     //finally save the image
     imwrite(fileToSave.c_str(), finalImage);
     free( pImage_flipped_x );
@@ -164,8 +168,12 @@ int main(int argc, char* argv[])
 
   Mat frame, frame_orig;
   frame_orig = imread( inputFile, CV_LOAD_IMAGE_COLOR);
-  //double the size
-  resize(frame_orig, frame, Size(), AA_FACTOR, AA_FACTOR, INTER_CUBIC);
+  if( AA_FACTOR != 1 ) {
+    //double the size
+    resize(frame_orig, frame, Size(), AA_FACTOR, AA_FACTOR, INTER_CUBIC);
+  } else {
+    frame = frame_orig.clone();
+  }
   Size srcSize = frame_orig.size();
   ASPECT_RATIO aspectRatio = ASPECT_RATIO_4_3;
   if( srcSize.width * 3 == srcSize.height * 4 ) {
