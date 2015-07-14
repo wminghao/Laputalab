@@ -106,9 +106,9 @@ bool Glasses::init(const char* vertLFilePath,
     glBindRenderbuffer(GL_RENDERBUFFER, _depthRenderbuffer);
     
 #if defined(DESKTOP_GL)
-    glRenderbufferStorageMultisample(GL_RENDERBUFFER, AA_LEVEL, GL_DEPTH24_STENCIL8, _srcWidth, _srcHeight);
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, AA_LEVEL, GL_DEPTH32F_STENCIL8, _srcWidth, _srcHeight);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
-    glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, _depthRenderbuffer);
+    glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _depthRenderbuffer);
     
     glGenRenderbuffers(1, &_aaColorbuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, _aaColorbuffer);
@@ -302,7 +302,7 @@ bool Glasses::render(GLuint dstTextureName, GLuint candide3Texture, bool shouldR
             glBindFramebuffer( GL_DRAW_FRAMEBUFFER, 0 ); //bind to target framebuffer directly.
         }
         //glClear is ALWAYS associated with a framebuffer, should clear it here instead of outside.
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
         
         //Step 3. copy from read buffer to write buffer
         glBlitFramebuffer(0, 0, _srcWidth, _srcHeight, 0, 0, _srcWidth, _srcHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);

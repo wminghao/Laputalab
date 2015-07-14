@@ -116,10 +116,10 @@ static void saveBuffer(void* buffer, string& fileToSave, int srcWidth, int srcHe
     Mat origImage( srcHeight, srcWidth, CV_8UC4, pImage_flipped_x);
     Mat finalImage;
     if( AA_FACTOR != 1 ) { 
-      //float ratio = (float)1/(float)AA_FACTOR;
-      //resize(origImage, finalImage, Size(), ratio, ratio, INTER_AREA);
+      float ratio = (float)1/(float)AA_FACTOR;
+      resize(origImage, finalImage, Size(), ratio, ratio, INTER_AREA);
       //finally save the image
-      imwrite(fileToSave.c_str(), origImage);
+      imwrite(fileToSave.c_str(), finalImage);
 
     } else {
       //finally save the image
@@ -198,10 +198,10 @@ int main(int argc, char* argv[])
   ////////////////
   //osmesa context
   ////////////////
-  const GLint zdepth = 24; //24 bits z depth buffer
+  const GLint zdepth = 32; //24 bits z depth buffer
   const GLint stencil = 8; //8 bits stencil
-  const GLint accum = 16; //accumulation buffer
-  OSMesaContext ctx = OSMesaCreateContextExt( OSMESA_RGBA, zdepth, stencil, 0, NULL);
+  const GLint accum = 0; //accumulation buffer
+  OSMesaContext ctx = OSMesaCreateContextExt( OSMESA_RGBA, zdepth, stencil, accum, NULL);
   if(!ctx) {
     printf("OSMesaCreateContextExt failed!\n");
     return 0;
