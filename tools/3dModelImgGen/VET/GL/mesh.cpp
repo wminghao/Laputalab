@@ -364,6 +364,7 @@ void Mesh::Render(GLuint textureObj)
     glEnableVertexAttribArray(m_texCoordLocation);
     glEnableVertexAttribArray(m_normalLocation);
     
+    //howard: for model only, don't need candide3.
     //first render invisible candide3
     /*
 #if defined(DESKTOP_GL)

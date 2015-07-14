@@ -169,7 +169,8 @@ bool ReflectionTexture::load()
 
 void ReflectionTexture::bind(GLint textureId)
 {
-    glUniform1i(m_texCountLocation, 2);
+    //howard: for model only, disable reflection HDR.
+    glUniform1i(m_texCountLocation, 1); //2
     glUniform4f(m_diffuseColorLocation, m_diffuseColor.x, m_diffuseColor.y, m_diffuseColor.z, m_diffuseColor.w);
     glUniform4f(m_ambientColorLocation, m_ambientColor.x, m_ambientColor.y, m_ambientColor.z, m_ambientColor.w);
     
