@@ -1,3 +1,7 @@
+cd ../result
+rm RanGlasses.tar.gz 
+rm -rf RanGlasses
+cd ../test
 ./runsingle.sh RanGlasses +0
 ./runsingle.sh RanGlasses +10
 ./runsingle.sh RanGlasses +20

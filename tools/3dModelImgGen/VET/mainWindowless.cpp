@@ -22,12 +22,13 @@ using namespace cv;
 #define V_HEIGHT 480
 #define DIST 600 //to be verified, need to find the correct value
 
-const int AA_FACTOR = 1;
+const int AA_FACTOR = 4;
 
 //Model file
 const string pathPrefix = "/Laputalab/";
 string vertexFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/vertexlist_113.wfm";
 string faceFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/facelist_184.wfm";
+const string shaderFilePrefix = pathPrefix + "demo/LaputaDesktop3/VET/3dGlasses/";
 const string glassesFilePrefix = pathPrefix + "LaputaApp/Resources/3dmodels/3dGlasses/";
 const string whiteFilePrefix = pathPrefix + "tools/3dModelImgGen/background/";
 const string outputFilePrefix = pathPrefix + "tools/3dModelImgGen/result/";
@@ -115,13 +116,15 @@ static void saveBuffer(void* buffer, string& fileToSave, int srcWidth, int srcHe
     Mat origImage( srcHeight, srcWidth, CV_8UC4, pImage_flipped_x);
     Mat finalImage;
     if( AA_FACTOR != 1 ) { 
-      float ratio = (float)1/(float)AA_FACTOR;
-      resize(origImage, finalImage, Size(), ratio, ratio, INTER_AREA);
+      //float ratio = (float)1/(float)AA_FACTOR;
+      //resize(origImage, finalImage, Size(), ratio, ratio, INTER_AREA);
+      //finally save the image
+      imwrite(fileToSave.c_str(), origImage);
+
     } else {
-      finalImage = origImage.clone();
+      //finally save the image
+      imwrite(fileToSave.c_str(), origImage);
     }
-    //finally save the image
-    imwrite(fileToSave.c_str(), finalImage);
     free( pImage_flipped_x );
 }
 
@@ -213,11 +216,11 @@ int main(int argc, char* argv[])
     string glassesVsh;
     string glassesFsh;    
     if( OPENGL_2_1 ) {
-        glassesVsh = pathPrefix + "demo/LaputaDesktop3/VET/3dGlasses/3dGlassesVertexShaderGL2.1.vsh";
-        glassesFsh = pathPrefix + "demo/LaputaDesktop3/VET/3dGlasses/3dGlassesFragmentShaderGL2.1.fsh";
+        glassesVsh = shaderFilePrefix + "3dGlassesVertexShaderGL2.1.vsh";
+        glassesFsh = shaderFilePrefix + "3dGlassesFragmentShaderGL2.1.fsh";
     } else {
-        glassesVsh = pathPrefix + "demo/LaputaDesktop3/VET/3dGlasses/3dGlassesVertexShaderGL.vsh";
-        glassesFsh = pathPrefix + "demo/LaputaDesktop3/VET/3dGlasses/3dGlassesFragmentShaderGL.fsh";
+        glassesVsh = shaderFilePrefix + "3dGlassesVertexShaderGL.vsh";
+        glassesFsh = shaderFilePrefix + "3dGlassesFragmentShaderGL.fsh";
     }
     ////////////////
     

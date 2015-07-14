@@ -6,9 +6,9 @@ uniform vec4 ambientColor;
 uniform sampler2D textureImage;
 uniform samplerCube envMap;
 
-varying vec2 texCoordFrag;
-varying vec3 normalWorld;
-varying vec3 lightDirWorld;
+invariant varying vec2 texCoordFrag;
+invariant varying vec3 normalWorld;
+invariant varying vec3 lightDirWorld;
 
 void main()
 {

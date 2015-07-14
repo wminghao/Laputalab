@@ -8,9 +8,10 @@ uniform mat4 MVP;
 uniform mat4 World;
 uniform mat3 NormalMatrix;
 
-varying vec2 texCoordFrag;
-varying vec3 normalWorld;
-varying vec3 lightDirWorld;
+invariant varying vec2 texCoordFrag;
+invariant varying vec3 normalWorld;
+invariant varying vec3 lightDirWorld;
+invariant gl_Position;
 
 void main(){
     gl_Position = MVP * vec4(position, 1.0);
