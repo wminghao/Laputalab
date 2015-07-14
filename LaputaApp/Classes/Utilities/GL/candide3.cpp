@@ -121,7 +121,7 @@ bool Candide3::readVertices(string& vertexFile, float glassesWidth, float zRotat
         Vertex v(vert, texture, normal);
         
         vertices.push_back(v);
-        cout << "vert: "<<vert.x << " " << vert.y << " " << vert.z << " texture: "<<texture.x<<" "<<texture.y<<endl;
+        //cout << "vert: "<<vert.x << " " << vert.y << " " << vert.z << " texture: "<<texture.x<<" "<<texture.y<<endl;
     }
     
     ifs.close();
