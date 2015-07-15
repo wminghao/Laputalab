@@ -130,7 +130,7 @@ bool Candide3::readVertices(string& vertexFile, float glassesWidth, float zRotat
     //TODO
     //adjustShape(NULL, 0, shapeFactor, 1.0, 1.0, 1.0);
     
-    cout << "Total vertices: " << vertices.size() <<endl;
+    //cout << "Total vertices: " << vertices.size() <<endl;
     
     glGenBuffers(1, &VB);
     glBindBuffer(GL_ARRAY_BUFFER, VB);

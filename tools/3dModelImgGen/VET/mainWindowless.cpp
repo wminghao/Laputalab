@@ -29,14 +29,15 @@ const string pathPrefix = "/Laputalab/";
 string vertexFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/vertexlist_113.wfm";
 string faceFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/facelist_184.wfm";
 const string shaderFilePrefix = pathPrefix + "demo/LaputaDesktop3/VET/3dGlasses/";
-const string glassesFilePrefix = pathPrefix + "LaputaApp/Resources/3dmodels/3dGlasses/";
+const string glassesFilePrefix = "/root/3dmodels/";
+const string outputFilePrefix = "/root/3dmodels/result/";
+
 const string whiteFilePrefix = pathPrefix + "tools/3dModelImgGen/background/";
-const string outputFilePrefix = pathPrefix + "tools/3dModelImgGen/result/";
 const char* fragName = "outFrag";
 
 const string defaultInputFile = "white.jpg";
 const string defaultOutputFile = "output.jpg";
-const string defaultGlassesFile = "RanGlasses.obj";
+const string defaultGlassesFileName = "RanGlasses";
 
 Mat P2PMat(float P[]){
     Mat res = Mat::zeros(3, 4, CV_32F);
@@ -159,12 +160,12 @@ int main(int argc, char* argv[])
 {
   string inputFile = defaultInputFile;
   string outputFile = defaultOutputFile;
-  string glassesFile = glassesFilePrefix+defaultGlassesFile;
+  string glassesFile = glassesFilePrefix+defaultGlassesFileName+"/"+defaultGlassesFileName+".obj";
   float yRotateInDeg = 0;
   if( argc == 5 ) {
     inputFile = whiteFilePrefix+argv[1];
     outputFile = outputFilePrefix+argv[3]+"/"+argv[2];
-    glassesFile = glassesFilePrefix+argv[3]+".obj";
+    glassesFile = glassesFilePrefix+argv[3]+"/"+argv[3]+".obj";
     yRotateInDeg = (float)atoi(argv[4]);
   }
   cout<<outputFile<<endl;
