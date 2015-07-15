@@ -25,7 +25,7 @@ using namespace cv;
 #define GLASSON 0
 #define OPENGL_2_1 1
 
-const int AA_FACTOR = 2;
+const int AA_FACTOR = 4;
 
 //Facial Model Source File
 const string vertexFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/vertexlist_113.wfm";
@@ -154,10 +154,10 @@ int main(int argc, char* argv[])
   ////////////////
   //osmesa context
   ////////////////
-  const GLint zdepth = 24; //24 bits z depth buffer
+  const GLint zdepth = 32; //32 bits z depth buffer
   const GLint stencil = 8; //8 bits stencil
-  const GLint accum = 16; //accumulation buffer
-  OSMesaContext ctx = OSMesaCreateContextExt( OSMESA_RGBA, zdepth, stencil, 0, NULL);
+  const GLint accum = 0; //accumulation buffer
+  OSMesaContext ctx = OSMesaCreateContextExt( OSMESA_RGBA, zdepth, stencil, accum, NULL);
   if(!ctx) {
     printf("OSMesaCreateContextExt failed!\n");
     return 0;
