@@ -381,21 +381,24 @@ void Mesh::Render(GLuint textureObj)
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Entries[i].IB);
         
+        /*
         //use depth-bias to make the lens away from the frame to avoid z-fighting
         const float polygonOffsetFactor = 32.0f;
         const float polygonOffsetUnits = 32.0f;
-        
         glDepthFunc(GL_LEQUAL);
+        */
         
         //starting from GL_TEXTURE1 to avoid conflict with GL_TEXTURE0 in the base texture.
         const unsigned int materialIndex = m_Entries[i].MaterialIndex;
         if( materialIndex < m_Materials.size() && m_Materials[materialIndex] ){
+            /*
             if( dynamic_cast<ReflectionTexture*>(m_Materials[materialIndex]) ) {
                 glEnable(GL_POLYGON_OFFSET_FILL);
                 glPolygonOffset(polygonOffsetFactor, polygonOffsetUnits);
             } else {
                 glDisable(GL_POLYGON_OFFSET_FILL);
             }
+            */
             m_Materials[materialIndex]->bind(1);
         }
         glDrawElements(GL_TRIANGLES, m_Entries[i].NumIndices, GL_UNSIGNED_INT, 0);
