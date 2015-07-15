@@ -9,6 +9,7 @@ ImageMagickPath = '/usr/include/ImageMagick/'
 
 VETCflags = CCFLAGS
 VETCflags.append( '-Wno-unused' )
+VETCflags.append( '-DTHREED_MODEL_ONLY' )
 
 VETCPPPath = []
 VETCPPPath.append( GLCodePath )

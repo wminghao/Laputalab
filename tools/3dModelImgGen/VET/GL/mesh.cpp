@@ -363,15 +363,12 @@ void Mesh::Render(GLuint textureObj)
     glEnableVertexAttribArray(m_texCoordLocation);
     glEnableVertexAttribArray(m_normalLocation);
     
-    //howard: for model only, don't need candide3.
     //first render invisible candide3
-    /*
 #if defined(DESKTOP_GL)
     glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 #endif //DESKTOP_GL
     _candide3.render(textureObj);
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-    */
 
     //then render visible glasses object
     unsigned int totalMeshes = (unsigned int)m_Entries.size();
@@ -405,7 +402,6 @@ void Mesh::Render(GLuint textureObj)
             m_Materials[materialIndex]->bind(1);
         }
         glDrawElements(GL_TRIANGLES, m_Entries[i].NumIndices, GL_UNSIGNED_INT, 0);
-	printf("m_Entries[i].NumIndices=%d, materialIndex=%d\r\n", m_Entries[i].NumIndices, materialIndex);
     }
     
     /*

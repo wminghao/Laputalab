@@ -12,7 +12,14 @@
 #include<fstream>
 #include "platform.h"
 
+//howard: for model only, don't need candide3, move it far away.
+//3d model only has a strange issue, if no candide3, some triangles are not drawn correctly. side effects including, missing some triangles in the frame or totally gone triangles for the whole frame
+// So move it far away
+#if defined(THREED_MODEL_ONLY)
+const float DELTA_BEHIND_GLASSES = 200.0; //delta face behind the glasses
+#else
 const float DELTA_BEHIND_GLASSES = 4.0; //delta face behind the glasses
+#endif
 
 #if defined(DESKTOP_GL)
 const float DELTA_SMALLER_GLASSES = 1.0; //delta face width smaller than glasses

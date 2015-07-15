@@ -85,9 +85,7 @@ bool Glasses::init(const char* vertLFilePath,
     /////////////////////
     // offscreen buffer
     /////////////////////
-    //howard for model only disable culling here completely.
-    glDisable(GL_CULL_FACE);  
-    //glEnable(GL_CULL_FACE);  //enable culling to speed up rendering.
+    glEnable(GL_CULL_FACE);  //enable culling to speed up rendering.
     glEnable(GL_DEPTH_TEST); //MUST enable depth buffer
     glEnable(GL_DITHER); //enable dithering.
     glEnable(GL_BLEND); //enable blending
