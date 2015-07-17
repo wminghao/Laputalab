@@ -1,4 +1,7 @@
 #!/bin/bash
-#./runpanaroma.sh purpleglasses
+cd ..
+scons
+cd test
+./runpanaroma.sh purpleglasses
 ./runpanaroma.sh RanGlasses
-#./runpanaroma.sh blackglasses2
+./runpanaroma.sh blackglasses
