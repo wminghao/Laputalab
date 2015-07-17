@@ -41,8 +41,8 @@ string videoFile = "./demo1.mov";
 
 
 const int srcWidth = 640;
-const int srcHeight = 360;//src, 16:9
-//const int srcHeight = 480; //src, 4:3
+//const int srcHeight = 360;//src, 16:9
+const int srcHeight = 480; //src, 4:3
 
 Glasses glasses(srcWidth, srcHeight, ENABLE_AA);
 
