@@ -29,8 +29,8 @@ const string pathPrefix = "/Laputalab/";
 string vertexFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/vertexlist_113.wfm";
 string faceFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/facelist_184.wfm";
 const string shaderFilePrefix = pathPrefix + "demo/LaputaDesktop3/VET/3dGlasses/";
-const string glassesFilePrefix = "/root/3dmodels/";
-const string outputFilePrefix = "/root/3dmodels/result/";
+const string glassesFilePrefix = "/shared/3dmodels/";
+const string outputFilePrefix = glassesFilePrefix + "result/";
 
 const string whiteFilePrefix = pathPrefix + "tools/3dModelImgGen/background/";
 const char* fragName = "outFrag";

@@ -1,7 +1,6 @@
 #!/bin/bash
 pwd=`pwd`
-modeldir='/root/3dmodels'
-echo $modeldir
+modeldir='/shared/3dmodels'
 cd $modeldir/result
 rm $1.tar.gz 
 rm -rf $1
