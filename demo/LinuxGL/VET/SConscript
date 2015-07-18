@@ -1,13 +1,18 @@
 Import("*")
 import os
 
-JpgeCodePath = os.getcwd()+'../../../../../LaputaDesktop3/thirdparty/jpeg-compressor_v104_r1/'
-GLCodePath =  os.getcwd()+'../../../../../../LaputaApp/Classes/Utilities/GL/'
-MainCodePath =  os.getcwd()+'../../../../../LinuxGL/VET/'
-UtilitiesCodePath =  os.getcwd()+'../../../../../LaputaDesktop3/VET/'
-GlmCodePath =  os.getcwd()+'../../../../../../LaputaApp/thirdpartylib/glm/'
-PlatformPath =  os.getcwd()+'../../../../../../LaputaApp/'
+buildpath=os.getcwd()+"/../../../"
+
+JpgeCodePath = buildpath+'../LaputaDesktop3/thirdparty/jpeg-compressor_v104_r1/'
+GLCodePath =  buildpath+'../../LaputaApp/Classes/Utilities/GL/'
+MainCodePath =  buildpath+"VET/"
+UtilitiesCodePath =  buildpath+'../LaputaDesktop3/VET/'
+GlmCodePath =  buildpath+'../../LaputaApp/thirdpartylib/glm/'
+PlatformPath =  buildpath+'../../LaputaApp/'
 ImageMagickPath = '/usr/include/ImageMagick/'
+
+print UtilitiesCodePath
+print MainCodePath
 
 VETCflags = CCFLAGS
 VETCflags.append( '-Wno-unused' )

@@ -30,7 +30,8 @@ const int AA_FACTOR = 4;
 //Facial Model Source File
 const string vertexFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/vertexlist_113.wfm";
 const string faceFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/facelist_184.wfm";
-const string glassesFilePrefix = pathPrefix + "LaputaApp/Resources/3dmodels/3dGlasses/";
+const string glassesFilePrefix = "/shared/3dmodels/";
+const string imageFilePrefix = "/shared/images/";
 const char* fragName = "outFrag";
 
 const string defaultInputFile = "Tom.jpg";
@@ -80,14 +81,14 @@ static void saveBuffer(void* buffer, string& fileToSave, int srcWidth, int srcHe
 	  *(dst+2) = *src;
 	  *(dst+3) = *(src+3);
         }
-    }
+       }
     //then resize the image
     Mat origImage( srcHeight, srcWidth, CV_8UC4, pImage_flipped_x);
     Mat finalImage;
     float ratio = (float)1/(float)AA_FACTOR;
     resize(origImage, finalImage, Size(), ratio, ratio, INTER_AREA);
     //finally save the image
-    imwrite((pathPrefix+fileToSave).c_str(), finalImage);
+    imwrite((imageFilePrefix+fileToSave).c_str(), finalImage);
     free( pImage_flipped_x );
 }
 
@@ -126,11 +127,11 @@ int main(int argc, char* argv[])
   if( argc == 4 ) {
     inputFile = argv[1];
     outputFile = argv[2];
-    glassesFile = glassesFilePrefix+argv[3];
+    glassesFile = glassesFilePrefix+argv[3]+"/"+argv[3]+".obj";
   }
 
   Mat frame, frame_orig;
-  frame_orig = imread( pathPrefix + "demo/LinuxGL/sample/" + inputFile, CV_LOAD_IMAGE_COLOR);
+  frame_orig = imread( imageFilePrefix + inputFile, CV_LOAD_IMAGE_COLOR);
   //double the size
   resize(frame_orig, frame, Size(), AA_FACTOR, AA_FACTOR, INTER_CUBIC);
   Size srcSize = frame_orig.size();
