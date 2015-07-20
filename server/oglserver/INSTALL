@@ -1,10 +1,18 @@
-It requires 2 libraries.
+1. It requires 2 libraries.
 
-Libevent, latest version = 2.0.22
+1.1 Libevent, latest version = 2.0.22
 https://sourceforge.net/projects/levent/files/libevent/libevent-2.0/libevent-2.0.22-stable.tar.gz
+./configure
+make
+sudo make install
+ldconfig
 
-json parser library, latest version = 1.0.2
+1.2 json parser library, latest version = 1.0.2
 https://code.google.com/p/rapidjson/wiki/UserGuide
 https://github.com/miloyip/rapidjson
 
-It needs to copy the child process VETHeadless in /usr/bin/ directory.
+cmake .
+make
+sudo make install
+
+2. It needs to copy the child process VETHeadless in /usr/bin/ directory.

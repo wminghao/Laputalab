@@ -19,24 +19,24 @@ from daemon import Daemon
 from mail import Mail
 
 #setting
-pidFileName = '/tmp/face2dserver-nanny.pid'
+pidFileName = '/tmp/oglserver-nanny.pid'
 
 #server script
-face2dServerInitdScript = "/etc/init.d/face2d.sh"
-face2dStatusListeningPort = 1235
+OglServerInitdScript = "/etc/init.d/oglserver.sh"
+OglStatusListeningPort = 1235
 queryInterval = 1
 maxNonresponsiveCount = 5
 
 #import daemon.pidlockfile 
-class Face2dServerNanny(Daemon):
+class OglServerNanny(Daemon):
 
     def __init__( self, pidfile):
         Daemon.__init__(self, pidfile)
         self.nonresponsiveCount_ = 0
         
     def run( self ):
-        syslog.syslog('Face2dServerNanny running!')
-        self._restartFace2dServerProcess()
+        syslog.syslog('OglServerNanny running!')
+        self._restartOglServerProcess()
 
         start = time.time()
         while True:
@@ -44,48 +44,48 @@ class Face2dServerNanny(Daemon):
             try:
                 now = time.time()
                 if now - start > queryInterval:
-                    self._queryFace2dServerStat()
+                    self._queryOglServerStat()
                     start = now
             except:
                 traceback.print_exc( file = exceptionTraceout )
             time.sleep( 0.1 )
 
     def start( self ):
-        #daemon start will automatically start the face2dserver
+        #daemon start will automatically start the Oglserver
         Daemon.start(self)
 
     def stop( self ):
-        #daemon stop first need to stop the face2d server
+        #daemon stop first need to stop the Ogl server
         try:
-            subprocess.Popen( [face2dServerInitdScript, "stop"],
+            subprocess.Popen( [OglServerInitdScript, "stop"],
                               stdout=subprocess.PIPE ).communicate()[0]
         except:
             pass
         Daemon.stop(self)
 
-    def _restartFace2dServerProcess( self ):
-        syslog.syslog('Face2dServerNanny (re)start face2d!')
+    def _restartOglServerProcess( self ):
+        syslog.syslog('OglServerNanny (re)start Ogl!')
         output = ''
 
         try:
-            output += subprocess.Popen( [face2dServerInitdScript, "stop"],
+            output += subprocess.Popen( [OglServerInitdScript, "stop"],
                                         stdout=subprocess.PIPE ).communicate()[0]
         except:
             pass
 
         publicIp = Interface.get_ip_address('eth0')
         try:
-            output += subprocess.Popen( [face2dServerInitdScript, "start"],
+            output += subprocess.Popen( [OglServerInitdScript, "start"],
                                         stdout=subprocess.PIPE).communicate()[0]
-            Mail.mail( "face2dserver from host %s restarted" % publicIp, output )
+            Mail.mail( "Oglserver from host %s restarted" % publicIp, output )
         except:
-            Mail.mail( "face2dserver from host %s failed to restart" % publicIp, output )
+            Mail.mail( "Oglserver from host %s failed to restart" % publicIp, output )
         
-    def _queryFace2dServerStat( self ):
+    def _queryOglServerStat( self ):
         success = False
         exceptionTraceout = StringIO.StringIO()
         try:
-            url = "localhost:%d" % face2dStatusListeningPort
+            url = "localhost:%d" % OglStatusListeningPort
             conn = httplib.HTTPConnection(url)
             conn.request("GET", "/")
             r1 = conn.getresponse()
@@ -101,12 +101,12 @@ class Face2dServerNanny(Daemon):
             self.nonresponsiveCount_ += 1
 
         if self.nonresponsiveCount_ > maxNonresponsiveCount:
-            self._restartFace2dServerProcess()
+            self._restartOglServerProcess()
             self.nonresponsiveCount_ = 0
 
 if __name__ == "__main__":
     syslog.openlog(logoption=syslog.LOG_PID, facility=syslog.LOG_MAIL)
-    daemon = Face2dServerNanny( pidFileName )
+    daemon = OglServerNanny( pidFileName )
     if len(sys.argv) == 2:
         if 'start' == sys.argv[1]:
             daemon.start()

@@ -1,8 +1,8 @@
 //
-//  Face2dServerMain.cpp
-//  This server listens on a port: 1234 and serves http request for any face2d API calls.
+//  OglServerMain.cpp
+//  This server listens on a port: 9000 and serves http request for any ogl api calls.
 //
-//  Created by Xingze and Minghao on 4/21/15.
+//  Created by Minghao on 7/21/15
 //  Copyright (c) 2015 laputalab. All rights reserved.
 //
 #include <sys/types.h>
@@ -37,15 +37,20 @@ const int MAX_PROCESS_PIPES = 2; //max 32 instances at the same time.
 const int SERVER_PORT = 1234;
 const int STATUS_PORT = 1235;
 
-//#define TEST_DUMMY
+#define TEST_DUMMY
 #ifdef TEST_DUMMY
 const char* PROCESS_LOCATION = "dummy";//"/usr/bin/dummy";
 #else
-const char* PROCESS_LOCATION = "LandMarkMain";//"/usr/bin/LandMarkMain";
+const char* PROCESS_LOCATION = "VETHeadless";//"/usr/bin/VETHeadless"
 #endif
 
-const char* LANDMARK_URL_PREFIX = "GET /getlandmark?url=";
-const char* LANDMARK_URL_SUFFIX = "&";
+const char* OGLIMAGE_IN_PREFIX = "GET /getoglimage?input=";
+const char* OGLIMAGE_IN_SUFFIX = "&";
+const char* OGLIMAGE_OUT_PREFIX = "output=";
+const char* OGLIMAGE_OUT_SUFFIX = "&";
+const char* OGLIMAGE_GL_SUFFIX = "glasses=";
+const char* OGLIMAGE_GL_SUFFIX = "&";
+
 
 const char* TWO_HUNDRED_OK = "HTTP/1.1 200 OK\r\n\r\n";
 const char* FIVE_HUNDRED_ERROR = "HTTP/1.1 500 Cannot process image\r\n\r\n";
@@ -61,12 +66,12 @@ struct event_base * gEvtBase;
 ///////////////////////////////////
 void fnExit (void)
 {
-    LOG("----face2dServer Exited!");
+    LOG("----OglServer Exited!");
 }
 void handlesig( int signum )
 {
     LOG( "Exiting on signal: %d", signum  );
-    LOG( "Face2dServer just crashed, see stack dump below." );
+    LOG( "OglServer just crashed, see stack dump below." );
     LOG( "---------------------------------------------");
     void *array[10];
     size_t bt_size;
@@ -298,10 +303,10 @@ void buf_read_callback(struct bufferevent *incoming,
         int ret = evbuffer_remove(incoming->input, req, len);
         ASSERT(len == ret);
         if ( ret > 0 ) {
-            char* startPos = strstr(req, LANDMARK_URL_PREFIX);
-            char* endPos = strstr(req, LANDMARK_URL_SUFFIX);
+            char* startPos = strstr(req, OGLIMAGE_IN_PREFIX);
+            char* endPos = strstr(req, OGLIMAGE_IN_SUFFIX);
             if( startPos && endPos ) {
-                startPos += strlen(LANDMARK_URL_PREFIX);
+                startPos += strlen(OGLIMAGE_IN_PREFIX);
                 int urlLen =(endPos-startPos);
                 char url[urlLen+sizeof(int)];
                 memcpy(url, &urlLen, sizeof(int));
@@ -439,7 +444,7 @@ int main(int argc,
     // SIGKILL command cannot be caught
     atexit(fnExit);
 
-    Logger::initLog("Face2ServerMain");    
+    Logger::initLog("OglServerMain");    
 
     //start hashmap, launch 10 processes
     gPipeTable = new PipeTable(PROCESS_LOCATION, MAX_PROCESS_PIPES);

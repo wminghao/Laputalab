@@ -1,9 +1,9 @@
 #!/bin/sh
 	
-# description: face2d SDK server
-# processname: face2d_server
-PROG=face2d_server
-PROG_HOME=/usr/share/face2d
+# description: ogl SDK server
+# processname: ogl_server
+PROG=ogl_server
+PROG_HOME=/usr/share/ogl
 DAEMON=$PROG_HOME/$PROG
 PIDFILE=$PROG_HOME/$PROG.pid
 
