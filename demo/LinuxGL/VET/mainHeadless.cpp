@@ -31,12 +31,9 @@ const int AA_FACTOR = 4;
 const string vertexFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/vertexlist_113.wfm";
 const string faceFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/facelist_184.wfm";
 const string glassesFilePrefix = "/shared/3dmodels/";
-const string imageFilePrefix = "/shared/images/";
+const string imageFileInputPrefix = "/shared/images/input/";
+const string imageFileOutputPrefix = "/shared/images/output/";
 const char* fragName = "outFrag";
-
-const string defaultInputFile = "Tom.jpg";
-const string defaultOutputFile = "savedHeadless.jpg";
-const string defaultGlassesFile = "RanGlasses.obj";
 
 string videoFile = "./demo1.mov";
 
@@ -88,7 +85,7 @@ static void saveBuffer(void* buffer, string& fileToSave, int srcWidth, int srcHe
     float ratio = (float)1/(float)AA_FACTOR;
     resize(origImage, finalImage, Size(), ratio, ratio, INTER_AREA);
     //finally save the image
-    imwrite((imageFilePrefix+fileToSave).c_str(), finalImage);
+    imwrite(fileToSave.c_str(), finalImage);
     free( pImage_flipped_x );
 }
 
@@ -121,55 +118,63 @@ static void drawOpenGLGlasses(GLuint& dstTexture, Mat& frameOrig, Glasses& glass
 
 int main(int argc, char* argv[])
 {
-  string inputFile = defaultInputFile;
-  string outputFile = defaultOutputFile;
-  string glassesFile = glassesFilePrefix+defaultGlassesFile;
-  if( argc == 4 ) {
-    inputFile = argv[1];
-    outputFile = argv[2];
-    glassesFile = glassesFilePrefix+argv[3]+"/"+argv[3]+".obj";
-  }
-
-  Mat frame, frame_orig;
-  frame_orig = imread( imageFilePrefix + inputFile, CV_LOAD_IMAGE_COLOR);
-  //double the size
-  resize(frame_orig, frame, Size(), AA_FACTOR, AA_FACTOR, INTER_CUBIC);
-  Size srcSize = frame_orig.size();
-  ASPECT_RATIO aspectRatio = ASPECT_RATIO_4_3;
-  if( srcSize.width * 3 == srcSize.height * 4 ) {
-    aspectRatio = ASPECT_RATIO_4_3;
-    printf("image asepect ratio: 4/3\r\n");
-  } else if(srcSize.width * 9 == srcSize.height * 16 ) {
-    aspectRatio = ASPECT_RATIO_16_9;
-    printf("image asepect ratio: 16/9\r\n");
-  } else {
-    printf("image asepect ratio: unknown\r\n");
-    //TODO
-  }
-  
-  //manually resize to achive aa
-  const int srcWidth = srcSize.width * AA_FACTOR;
-  const int srcHeight = srcSize.height * AA_FACTOR; 
-  Glasses glasses(srcWidth, srcHeight, false);
-
-  ////////////////
-  //osmesa context
-  ////////////////
-  const GLint zdepth = 32; //32 bits z depth buffer
-  const GLint stencil = 8; //8 bits stencil
-  const GLint accum = 0; //accumulation buffer
-  OSMesaContext ctx = OSMesaCreateContextExt( OSMESA_RGBA, zdepth, stencil, accum, NULL);
-  if(!ctx) {
-    printf("OSMesaCreateContextExt failed!\n");
-    return 0;
-  }
-  void* buffer = malloc(srcWidth*srcHeight*4*sizeof(GLubyte));
-  /* Bind the buffer to the context and make it current */
-  if (!OSMesaMakeCurrent( ctx, buffer, GL_UNSIGNED_BYTE, srcWidth, srcHeight )) {
-    printf("OSMesaMakeCurrent failed!\n");
-    return 0;
-  }
-
+    string inputFile;
+    string outputFile;
+    string glassesFile;
+    if( argc == 4 ) {
+        inputFile = imageFileInputPrefix+argv[1];
+        outputFile = imageFileOutputPrefix+argv[2];
+        glassesFile = glassesFilePrefix+argv[3]+"/"+argv[3]+".obj";
+    } else {
+        return 0;
+    }
+    printf("input file=%s\r\n", inputFile.c_str());
+    printf("output file=%s\r\n", outputFile.c_str());
+    printf("glasses file=%s\r\n", glassesFile.c_str());
+    
+    Mat frame, frame_orig;
+    frame_orig = imread( inputFile, CV_LOAD_IMAGE_COLOR);
+    
+    printf("input size w=%d, h=%d\r\n", frame_orig.size().width, frame_orig.size().height);
+    
+    //double the size
+    resize(frame_orig, frame, Size(), AA_FACTOR, AA_FACTOR, INTER_CUBIC);
+    Size srcSize = frame_orig.size();
+    ASPECT_RATIO aspectRatio = ASPECT_RATIO_4_3;
+    if( srcSize.width * 3 == srcSize.height * 4 ) {
+        aspectRatio = ASPECT_RATIO_4_3;
+        printf("image asepect ratio: 4/3\r\n");
+    } else if(srcSize.width * 9 == srcSize.height * 16 ) {
+        aspectRatio = ASPECT_RATIO_16_9;
+        printf("image asepect ratio: 16/9\r\n");
+    } else {
+        printf("image asepect ratio: unknown\r\n");
+        //TODO
+    }
+    
+    //manually resize to achive aa
+    const int srcWidth = srcSize.width * AA_FACTOR;
+    const int srcHeight = srcSize.height * AA_FACTOR; 
+    Glasses glasses(srcWidth, srcHeight, false);
+    
+    ////////////////
+    //osmesa context
+    ////////////////
+    const GLint zdepth = 32; //32 bits z depth buffer
+    const GLint stencil = 8; //8 bits stencil
+    const GLint accum = 0; //accumulation buffer
+    OSMesaContext ctx = OSMesaCreateContextExt( OSMESA_RGBA, zdepth, stencil, accum, NULL);
+    if(!ctx) {
+        printf("OSMesaCreateContextExt failed!\n");
+        return 0;
+    }
+    void* buffer = malloc(srcWidth*srcHeight*4*sizeof(GLubyte));
+    /* Bind the buffer to the context and make it current */
+    if (!OSMesaMakeCurrent( ctx, buffer, GL_UNSIGNED_BYTE, srcWidth, srcHeight )) {
+        printf("OSMesaMakeCurrent failed!\n");
+        return 0;
+    }
+    
     string glassesVsh;
     string glassesFsh;    
     if( OPENGL_2_1 ) {
