@@ -25,7 +25,7 @@ using namespace cv;
 #define GLASSON 0
 #define OPENGL_2_1 1
 
-const int MAX_WIDTH_X_HEIGHT = 1280*960;
+const int MAX_WIDTH_X_HEIGHT = 960*960;//max memory on ytiyan server, 1Gbytes, too big.
 
 const int AA_FACTOR = 4; //4 uses too much memory here.
 
@@ -162,9 +162,12 @@ int main(int argc, char* argv[])
     } else if(srcSize.width * 9 == srcSize.height * 16 ) {
         aspectRatio = ASPECT_RATIO_16_9;
         printf("image asepect ratio: 16/9\r\n");
+    } else if(srcSize.width == srcSize.height) {
+        aspectRatio = ASPECT_RATIO_1_1;
+        printf("image asepect ratio: 1/1\r\n");
     } else {
         printf("image asepect ratio: unknown\r\n");
-        //TODO
+        return -1;
     }
     
     //manually resize to achive aa
@@ -202,7 +205,23 @@ int main(int argc, char* argv[])
     ////////////////
     
     //------------Initialization Begin---------------
-    Mat cam_int = (Mat_<float>(3,3) << 650.66, 0, 319.50, 0, 650.94, ( aspectRatio == ASPECT_RATIO_16_9 )?179.5:239.5, 0, 0, 1);
+    int curWidth;
+    switch( aspectRatio ) {
+    case ASPECT_RATIO_16_9: {
+        curWidth = 360/2-0.5;
+        break;
+    }
+    case ASPECT_RATIO_4_3: {
+        curWidth = 480/2-0.5;
+        break;
+    }
+    case ASPECT_RATIO_1_1: 
+    default: {
+        curWidth = 640/2-0.5;
+        break;
+    }
+    }
+    Mat cam_int = (Mat_<float>(3,3) << 650.66, 0, 319.50, 0, 650.94, curWidth, 0, 0, 1);
     glm::mat4 projectionMat4 = IntrinsicToProjection(&cam_int, srcWidth, srcHeight);
     
     //Scales
