@@ -25,7 +25,7 @@ using namespace cv;
 #define GLASSON 0
 #define OPENGL_2_1 1
 
-const int AA_FACTOR = 4;
+const int AA_FACTOR = 4; //4 uses too much memory here.
 
 //Facial Model Source File
 const string vertexFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/vertexlist_113.wfm";
@@ -65,28 +65,33 @@ glm::mat4 IntrinsicToProjection(Mat* intrinsicMat, int W, int H)
 static void saveBuffer(void* buffer, string& fileToSave, int srcWidth, int srcHeight) {
     //first flip the x axis
     uint8 *pImage_flipped_x = (uint8*)malloc( srcWidth * srcHeight * 4 );
-    //convert from RGBA to BGRA
-    uint8* src;
-    uint8* dst;    
 
-    for( int i = 0; i < srcHeight; i++) {
-        for( int j = 0; j < srcWidth; j++ ) {
-	  src = (uint8*)buffer + ( (srcHeight-i)*srcWidth + j )*4;
-	  dst = pImage_flipped_x + (i * srcWidth + j) * 4;
-	  *dst = *(src+2);
-	  *(dst+1) = *(src+1);
-	  *(dst+2) = *src;
-	  *(dst+3) = *(src+3);
+    if( pImage_flipped_x ) {
+        //convert from RGBA to BGRA
+        uint8* src;
+        uint8* dst;    
+        
+        for( int i = 0; i < srcHeight; i++) {
+            for( int j = 0; j < srcWidth; j++ ) {
+                src = (uint8*)buffer + ( (srcHeight-i)*srcWidth + j )*4;
+                dst = pImage_flipped_x + (i * srcWidth + j) * 4;
+                *dst = *(src+2);
+                *(dst+1) = *(src+1);
+                *(dst+2) = *src;
+                *(dst+3) = *(src+3);
+            }
         }
-       }
-    //then resize the image
-    Mat origImage( srcHeight, srcWidth, CV_8UC4, pImage_flipped_x);
-    Mat finalImage;
-    float ratio = (float)1/(float)AA_FACTOR;
-    resize(origImage, finalImage, Size(), ratio, ratio, INTER_AREA);
-    //finally save the image
-    imwrite(fileToSave.c_str(), finalImage);
-    free( pImage_flipped_x );
+        //then resize the image
+        Mat origImage( srcHeight, srcWidth, CV_8UC4, pImage_flipped_x);
+        Mat finalImage;
+        float ratio = (float)1/(float)AA_FACTOR;
+        resize(origImage, finalImage, Size(), ratio, ratio, INTER_AREA);
+        //finally save the image
+        imwrite(fileToSave.c_str(), finalImage);
+        free( pImage_flipped_x );
+    } else {
+        printf("OOM: srcWidth = %d, srcHeight=%d\r\n", srcWidth, srcHeight);
+    }
 }
 
 static void drawOpenGLGlasses(GLuint& dstTexture, Mat& frameOrig, Glasses& glasses, mat4& projectionMat, mat4& rotTransMat ) {
@@ -140,6 +145,8 @@ int main(int argc, char* argv[])
     //double the size
     resize(frame_orig, frame, Size(), AA_FACTOR, AA_FACTOR, INTER_CUBIC);
     Size srcSize = frame_orig.size();
+    frame_orig.release();
+
     ASPECT_RATIO aspectRatio = ASPECT_RATIO_4_3;
     if( srcSize.width * 3 == srcSize.height * 4 ) {
         aspectRatio = ASPECT_RATIO_4_3;
@@ -337,6 +344,7 @@ int main(int argc, char* argv[])
             if (trackFlag == 0){
                 glm::mat4 rotTransMat4 = externalToRotTrans(P);
                 drawOpenGLGlasses(dstTexture, frame, glasses, projectionMat4, rotTransMat4);
+                frame.release();
 		saveBuffer(buffer, outputFile, srcWidth, srcHeight);
                 if ( 0 ) //disable the calibration
                 {

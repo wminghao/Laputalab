@@ -99,30 +99,34 @@ static void saveBuffer(void* buffer, string& fileToSave, int srcWidth, int srcHe
     uint8* src;
     uint8* dst;    
 
-    for( int i = 0; i < srcHeight; i++) {
-        for( int j = 0; j < srcWidth; j++ ) {
-	  src = (uint8*)buffer + ( (srcHeight-i)*srcWidth + j )*4;
-	  dst = pImage_flipped_x + (i * srcWidth + j) * 4;
-	  *dst = *(src+2);
-	  *(dst+1) = *(src+1);
-	  *(dst+2) = *src;
-	  *(dst+3) = *(src+3);
+    if( pImage_flipped_x ) {
+        for( int i = 0; i < srcHeight; i++) {
+            for( int j = 0; j < srcWidth; j++ ) {
+                src = (uint8*)buffer + ( (srcHeight-i)*srcWidth + j )*4;
+                dst = pImage_flipped_x + (i * srcWidth + j) * 4;
+                *dst = *(src+2);
+                *(dst+1) = *(src+1);
+                *(dst+2) = *src;
+                *(dst+3) = *(src+3);
+            }
         }
-    }
-    //then resize the image
-    Mat origImage( srcHeight, srcWidth, CV_8UC4, pImage_flipped_x);
-    Mat finalImage;
-    if( AA_FACTOR != 1 ) { 
-      float ratio = (float)1/(float)AA_FACTOR;
-      resize(origImage, finalImage, Size(), ratio, ratio, INTER_AREA);
-      //finally save the image
-      imwrite(fileToSave.c_str(), finalImage);
-
+        
+        //then resize the image
+        Mat origImage( srcHeight, srcWidth, CV_8UC4, pImage_flipped_x);
+        Mat finalImage;
+        if( AA_FACTOR != 1 ) { 
+            float ratio = (float)1/(float)AA_FACTOR;
+            resize(origImage, finalImage, Size(), ratio, ratio, INTER_AREA);
+            //finally save the image
+            imwrite(fileToSave.c_str(), finalImage);
+        } else {
+            //finally save the image
+            imwrite(fileToSave.c_str(), origImage);
+        }
+        free( pImage_flipped_x );
     } else {
-      //finally save the image
-      imwrite(fileToSave.c_str(), origImage);
+        printf("OOM: srcWidth = %d, srcHeight=%d\r\n", srcWidth, srcHeight);        
     }
-    free( pImage_flipped_x );
 }
 
 static void drawOpenGLGlasses(GLuint& dstTexture, Mat& frameOrig, Glasses& glasses, mat4& projectionMat, mat4& rotTransMat, float yRotateInDeg ) {
@@ -177,6 +181,7 @@ int main(int argc, char* argv[])
         frame = frame_orig.clone();
     }
     Size srcSize = frame_orig.size();
+    frame_orig.release();
     ASPECT_RATIO aspectRatio = ASPECT_RATIO_4_3;
     if( srcSize.width * 3 == srcSize.height * 4 ) {
         aspectRatio = ASPECT_RATIO_4_3;
@@ -255,8 +260,9 @@ int main(int argc, char* argv[])
     //only process once.
     glm::mat4 rotTransMat4 = externalToRotTrans(P);
     drawOpenGLGlasses(dstTexture, frame, glasses, projectionMat4, rotTransMat4, yRotateInDeg);
+    frame.release();
     saveBuffer(buffer, outputFile, srcWidth, srcHeight);
-    
+
     //------------Clean up-----------
     free( buffer );
     OSMesaDestroyContext( ctx );
