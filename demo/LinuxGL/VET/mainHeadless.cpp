@@ -25,7 +25,7 @@ using namespace cv;
 #define GLASSON 0
 #define OPENGL_2_1 1
 
-const int MAX_WIDTH_X_HEIGHT = 1280*960;
+const int MAX_WIDTH_X_HEIGHT = 960*960;//max memory on ytiyan server, 1Gbytes, too big.
 
 const int AA_FACTOR = 4; //4 uses too much memory here.
 
