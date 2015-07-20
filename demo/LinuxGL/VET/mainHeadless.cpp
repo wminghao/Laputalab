@@ -25,6 +25,8 @@ using namespace cv;
 #define GLASSON 0
 #define OPENGL_2_1 1
 
+const int MAX_WIDTH_X_HEIGHT = 1280*960;
+
 const int AA_FACTOR = 4; //4 uses too much memory here.
 
 //Facial Model Source File
@@ -131,7 +133,8 @@ int main(int argc, char* argv[])
         outputFile = imageFileOutputPrefix+argv[2];
         glassesFile = glassesFilePrefix+argv[3]+"/"+argv[3]+".obj";
     } else {
-        return 0;
+        printf("invalid input parameters");
+        return -1;
     }
     printf("input file=%s\r\n", inputFile.c_str());
     printf("output file=%s\r\n", outputFile.c_str());
@@ -146,6 +149,11 @@ int main(int argc, char* argv[])
     resize(frame_orig, frame, Size(), AA_FACTOR, AA_FACTOR, INTER_CUBIC);
     Size srcSize = frame_orig.size();
     frame_orig.release();
+
+    if( srcSize.width * srcSize.height > MAX_WIDTH_X_HEIGHT ) {
+        printf("OOM: Input size too big. width=%d, height=%d\r\n", srcSize.width, srcSize.height);
+        return -1;
+    }
 
     ASPECT_RATIO aspectRatio = ASPECT_RATIO_4_3;
     if( srcSize.width * 3 == srcSize.height * 4 ) {
@@ -173,13 +181,13 @@ int main(int argc, char* argv[])
     OSMesaContext ctx = OSMesaCreateContextExt( OSMESA_RGBA, zdepth, stencil, accum, NULL);
     if(!ctx) {
         printf("OSMesaCreateContextExt failed!\n");
-        return 0;
+        return -1;
     }
     void* buffer = malloc(srcWidth*srcHeight*4*sizeof(GLubyte));
     /* Bind the buffer to the context and make it current */
     if (!OSMesaMakeCurrent( ctx, buffer, GL_UNSIGNED_BYTE, srcWidth, srcHeight )) {
         printf("OSMesaMakeCurrent failed!\n");
-        return 0;
+        return -1;
     }
     
     string glassesVsh;
