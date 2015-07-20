@@ -183,9 +183,13 @@ bool Glasses::init(const char* vertLFilePath,
         if( ratio == ASPECT_RATIO_4_3 ) {
             ratioW = 12;
             ratioH = 9;
-        } else {
+        } else if( ratio == ASPECT_RATIO_16_9 ){
             ratioW = 16;
             ratioH = 9;
+        } else {
+            //assume it's 1:1
+            ratioW = 12;
+            ratioH = 12;
         }
         
         // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
