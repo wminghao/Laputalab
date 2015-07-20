@@ -1,0 +1,29 @@
+This is a ogl server to accept request as an http post of image data + glasses object file and return an image with glasses on.
+
+1. UI for ogl server
+Nice UI
+
+2. Web server/Node.js page
+Authentication user.
+Accounting(how many requests/charge)
+Forwarding image data to ogl server cluster
+Save image to disck
+Return image data to client.
+
+3. ogl server
+Load balanced.
+Receives the data and send it to VETHeadless Process
+Returns status from the process and send it back to Node.js page.
+
+4. VETHeadless Process.
+Each requests launches a new process.
+Input = image + glasses
+Output = image
+
+Protocol between 2 & 3 is as follows:
+http://stackoverflow.com/questions/20247423/ios-http-post-data-and-image-image-not-getting-posted
+
+Protocol between 3 & 4 is as follows:
+
+Input = image file name + glasses file name
+Output = status bytes

@@ -1,0 +1,10 @@
+It requires 2 libraries.
+
+Libevent, latest version = 2.0.22
+https://sourceforge.net/projects/levent/files/libevent/libevent-2.0/libevent-2.0.22-stable.tar.gz
+
+json parser library, latest version = 1.0.2
+https://code.google.com/p/rapidjson/wiki/UserGuide
+https://github.com/miloyip/rapidjson
+
+It needs to copy the child process VETHeadless in /usr/bin/ directory.

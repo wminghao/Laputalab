@@ -1,0 +1,59 @@
+Import("*")
+
+face2dCflags = CCFLAGS
+face2dCflags.append( '-Wno-unused' )
+
+#objects
+LoggerObj = env.Object('prog/utility/Logger.cpp', CCFLAGS=face2dCflags )
+processPipeObj = env.Object('prog/ProcessPipe.cpp', CCFLAGS=face2dCflags )
+mainObj = env.Object('prog/Face2dServerMain.cpp', CCFLAGS=face2dCflags )
+
+#target
+face2dServerProg = File("prog/face2d_server")
+
+progs.append( face2dServerProg )
+env.Program( face2dServerProg,
+	     [ LoggerObj,
+	       processPipeObj,
+	       mainObj],	
+	       LIBS=['event'],
+	       LIBPATH = ['/usr/lib', '/usr/local/lib'],
+	       CCFLAGS=face2dCflags)
+
+#LandMarkMain
+landMarkLib = File("prog/libLandMark.a")
+Command("libLandMark.a", landMarkLib, Copy("$TARGET", "$SOURCE"))
+landMarkObj = env.Object('prog/LandMarkMain.cpp', CCFLAGS=face2dCflags )
+landMarkProg = File("prog/LandMarkMain")
+
+progs.append( landMarkProg ) 
+env.Program( landMarkProg,
+	     [landMarkObj,
+	     LoggerObj],
+	     LIBS=['pthread','rt', 'dl', 'm', 'LandMark', 'opencv_calib3d', 'opencv_contrib', 'opencv_core', 'opencv_features2d', 'opencv_flann','opencv_gpu', 'opencv_highgui', 'opencv_imgproc','opencv_legacy', 'opencv_ml', 'opencv_nonfree', 'opencv_objdetect', 'opencv_ocl', 'opencv_photo', 'opencv_stitching', 'opencv_superres', 'opencv_ts', 'opencv_video', 'opencv_videostab', 'jansson'],
+	     LIBPATH = ['/usr/lib', '/usr/local/lib', '.'],
+	     CCFLAGS=face2dCflags)
+
+#test 1
+landMarkLib = File("prog/libLandMark.a")
+Command("libLandMark.a", landMarkLib, Copy("$TARGET", "$SOURCE"))
+landMarkTestObj = env.Object('prog/LandMarkTest.cpp', CCFLAGS=face2dCflags )
+landMarkTestProg = File("prog/LandMarkTest")
+
+progs.append( landMarkTestProg ) 
+env.Program( landMarkTestProg,
+	     [landMarkTestObj,
+	     LoggerObj],
+	     LIBS=['pthread','rt', 'dl', 'm', 'LandMark', 'opencv_calib3d', 'opencv_contrib', 'opencv_core', 'opencv_features2d', 'opencv_flann','opencv_gpu', 'opencv_highgui', 'opencv_imgproc','opencv_legacy', 'opencv_ml', 'opencv_nonfree', 'opencv_objdetect', 'opencv_ocl', 'opencv_photo', 'opencv_stitching', 'opencv_superres', 'opencv_ts', 'opencv_video', 'opencv_videostab'],
+	     LIBPATH = ['/usr/lib', '/usr/local/lib', '.'],
+	     CCFLAGS=face2dCflags)
+#test dummy
+dummyObj = env.Object('prog/dummy.cpp', CCFLAGS=face2dCflags )
+dummyProg = File("prog/dummy")
+
+progs.append( dummyProg ) 
+env.Program( dummyProg,
+	     [dummyObj,
+	     LoggerObj],
+	     LIBPATH = ['/usr/lib', '/usr/local/lib'],
+	     CCFLAGS=face2dCflags)
