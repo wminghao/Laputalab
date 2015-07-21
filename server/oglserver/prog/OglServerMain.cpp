@@ -34,8 +34,8 @@
 
 using namespace std;
 const int MAX_PROCESS_PIPES = 2; //max 32 instances at the same time.
-const int SERVER_PORT = 1234;
-const int STATUS_PORT = 1235;
+const int SERVER_PORT = 9000;
+const int STATUS_PORT = 9001;
 
 #define TEST_DUMMY
 #ifdef TEST_DUMMY
@@ -50,7 +50,6 @@ const char* OGLIMAGE_OUT_PREFIX = "output=";
 const char* OGLIMAGE_OUT_SUFFIX = "&";
 const char* OGLIMAGE_GL_PREFIX = "glasses=";
 const char* OGLIMAGE_GL_SUFFIX = "&";
-
 
 const char* TWO_HUNDRED_OK = "HTTP/1.1 200 OK\r\n\r\n";
 const char* FIVE_HUNDRED_ERROR = "HTTP/1.1 500 Cannot process image\r\n\r\n";
@@ -303,21 +302,35 @@ void buf_read_callback(struct bufferevent *incoming,
         int ret = evbuffer_remove(incoming->input, req, len);
         ASSERT(len == ret);
         if ( ret > 0 ) {
+            //first find input
             char* startPos = strstr(req, OGLIMAGE_IN_PREFIX);
             char* endPos = strstr(req, OGLIMAGE_IN_SUFFIX);
             if( startPos && endPos ) {
                 startPos += strlen(OGLIMAGE_IN_PREFIX);
-                int urlLen =(endPos-startPos);
-                char url[urlLen+sizeof(int)];
-                memcpy(url, &urlLen, sizeof(int));
-                memcpy(url+sizeof(int), startPos, urlLen);
-                if( !client->tryToEnablePipe( url, sizeof(url), pipe_read_callback, pipe_write_callback) ) {
-                    OUTPUT("add pending task, client=0x%x, urllen=%d, url=%s\n", client, urlLen, url+sizeof(int));
-                    if( !gPendingTasks->addTask(client, url, sizeof(url)) ) {
-                        OUTPUT("----too many tasks in the queue!");
-                        client->writeBuf(FIVE_HUNDRED_THREE_ERROR_TOO_MANY_TASKS, strlen((char*)FIVE_HUNDRED_THREE_ERROR_TOO_MANY_TASKS), true);
-                        client->startTimeoutTimer(gEvtBase, timeout_handler);
-                    }
+
+                //then find output
+                char* nextPos = strstr(endPos+1, OGLIMAGE_OUT_PREFIX);
+                endPos = strstr(endPos+1, OGLIMAGE_OUT_SUFFIX);
+                if( nextPos && endPos ) {
+
+                    //last find glasses
+                    char* nextPos = strstr(endPos+1, OGLIMAGE_GL_PREFIX);
+                    endPos = strstr(endPos+1, OGLIMAGE_GL_SUFFIX);
+                    
+                    if( nextPos && endPos ) {
+                        int urlLen =(endPos-startPos);
+                        char url[urlLen+sizeof(int)];
+                        memcpy(url, &urlLen, sizeof(int));
+                        memcpy(url+sizeof(int), startPos, urlLen);
+                        if( !client->tryToEnablePipe( url, sizeof(url), pipe_read_callback, pipe_write_callback) ) {
+                            OUTPUT("add pending task, client=0x%x, urllen=%d, url=%s\n", client, urlLen, url+sizeof(int));
+                            if( !gPendingTasks->addTask(client, url, sizeof(url)) ) {
+                                OUTPUT("----too many tasks in the queue!");
+                                client->writeBuf(FIVE_HUNDRED_THREE_ERROR_TOO_MANY_TASKS, strlen((char*)FIVE_HUNDRED_THREE_ERROR_TOO_MANY_TASKS), true);
+                                client->startTimeoutTimer(gEvtBase, timeout_handler);
+                            }
+                        }
+                    }                    
                 }
             }
         } else {

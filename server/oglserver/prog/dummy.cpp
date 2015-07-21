@@ -77,9 +77,11 @@ int main()
             doWrite( 1, buf, 4);
             fsync( 1 ); //flush the buffer
 
-            char buf2[totalBytes];
+            char buf2[totalBytes+1];
             bWorking = doRead( 0, buf2, totalBytes );
             if( bWorking ) {
+                buf2[totalBytes]='\0';
+                OUTPUT("------dummy read data, buf2=%s\n", buf2);
                 doWrite( 1, buf2, totalBytes);
                 fsync( 1 ); //flush the buffer
             }

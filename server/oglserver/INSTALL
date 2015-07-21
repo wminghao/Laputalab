@@ -1,6 +1,7 @@
 1. It requires 2 libraries.
 
 1.1 Libevent, latest version = 2.0.22
+sudo apt-get install libevent-dev
 https://sourceforge.net/projects/levent/files/libevent/libevent-2.0/libevent-2.0.22-stable.tar.gz
 ./configure
 make

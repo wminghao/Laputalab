@@ -23,7 +23,7 @@ pidFileName = '/tmp/oglserver-nanny.pid'
 
 #server script
 OglServerInitdScript = "/etc/init.d/oglserver.sh"
-OglStatusListeningPort = 1235
+OglStatusListeningPort = 9001
 queryInterval = 1
 maxNonresponsiveCount = 5
 
