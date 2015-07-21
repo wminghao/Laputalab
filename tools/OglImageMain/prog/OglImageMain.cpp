@@ -1,19 +1,28 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <stdio.h>
+#include <stdlib.h>
+#include <execinfo.h>
+#include <sys/signal.h>
+#include <time.h>
+#include <errno.h>
+#include <sys/stat.h>
+#include <string.h>
+#include <fcntl.h>    /* For O_RDWR */
+#include <unistd.h>   /* For open(), creat() */
+#include <string>
+#include <assert.h>
+#include "utility/Output.h"
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
-#include "opencv2/imgproc/imgproc.hpp"
+#include <opencv2/imgproc/imgproc.hpp>
 
-#include "main.h"
+#include "OglImageMain.h"
 #include "utilities.h"
-#include "objloader.hpp"
 
 // GLFW
 #include "GL/osmesa.h"
-
-//jpeg compressor
-#include "jpge.h"
 
 //glasses
 #include "glasses.h"
@@ -21,6 +30,73 @@
 using namespace std;
 using namespace cv;
 
+//////////////////////////////////////////////
+//I/O code
+//////////////////////////////////////////////
+
+void fnExit (void)
+{
+    LOG("----LandMarkMain Exited!");
+}
+void handlesig( int signum )
+{
+    LOG( "Exiting on signal: %d", signum  );
+    LOG( "LandMarkMain just crashed, see stack dump below." );
+    LOG( "---------------------------------------------");
+    void *array[10];
+    size_t bt_size;
+
+    // get void*'s for all entries on the stack
+    bt_size = backtrace(array, 10);
+
+    // print out all the frames to stderr
+    char **bt_syms = backtrace_symbols(array, bt_size);
+    for (size_t i = 1; i < bt_size; i++) {
+        //size_t len = strlen(bt_syms[i]);
+        LOG("%s", bt_syms[i]);
+    }
+    free( bt_syms );
+    LOG( "---------------------------------------------");
+}
+
+
+bool doRead( int fd, char *buf, size_t len ) {
+    size_t bytesRead = 0;
+
+    while ( bytesRead < len ) {
+        size_t bytesToRead = len - bytesRead;
+        int t = read( fd, buf + bytesRead, bytesToRead );
+        if ( t <= 0 ) {
+            OUTPUT("read() failed: %s\r\n", strerror(errno) );
+
+            return false;
+        }
+        bytesRead += t;
+    }
+
+    return true;
+}
+
+bool doWrite( int fd, const char *buf, size_t len ) {
+    size_t bytesWrote = 0;
+
+    while ( bytesWrote < len ) {
+        size_t bytesToWrite = len - bytesWrote;
+        int t = write( fd, buf + bytesWrote, bytesToWrite );
+        if ( t <= 0 ) {
+            OUTPUT("write() failed: %s \r\n", strerror(errno) );
+            return false;
+        }
+
+        bytesWrote += t;
+    }
+
+    return true;
+}
+
+//////////////////////////////////////////////
+//OpenGL + OpenCV code
+//////////////////////////////////////////////
 #define REALTIME 1
 #define GLASSON 0
 #define OPENGL_2_1 1
@@ -36,8 +112,6 @@ const string glassesFilePrefix = "/shared/3dmodels/";
 const string imageFileInputPrefix = "/shared/images/input/";
 const string imageFileOutputPrefix = "/shared/images/output/";
 const char* fragName = "outFrag";
-
-string videoFile = "./demo1.mov";
 
 glm::mat4 externalToRotTrans(float* P_arr)
 {
@@ -64,7 +138,7 @@ glm::mat4 IntrinsicToProjection(Mat* intrinsicMat, int W, int H)
     return projectionMat;
 }
 
-static void saveBuffer(void* buffer, string& fileToSave, int srcWidth, int srcHeight) {
+static bool saveBuffer(void* buffer, string& fileToSave, int srcWidth, int srcHeight, string& errReason) {
     //first flip the x axis
     uint8 *pImage_flipped_x = (uint8*)malloc( srcWidth * srcHeight * 4 );
 
@@ -91,8 +165,12 @@ static void saveBuffer(void* buffer, string& fileToSave, int srcWidth, int srcHe
         //finally save the image
         imwrite(fileToSave.c_str(), finalImage);
         free( pImage_flipped_x );
+        return true;
     } else {
-        printf("OOM: srcWidth = %d, srcHeight=%d\r\n", srcWidth, srcHeight);
+        char buf[200];
+        sprintf(buf, "OOM: srcWidth = %d, srcHeight=%d\r\n", srcWidth, srcHeight);
+        errReason = buf;
+        return false;
     }
 }
 
@@ -123,27 +201,19 @@ static void drawOpenGLGlasses(GLuint& dstTexture, Mat& frameOrig, Glasses& glass
     glasses.render(dstTexture, dstTexture, false);
 }
 
-int main(int argc, char* argv[])
-{
-    string inputFile;
-    string outputFile;
-    string glassesFile;
-    if( argc == 4 ) {
-        inputFile = imageFileInputPrefix+argv[1];
-        outputFile = imageFileOutputPrefix+argv[2];
-        glassesFile = glassesFilePrefix+argv[3]+"/"+argv[3]+".obj";
-    } else {
-        printf("invalid input parameters");
-        return -1;
-    }
-    printf("input file=%s\r\n", inputFile.c_str());
-    printf("output file=%s\r\n", outputFile.c_str());
-    printf("glasses file=%s\r\n", glassesFile.c_str());
+int ProcessFile( string& iFilePath, string& oFilePath, string& gName, string & errReason ) {
+    string inputFile = imageFileInputPrefix+iFilePath;
+    string outputFile = imageFileOutputPrefix+oFilePath;
+    string glassesFile = glassesFilePrefix+gName+"/"+gName+".obj";
+
+    OUTPUT("input file=%s\r\n", inputFile.c_str());
+    OUTPUT("output file=%s\r\n", outputFile.c_str());
+    OUTPUT("glasses file=%s\r\n", glassesFile.c_str());
     
     Mat frame, frame_orig;
     frame_orig = imread( inputFile, CV_LOAD_IMAGE_COLOR);
     
-    printf("input size w=%d, h=%d\r\n", frame_orig.size().width, frame_orig.size().height);
+    OUTPUT("input size w=%d, h=%d\r\n", frame_orig.size().width, frame_orig.size().height);
     
     //double the size
     resize(frame_orig, frame, Size(), AA_FACTOR, AA_FACTOR, INTER_CUBIC);
@@ -151,22 +221,24 @@ int main(int argc, char* argv[])
     frame_orig.release();
 
     if( srcSize.width * srcSize.height > MAX_WIDTH_X_HEIGHT ) {
-        printf("OOM: Input size too big. width=%d, height=%d\r\n", srcSize.width, srcSize.height);
+        char err[300];
+        sprintf(err, "OOM: Input size too big. width=%d, height=%d\r\n", srcSize.width, srcSize.height);
+        errReason = err;
         return -1;
     }
 
     ASPECT_RATIO aspectRatio = ASPECT_RATIO_4_3;
     if( srcSize.width * 3 == srcSize.height * 4 ) {
         aspectRatio = ASPECT_RATIO_4_3;
-        printf("image asepect ratio: 4/3\r\n");
+        OUTPUT("image asepect ratio: 4/3\r\n");
     } else if(srcSize.width * 9 == srcSize.height * 16 ) {
         aspectRatio = ASPECT_RATIO_16_9;
-        printf("image asepect ratio: 16/9\r\n");
+        OUTPUT("image asepect ratio: 16/9\r\n");
     } else if(srcSize.width == srcSize.height) {
         aspectRatio = ASPECT_RATIO_1_1;
-        printf("image asepect ratio: 1/1\r\n");
+        OUTPUT("image asepect ratio: 1/1\r\n");
     } else {
-        printf("image asepect ratio: unknown\r\n");
+        errReason = "image asepect ratio: unknown\r\n";
         return -1;
     }
     
@@ -183,13 +255,13 @@ int main(int argc, char* argv[])
     const GLint accum = 0; //accumulation buffer
     OSMesaContext ctx = OSMesaCreateContextExt( OSMESA_RGBA, zdepth, stencil, accum, NULL);
     if(!ctx) {
-        printf("OSMesaCreateContextExt failed!\n");
+        errReason = "OSMesaCreateContextExt failed!\n";
         return -1;
     }
     void* buffer = malloc(srcWidth*srcHeight*4*sizeof(GLubyte));
     /* Bind the buffer to the context and make it current */
     if (!OSMesaMakeCurrent( ctx, buffer, GL_UNSIGNED_BYTE, srcWidth, srcHeight )) {
-        printf("OSMesaMakeCurrent failed!\n");
+        errReason="OSMesaMakeCurrent failed!\n";
         return -1;
     }
     
@@ -249,18 +321,6 @@ int main(int argc, char* argv[])
     
     vector<myvec3> verticesGlass;
     vector<myvec3> verticesG_1st;
-    
-    if (GLASSON) {
-        //Read glasses model
-        bool res = loadOBJ((pathPrefix+"demo/LaputaDesktop3/VET/Glasses.obj").c_str(), verticesGlass);
-        myrotate(verticesGlass, 90, 0, 1, 0);
-        myrotate(verticesGlass, 180, 0, 0, 1);
-        myscale(verticesGlass, 35, 35, 35);
-        mytranslate(verticesGlass, 0, 10, -15);
-        
-        verticesG_1st = verticesGlass;
-        mytransform(verticesG_1st, P);
-    }
     
     vector<myvec3> verticesAdjusted(verticesFromModel);
     adjustShape(shapeFactor, verticesAdjusted, xScale, yScale, zScale); //based on the face, now it's xingze
@@ -372,7 +432,9 @@ int main(int argc, char* argv[])
                 glm::mat4 rotTransMat4 = externalToRotTrans(P);
                 drawOpenGLGlasses(dstTexture, frame, glasses, projectionMat4, rotTransMat4);
                 frame.release();
-		saveBuffer(buffer, outputFile, srcWidth, srcHeight);
+		if( !saveBuffer(buffer, outputFile, srcWidth, srcHeight, errReason) )  {
+                    return -1;
+                }
                 if ( 0 ) //disable the calibration
                 {
 		    cvtColor(frame, image, CV_BGR2GRAY);
@@ -631,4 +693,75 @@ int main(int argc, char* argv[])
     free( buffer );
     OSMesaDestroyContext( ctx );
     return 0;
+}
+
+///////////////////////////////
+//main function
+///////////////////////////////
+int main()
+{
+    //ignore sig pipe, any io to an invalid pipe will return properly
+    signal(SIGPIPE, SIG_IGN);
+    signal( SIGHUP, SIG_IGN ); //ignore hangup
+    signal( SIGSEGV, handlesig );
+    signal( SIGFPE, handlesig );
+    signal( SIGBUS, handlesig );
+    signal( SIGSYS, handlesig );
+    signal( SIGTERM, handlesig );
+    signal( SIGQUIT, handlesig );
+    signal( SIGINT, handlesig );
+    signal( SIGILL, handlesig );
+    signal( SIGABRT, handlesig );
+    signal( SIGALRM, handlesig );
+    signal( SIGXCPU, handlesig ); //CPU limit
+    // SIGKILL command cannot be caught
+    atexit(fnExit);
+
+    Logger::initLog("OglImageMainProc");
+
+    OUTPUT("------OglImageMainProc started!\r\n");
+    bool bWorking = true;
+
+    while ( true ) {
+        char lenBuf[4];
+        bWorking = doRead( 0, lenBuf, 4 );
+        
+        if( bWorking ) {
+            int pathLen = 0;
+            memcpy(&pathLen, lenBuf, 4);
+            OUTPUT("------OglImageMain read data, size=%d\n", pathLen);
+            
+            bool bIsSuccess = false;
+            char buf[pathLen];
+            bWorking = doRead( 0, buf, pathLen );
+            if( bWorking ) {
+                buf[pathLen]='\0';
+                char iFilePathStr[200];
+                char oFilePathStr[200];
+                char gNameStr[100];
+                sscanf(buf, "input=%s&output=%s&glasses=%s", iFilePathStr, oFilePathStr, gNameStr);
+                string iFilePath = iFilePathStr;
+                string oFilePath = oFilePathStr;
+                string gName = gNameStr;
+                if( iFilePath.length() && oFilePath.length() && gName.length() ) {
+                    string errReason;
+                    string result;
+                    
+                    int ret = ProcessFile( iFilePath, oFilePath, gName, errReason );
+                    if( !ret ) {
+                        result = "{ \"status\":\"success\",\"message\":\"ok\"}";
+                    } else {
+                        result = "{ \"status\":\"error\",\"message\":\"" + errReason + "\"}";
+                    }
+                    
+                    unsigned int bufLen = result.length();
+                    doWrite( 1, (char*)&bufLen, 4);
+                    doWrite( 1, result.c_str(), bufLen);                
+                    OUTPUT("%s",result.c_str());
+                } else {
+                    OUTPUT("Parsing error");
+                }
+            }
+        }
+    }
 }

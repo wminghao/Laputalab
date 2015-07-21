@@ -37,7 +37,7 @@ const int MAX_PROCESS_PIPES = 2; //max 32 instances at the same time.
 const int SERVER_PORT = 9000;
 const int STATUS_PORT = 9001;
 
-#define TEST_DUMMY
+//#define TEST_DUMMY
 #ifdef TEST_DUMMY
 const char* PROCESS_LOCATION = "dummy";//"/usr/bin/dummy";
 #else
