@@ -41,7 +41,7 @@ const int STATUS_PORT = 9001;
 #ifdef TEST_DUMMY
 const char* PROCESS_LOCATION = "dummy";//"/usr/bin/dummy";
 #else
-const char* PROCESS_LOCATION = "VETHeadless";//"/usr/bin/VETHeadless"
+const char* PROCESS_LOCATION = "OglImageMain";//"/usr/bin/OglImageMain"
 #endif
 
 const char* OGLIMAGE_IN_PREFIX = "GET /getoglimage?input=";

@@ -1,17 +1,18 @@
 cd ../..
 scons
-cd face2d
-if [ ! -d "/usr/share/face2d/" ]; then
-    sudo mkdir /usr/share/face2d
+cd oglserver
+if [ ! -d "/usr/share/oglserver/" ]; then
+    sudo mkdir /usr/share/oglserver
 fi
-sudo cp prog/Face2dServerNanny.py /usr/share/face2d/
-sudo cp -r prog/pythonlib /usr/share/face2d/
+sudo cp prog/OglServerNanny.py /usr/share/oglserver/
+sudo cp -r prog/pythonlib /usr/share/oglserver/
 cd scripts
-sudo cp face2d.sh /etc/init.d/
-sudo cp face2dnanny.sh /etc/init.d/
-sudo /etc/init.d/face2dnanny.sh stop
-sudo cp /home/ubuntu/Laputalab/server/build/Linux-x86_64/face2d/prog/LandMarkMain /usr/bin/
+sudo cp oglserver.sh /etc/init.d/
+sudo cp oglservernanny.sh /etc/init.d/
+sudo /etc/init.d/oglservernanny.sh stop
+# TODO change from LandMarkMain to OGLImageMain
+sudo cp /Laputalab/server/build/Linux-x86_64/face2d/prog/LandMarkMain /usr/bin/
 sudo chown root:root /usr/bin/LandMarkMain
 sudo chown -R root:root /usr/bin/Model
-sudo cp /home/ubuntu/Laputalab/server/build/Linux-x86_64/face2d/prog/face2d_server /usr/share/face2d/
-sudo /etc/init.d/face2dnanny.sh start
+sudo cp /Laputalab/server/build/Linux-x86_64/oglserver/prog/ogl_server /usr/share/oglserver/
+sudo /etc/init.d/oglservernanny.sh start

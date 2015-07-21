@@ -3,7 +3,7 @@
 # description: ogl SDK server
 # processname: ogl_server
 PROG=ogl_server
-PROG_HOME=/usr/share/ogl
+PROG_HOME=/usr/share/oglserver
 DAEMON=$PROG_HOME/$PROG
 PIDFILE=$PROG_HOME/$PROG.pid
 
