@@ -48,7 +48,7 @@ const char* OGLIMAGE_IN_PREFIX = "GET /getoglimage?input=";
 const char* OGLIMAGE_IN_SUFFIX = "&";
 const char* OGLIMAGE_OUT_PREFIX = "output=";
 const char* OGLIMAGE_OUT_SUFFIX = "&";
-const char* OGLIMAGE_GL_SUFFIX = "glasses=";
+const char* OGLIMAGE_GL_PREFIX = "glasses=";
 const char* OGLIMAGE_GL_SUFFIX = "&";
 
 
