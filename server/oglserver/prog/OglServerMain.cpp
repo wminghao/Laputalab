@@ -46,6 +46,7 @@ const char* PROCESS_LOCATION = "VETHeadless";//"/usr/bin/VETHeadless"
 
 const char* OGLIMAGE_IN_PREFIX = "GET /getoglimage?input=";
 const char* OGLIMAGE_IN_SUFFIX = "&";
+const char* OGLIMAGE_IN_STR = "input=";
 const char* OGLIMAGE_OUT_PREFIX = "output=";
 const char* OGLIMAGE_OUT_SUFFIX = "&";
 const char* OGLIMAGE_GL_PREFIX = "glasses=";
@@ -306,7 +307,7 @@ void buf_read_callback(struct bufferevent *incoming,
             char* startPos = strstr(req, OGLIMAGE_IN_PREFIX);
             char* endPos = strstr(req, OGLIMAGE_IN_SUFFIX);
             if( startPos && endPos ) {
-                startPos += strlen(OGLIMAGE_IN_PREFIX);
+                startPos += strlen(OGLIMAGE_IN_PREFIX) - strlen(OGLIMAGE_IN_STR) ;
 
                 //then find output
                 char* nextPos = strstr(endPos+1, OGLIMAGE_OUT_PREFIX);

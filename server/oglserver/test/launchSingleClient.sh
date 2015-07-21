@@ -1,1 +1,1 @@
-curl -v  "http://127.0.0.1:9000/getlandmark?input=/shared/images/1127e7aa-eb90-11e4-8b0e-1681e6b88ec1/245a336e-eb90-11e4-8b0e-1681e6b88ec1.png&output=/shared/images/output/out.jpg&glasses=RanGlasses2&licensekey=MYKEY"
+curl -v  "http://127.0.0.1:9000/getoglimage?input=/shared/images/input/1127e7aa-eb90-11e4-8b0e-1681e6b88ec1/245a336e-eb90-11e4-8b0e-1681e6b88ec1.png&output=/shared/images/output/out.jpg&glasses=RanGlasses2&licensekey=MYKEY"
