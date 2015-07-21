@@ -10,9 +10,11 @@ cd scripts
 sudo cp oglserver.sh /etc/init.d/
 sudo cp oglservernanny.sh /etc/init.d/
 sudo /etc/init.d/oglservernanny.sh stop
-# TODO change from LandMarkMain to OGLImageMain
-sudo cp /Laputalab/server/build/Linux-x86_64/face2d/prog/LandMarkMain /usr/bin/
-sudo chown root:root /usr/bin/LandMarkMain
+cd /Laputalab/tools/OglImageMain
+scons
+sudo cp /Laputalab/tools/OglImageMain/build/Linux-x86_64/prog/OglImageMain /usr/bin/
+sudo chown root:root /usr/bin/OglImageMain
 sudo chown -R root:root /usr/bin/Model
+cd /Laputalab/server/oglserver/scripts
 sudo cp /Laputalab/server/build/Linux-x86_64/oglserver/prog/ogl_server /usr/share/oglserver/
 sudo /etc/init.d/oglservernanny.sh start

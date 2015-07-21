@@ -35,7 +35,7 @@ utilitiesObj = env.Object(MainCodePath + 'utilities.cpp', CCFLAGS=OGLIMAGEMAINCf
 mainObj = env.Object(MainCodePath + 'OglImageMain.cpp', CCFLAGS=OGLIMAGEMAINCflags )
 
 #target without Window, headless
-OglImageMainProg = File("prog/OglImageMain")
+OglImageMainProg = File("OglImageMain")
 
 progs.append( OglImageMainProg )
 env.Replace( CPPPATH = OGLIMAGEMAINCPPPath )
