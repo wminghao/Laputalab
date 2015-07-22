@@ -810,14 +810,8 @@ void mat4ToMat3x4(glm::mat4& pMat4, Mat* pMat3x4)
     for (int i = 0; i < 4; ++i) {
         for(int j = 0; j< 3; ++j ) {
             pMat3x4->at<float>(j, i) = pMat4[i][j];
-            //printf("mat4ToMat3x4: pMat4[%d][%d] = %f\r\n", i, j, pMat4[i][j]);
         }
     }
-    /*
-     for(int i = 0; i< 4; ++i ) {
-     //printf("mat4ToMat3x4: pMat4[%d][%d] = %f\r\n", i, 3, pMat4[i][3]);
-     }
-     */
 }
 void mat3x4ToMat4(Mat* pMat3x4, glm::mat4& pMat4)
 {
@@ -825,7 +819,6 @@ void mat3x4ToMat4(Mat* pMat3x4, glm::mat4& pMat4)
     for (int i = 0; i < 3; ++i) {
         for(int j = 0; j< 4; ++j ) {
             pMat4[j][i] = pMat3x4->at<float>(i, j);
-            //printf("mat3x4ToMat4: pMat4[%d][%d] = %f\r\n", i, j, pMat4[i][j]);
         }
     }
     pMat4[0][3] =  pMat4[1][3] = pMat4[2][3] = 0;

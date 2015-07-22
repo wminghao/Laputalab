@@ -5,6 +5,7 @@ buildpath=os.getcwd()+"/../../../"
 
 GLCodePath =  buildpath+'../../LaputaApp/Classes/Utilities/GL/'
 MainCodePath =  "./"
+OutputCodePath = "./utility/"
 GlmCodePath =  buildpath+'../../LaputaApp/thirdpartylib/glm/'
 PlatformPath =  buildpath+'../../LaputaApp/'
 ImageMagickPath = '/usr/include/ImageMagick/'
@@ -15,6 +16,7 @@ OGLIMAGEMAINCflags.append( '-Wno-unused' )
 OGLIMAGEMAINCPPPath = []
 OGLIMAGEMAINCPPPath.append( GLCodePath )
 OGLIMAGEMAINCPPPath.append( MainCodePath )
+OGLIMAGEMAINCPPPath.append( OutputCodePath )
 OGLIMAGEMAINCPPPath.append( GlmCodePath )
 OGLIMAGEMAINCPPPath.append( PlatformPath )
 OGLIMAGEMAINCPPPath.append( ImageMagickPath )
@@ -28,7 +30,7 @@ glUtilitiesObj = env.Object(GLCodePath + 'glUtilities.cpp', CCFLAGS=OGLIMAGEMAIN
 matrixObj = env.Object(GLCodePath + 'matrix.c', CCFLAGS=OGLIMAGEMAINCflags )
 meshObj = env.Object(GLCodePath + 'mesh.cpp', CCFLAGS=OGLIMAGEMAINCflags )
 reflectionTextureObj = env.Object(GLCodePath + 'reflectionTexture.cpp', CCFLAGS=OGLIMAGEMAINCflags )
-ShaderUtilitiesObj = env.Object(GLCodePath + 'ShaderUtilities.c', CCFLAGS=OGLIMAGEMAINCflags )
+ShaderUtilitiesObj = env.Object(GLCodePath + 'ShaderUtilities.cpp', CCFLAGS=OGLIMAGEMAINCflags )
 textureObj = env.Object(GLCodePath + 'texture.cpp', CCFLAGS=OGLIMAGEMAINCflags )
 loggerObj = env.Object(MainCodePath + 'utility/Logger.cpp', CCFLAGS=OGLIMAGEMAINCflags )
 utilitiesObj = env.Object(MainCodePath + 'utilities.cpp', CCFLAGS=OGLIMAGEMAINCflags )

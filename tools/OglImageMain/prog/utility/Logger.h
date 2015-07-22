@@ -1,7 +1,7 @@
 #ifndef __LOG_H__
 #define __LOG_H__
 
-#include <fstream>
+//#include <fstream>
 #include <assert.h>
 #include <stdarg.h>
 

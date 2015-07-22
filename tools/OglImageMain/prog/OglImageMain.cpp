@@ -139,12 +139,11 @@ glm::mat4 IntrinsicToProjection(Mat* intrinsicMat, int W, int H)
 static bool saveBuffer(void* buffer, string& fileToSave, int srcWidth, int srcHeight, string& errReason) {
     //first flip the x axis
     uint8 *pImage_flipped_x = (uint8*)malloc( srcWidth * srcHeight * 4 );
-
     if( pImage_flipped_x ) {
         //convert from RGBA to BGRA
         uint8* src;
         uint8* dst;    
-        
+
         for( int i = 0; i < srcHeight; i++) {
             for( int j = 0; j < srcWidth; j++ ) {
                 src = (uint8*)buffer + ( (srcHeight-i)*srcWidth + j )*4;
@@ -163,6 +162,7 @@ static bool saveBuffer(void* buffer, string& fileToSave, int srcWidth, int srcHe
         //finally save the image
         imwrite(fileToSave.c_str(), finalImage);
         free( pImage_flipped_x );
+
         return true;
     } else {
         char buf[200];
@@ -181,20 +181,24 @@ static void drawOpenGLGlasses(GLuint& dstTexture, Mat& frameOrig, Glasses& glass
     ///////////////////////////////////////////////////////////////////////////////////
     glBindTexture(GL_TEXTURE_2D, dstTexture);
     flip(*frame, *frame, 0); //flip x
-    glTexImage2D(GL_TEXTURE_2D,     // Type of texture
-                 0,                 // Pyramid level (for mip-mapping) - 0 is the top level
-                 GL_RGBA,           // Internal colour format to convert to
-                 (*frame).cols,        // Image width  i.e. 640 for Kinect in standard mode
-                 (*frame).rows,        // Image height i.e. 480 for Kinect in standard mode
-                 0,                 // Border width in pixels (can either be 1 or 0)
-                 GL_BGR,            // Input image format (i.e. GL_RGB, GL_RGBA, GL_BGR etc.)
-                 GL_UNSIGNED_BYTE,  // Image data type
-                 (*frame).ptr()); // The actual image data itself
-    glBindTexture(GL_TEXTURE_2D, 0);
     
+    //OUTPUT("rows=%d, cols=%d, ptr=0x%x", (*frame).rows, (*frame).cols, (*frame).ptr());
+    if( (*frame).ptr() && (*frame).cols > 0 && (*frame).rows > 0 ) { 
+        glTexImage2D(GL_TEXTURE_2D,     // Type of texture
+                     0,                 // Pyramid level (for mip-mapping) - 0 is the top level
+                     GL_RGBA,           // Internal colour format to convert to
+                     (*frame).cols,        // Image width  i.e. 640 for Kinect in standard mode
+                     (*frame).rows,        // Image height i.e. 480 for Kinect in standard mode
+                     0,                 // Border width in pixels (can either be 1 or 0)
+                     GL_BGR,            // Input image format (i.e. GL_RGB, GL_RGBA, GL_BGR etc.)
+                     GL_UNSIGNED_BYTE,  // Image data type
+                     (*frame).ptr());   // The actual image data itself
+    }
+    glBindTexture(GL_TEXTURE_2D, 0);
+
     //set new matrix
     glasses.setMatrices(projectionMat, rotTransMat);
-    
+
     //draw glasses
     glasses.render(dstTexture, dstTexture, false);
 }
@@ -750,12 +754,13 @@ int main()
                         result = "{ \"status\":\"success\",\"message\":\"ok\"}";
                     } else {
                         result = "{ \"status\":\"error\",\"message\":\"" + errReason + "\"}";
+                        OUTPUT("OglImageMain Processing failed. input=%s, glasses=%s, errReason=%s", iFilePathStr, gNameStr, errReason.c_str());
                     }
                     
                     unsigned int bufLen = result.length();
                     doWrite( 1, (char*)&bufLen, 4);
                     doWrite( 1, result.c_str(), bufLen);                
-                    OUTPUT("%s",result.c_str());
+                    OUTPUT("Len:%d, buf:%s", bufLen, result.c_str());
                 } else {
                     OUTPUT("Parsing error");
                 }
