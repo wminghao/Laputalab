@@ -94,7 +94,7 @@ bool Candide3::readVertices(string& vertexFile, float glassesWidth, float zRotat
     float width = xMax - xMin;
     float ratio = (glassesWidth-DELTA_SMALLER_GLASSES)/width; //inside the width
     
-    OUTPUT("candide width=%f glasses width=%f ratio=%.2f", width, glassesWidth, ratio);
+    //OUTPUT("candide width=%f glasses width=%f ratio=%.2f", width, glassesWidth, ratio);
     
     //then seek to the beginning
     ifs.clear();
@@ -172,9 +172,9 @@ float Candide3::setCandide3Vertices(vector<myvec3>* vec, float zRotateInDegree)
         }
     }
     float width = (xMax - xMin);
-    OUTPUT("New xMax=%f xMin=%f candide3 width = %f", xMax, xMin, (xMax-xMin));
-    OUTPUT("New yMax=%f yMin=%f candide3 height = %f", yMax, yMin, (yMax-yMin));
-    OUTPUT("New zMax=%f zMin=%f candide3 depth = %f", zMax, zMin, (zMax-zMin));
+    //OUTPUT("New xMax=%f xMin=%f candide3 width = %f", xMax, xMin, (xMax-xMin));
+    //OUTPUT("New yMax=%f yMin=%f candide3 height = %f", yMax, yMin, (yMax-yMin));
+    //OUTPUT("New zMax=%f zMin=%f candide3 depth = %f", zMax, zMin, (zMax-zMin));
     
     for (size_t i = 0; i < total ; i++){
         //map directly into texture
