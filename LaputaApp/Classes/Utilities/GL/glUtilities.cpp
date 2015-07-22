@@ -8,6 +8,7 @@
 
 #include "glUtilities.h"
 #include <sys/time.h>
+#include "Output.h"
 
 //time functions
 uint64_t getTimeMs64() {
@@ -62,5 +63,5 @@ void PerfCalc::end()
 {
     uint64_t elapsedTime = getTimeMs64() - startTs_;
     totalElapsedTime_ += elapsedTime;
-    cout<<"---"<<prefix_<<" elapsedTimeInMs="<< elapsedTime <<" avgElapsedTimeInMs="<<(totalElapsedTime_/numTimes_)<<endl;
+    OUTPUT("---%s elapsedTimeInMs=%llu, avgElapsedTimeInMs=%llu", prefix_.c_str(), elapsedTime, (totalElapsedTime_/numTimes_));
 }
