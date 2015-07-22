@@ -119,6 +119,7 @@
 		895417751B4DCD400058B5C9 /* 3dGlassesFragmentShaderGL2.1.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = 3dGlassesFragmentShaderGL2.1.fsh; path = 3dGlasses/3dGlassesFragmentShaderGL2.1.fsh; sourceTree = "<group>"; };
 		895417761B4DCD400058B5C9 /* 3dGlassesVertexShaderGL2.1.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = 3dGlassesVertexShaderGL2.1.vsh; path = 3dGlasses/3dGlassesVertexShaderGL2.1.vsh; sourceTree = "<group>"; };
 		895417771B508A830058B5C9 /* libGLEW.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGLEW.a; path = ../../../../../opt/local/lib/libGLEW.a; sourceTree = "<group>"; };
+		895417821B6016110058B5C9 /* Output.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Output.h; sourceTree = "<group>"; };
 		899A5EA81B18F10100A080FF /* libopencv_calib3d.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.10.dylib; path = ../../../../../usr/local/lib/libopencv_calib3d.2.4.10.dylib; sourceTree = "<group>"; };
 		899A5EA91B18F10100A080FF /* libopencv_calib3d.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.10.dylib; path = ../../../../../usr/local/lib/libopencv_calib3d.2.4.10.dylib; sourceTree = "<group>"; };
 		899A5EAA1B18F10100A080FF /* libopencv_calib3d.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.10.dylib; path = ../../../../../usr/local/lib/libopencv_calib3d.2.4.10.dylib; sourceTree = "<group>"; };
@@ -333,6 +334,7 @@
 				25350AD31910358100DB3E08 /* objloader.hpp */,
 				25C3437818C6DB7400B0AD8C /* utilities.cpp */,
 				25C3437918C6DB7400B0AD8C /* utilities.h */,
+				895417821B6016110058B5C9 /* Output.h */,
 			);
 			path = VET;
 			sourceTree = "<group>";

@@ -25,6 +25,7 @@
 #include "reflectionTexture.h"
 #include "color.h"
 #include "err.h"
+#include "Output.h"
 
 const float DELTA_IN_FRONT_OF_CANDIDE3 = 3.0; //delta face behind the glasses
 
@@ -104,7 +105,7 @@ bool Mesh::reloadMesh( const std::string& Filename, float zRotateInDegree )
     if (pScene) {
         ret = InitFromScene(pScene, Filename, zRotateInDegree, _candide3WidthRatio);
     } else {
-        printf("Error parsing '%s': '%s'\n", Filename.c_str(), Importer.GetErrorString());
+        OUTPUT("Error parsing '%s': '%s'\n", Filename.c_str(), Importer.GetErrorString());
     }
     return ret;
 }
@@ -131,7 +132,7 @@ bool Mesh::LoadMesh(const std::string& Filename, const char*candide3FacePath, co
         _candide3WidthRatio = widthRatio;
         ret = InitFromScene(pScene, Filename, zRotateInDegree, widthRatio);
     } else {
-        printf("Error parsing '%s': '%s'\n", Filename.c_str(), Importer.GetErrorString());
+        OUTPUT("Error parsing '%s': '%s'\n", Filename.c_str(), Importer.GetErrorString());
     }
     
     ////////////////////////
@@ -162,10 +163,10 @@ bool Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename, flo
 #if defined(DESKTOP_GL)
     glGenVertexArrays(1, &vao);
 #endif //DESKTOP_GL
-    printf("Max vertex coord:%.2f, %.2f, %.2f\n",
+    OUTPUT("Max vertex coord:%.2f, %.2f, %.2f\n",
            xMax, yMax, zMax);
     
-    printf("Min vertex coord:%.2f, %.2f, %.2f\n",
+    OUTPUT("Min vertex coord:%.2f, %.2f, %.2f\n",
            xMin, yMin, zMin);
     return InitMaterials(pScene, Filename);
 }
@@ -180,7 +181,7 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDe
     const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
     
     /*
-     printf("Mesh Index=%d, Material Index='%d', vertices=%d, mNumFaces=%d\n", Index,
+     OUTPUT("Mesh Index=%d, Material Index='%d', vertices=%d, mNumFaces=%d\n", Index,
            paiMesh->mMaterialIndex, paiMesh->mNumVertices, paiMesh->mNumFaces);
      */
 
@@ -203,8 +204,8 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDe
                  Vector2f(pTexCoord->x, pTexCoord->y),
                  Vector3f(pNormal->x, pNormal->y, pNormal->z));
         
-        //printf("Mesh vertice x=%.2f, y=%.2f, z=%.2f\r\n", v.m_pos.x, v.m_pos.y, v.m_pos.z);
-        //printf("Mesh normal x=%.2f, y=%.2f, z=%.2f\r\n", pNormal->x, pNormal->y, pNormal->z);
+        //OUTPUT("Mesh vertice x=%.2f, y=%.2f, z=%.2f\r\n", v.m_pos.x, v.m_pos.y, v.m_pos.z);
+        //OUTPUT("Mesh normal x=%.2f, y=%.2f, z=%.2f\r\n", pNormal->x, pNormal->y, pNormal->z);
         
         if( pPos->x * widthRatio > xMax ) {
             xMax = pPos->x * widthRatio;
@@ -313,12 +314,12 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
                 }
 
                 if (!m_Materials[i]->load()) {
-                    printf("Error loading texture '%s'\n", FullPath.c_str());
+                    OUTPUT("Error loading texture '%s'\n", FullPath.c_str());
                     delete m_Materials[i];
                     m_Materials[i] = NULL;
                     Ret = false;
                 } else {
-                    /*printf("Loaded texture index:%d, name %s file: %s coord:%.2f, %.2f, %.2f, %.2f: %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f, %.2f, %d\n",
+                    /*OUTPUT("Loaded texture index:%d, name %s file: %s coord:%.2f, %.2f, %.2f, %.2f: %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f, %.2f, %d\n",
                            i, name.C_Str(), Path.data,
                            diffuseColor.x, diffuseColor.y, diffuseColor.z, diffuseColor.w,
                            ambientColor.x, ambientColor.y, ambientColor.z, ambientColor.w,
@@ -337,7 +338,7 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
                                        diffuseColor,
                                        ambientColor);
             /*
-            printf("Loaded color index:%d, name %s coord:%.2f, %.2f, %.2f, %.2f: %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f, %.2f, %d\n",
+            OUTPUT("Loaded color index:%d, name %s coord:%.2f, %.2f, %.2f, %.2f: %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f, %.2f, %d\n",
                    i, name.C_Str(),
                    diffuseColor.x, diffuseColor.y, diffuseColor.z, diffuseColor.w,
                    ambientColor.x, ambientColor.y, ambientColor.z, ambientColor.w,
@@ -481,6 +482,6 @@ int Mesh::getMeshWidthInfo(const aiScene* pScene, const std::string& Filename)
             }
         }
     }
-    printf("Glasses width:%.2f\r\n", (xMax-xMin));
+    OUTPUT("Glasses width:%.2f\r\n", (xMax-xMin));
     return 1;
 }

@@ -4,6 +4,7 @@
 #include <cstring>
 
 #include "main.h"
+#include "Output.h"
 
 #include "objloader.hpp"
 
@@ -21,7 +22,7 @@ bool loadOBJ(
 	const char * path, 
 	std::vector<myvec3> & out_vertices
 ){
-	printf("Loading OBJ file %s...\n", path);
+	OUTPUT("Loading OBJ file %s...\n", path);
 
 	std::vector<unsigned int> vertexIndices;
 	std::vector<myvec3> temp_vertices;
@@ -29,7 +30,7 @@ bool loadOBJ(
 
 	FILE * file = fopen(path, "r");
 	if( file == NULL ){
-		printf("Impossible to open the file ! Are you in the right path ? See Tutorial 1 for details\n");
+		OUTPUT("Impossible to open the file ! Are you in the right path ? See Tutorial 1 for details\n");
 		getchar();
 		return false;
 	}
@@ -52,7 +53,7 @@ bool loadOBJ(
 			unsigned int vertexIndex[4];
 			int matches = fscanf(file, "%d %d %d %d\n", &vertexIndex[0], &vertexIndex[1], &vertexIndex[2], &vertexIndex[3]  );
 			if (matches != 4){
-				printf("File can't be read by our simple parser :-( Try exporting with other options\n");
+				OUTPUT("File can't be read by our simple parser :-( Try exporting with other options\n");
 				return false;
 			}
 			vertexIndices.push_back(vertexIndex[0]);
@@ -104,7 +105,7 @@ bool loadAssImp(
 
 	const aiScene* scene = importer.ReadFile(path, 0/*aiProcess_JoinIdenticalVertices | aiProcess_SortByPType*/);
 	if( !scene) {
-		fprintf( stderr, importer.GetErrorString());
+		OUTPUT(importer.GetErrorString());
 		getchar();
 		return false;
 	}
