@@ -57,10 +57,11 @@
 
 #include "err.h"
 #include "platform.h"
+#include "Output.h"
 
 
-#define LogInfo printf
-#define LogError printf
+#define LogInfo OUTPUT
+#define LogError OUTPUT
 
 /* Compile a shader from the provided source(s) */
 GLint glueCompileShader(GLenum target, GLsizei count, const GLchar **sources, GLuint *shader)

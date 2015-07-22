@@ -11,6 +11,7 @@
 #include "mesh.h"
 #include "err.h"
 #include <glm/gtc/type_ptr.hpp>
+#include "Output.h"
 
 const int AA_LEVEL = 8; //4 is normal, 0 means no AA, max 8 on Mac, mesa does not support Anti-aliasing.
 
@@ -376,14 +377,14 @@ bool Glasses::render(GLuint dstTextureName, GLuint candide3Texture, bool shouldR
                     //do blitting here
                     glBlitFramebuffer(0, 0, _srcWidth, _srcHeight, 0, 0, _srcWidth, _srcHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
                 } else {
-                    printf("render final fail:framebufferStatus=%d\r\n", framebufferStatus);
+                    OUTPUT("render final fail:framebufferStatus=%d\r\n", framebufferStatus);
                 }
             }
 #endif//DESKTOP_GL
             
             ret = true;
         } else {
-            printf("render offscreen fail:framebufferStatus=%d\r\n", framebufferStatus);
+            OUTPUT("render offscreen fail:framebufferStatus=%d\r\n", framebufferStatus);
         }
         
     }
@@ -401,7 +402,7 @@ void Glasses::readPixels(unsigned char* pixels)
         glReadPixels(0, 0, _srcWidth, _srcHeight, GL_RGB, GL_UNSIGNED_BYTE, pixels);
         //getGLErr("glGetTexImage");
     } else {
-        printf("readPixels:framebufferStatus=%d\r\n", framebufferStatus);
+        OUTPUT("readPixels:framebufferStatus=%d\r\n", framebufferStatus);
     }
 
 }
