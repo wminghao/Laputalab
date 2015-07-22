@@ -36,12 +36,12 @@ using namespace cv;
 
 void fnExit (void)
 {
-    LOG("----LandMarkMain Exited!");
+    LOG("----OglImageMain Exited!");
 }
 void handlesig( int signum )
 {
     LOG( "Exiting on signal: %d", signum  );
-    LOG( "LandMarkMain just crashed, see stack dump below." );
+    LOG( "OglImageMain just crashed, see stack dump below." );
     LOG( "---------------------------------------------");
     void *array[10];
     size_t bt_size;
@@ -109,8 +109,6 @@ const int AA_FACTOR = 4; //4 uses too much memory here.
 const string vertexFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/vertexlist_113.wfm";
 const string faceFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/facelist_184.wfm";
 const string glassesFilePrefix = "/shared/3dmodels/";
-const string imageFileInputPrefix = "/shared/images/input/";
-const string imageFileOutputPrefix = "/shared/images/output/";
 const char* fragName = "outFrag";
 
 glm::mat4 externalToRotTrans(float* P_arr)
@@ -202,13 +200,13 @@ static void drawOpenGLGlasses(GLuint& dstTexture, Mat& frameOrig, Glasses& glass
 }
 
 int ProcessFile( string& iFilePath, string& oFilePath, string& gName, string & errReason ) {
-    string inputFile = imageFileInputPrefix+iFilePath;
-    string outputFile = imageFileOutputPrefix+oFilePath;
+    string inputFile = iFilePath;
+    string outputFile = oFilePath;
     string glassesFile = glassesFilePrefix+gName+"/"+gName+".obj";
 
-    OUTPUT("input file=%s\r\n", inputFile.c_str());
-    OUTPUT("output file=%s\r\n", outputFile.c_str());
-    OUTPUT("glasses file=%s\r\n", glassesFile.c_str());
+    OUTPUT("input file=%s", inputFile.c_str());
+    OUTPUT("output file=%s", outputFile.c_str());
+    OUTPUT("glasses file=%s", glassesFile.c_str());
     
     Mat frame, frame_orig;
     frame_orig = imread( inputFile, CV_LOAD_IMAGE_COLOR);
@@ -739,7 +737,7 @@ int main()
                 char iFilePathStr[200];
                 char oFilePathStr[200];
                 char gNameStr[100];
-                sscanf(buf, "input=%s&output=%s&glasses=%s", iFilePathStr, oFilePathStr, gNameStr);
+                sscanf(buf, "input=%[^&]&output=%[^&]&glasses=%s", iFilePathStr, oFilePathStr, gNameStr);
                 string iFilePath = iFilePathStr;
                 string oFilePath = oFilePathStr;
                 string gName = gNameStr;
