@@ -163,11 +163,13 @@ bool Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename, flo
 #if defined(DESKTOP_GL)
     glGenVertexArrays(1, &vao);
 #endif //DESKTOP_GL
+    /*
     OUTPUT("Max vertex coord:%.2f, %.2f, %.2f\n",
            xMax, yMax, zMax);
     
     OUTPUT("Min vertex coord:%.2f, %.2f, %.2f\n",
            xMin, yMin, zMin);
+    */
     return InitMaterials(pScene, Filename);
 }
 
@@ -482,6 +484,6 @@ int Mesh::getMeshWidthInfo(const aiScene* pScene, const std::string& Filename)
             }
         }
     }
-    OUTPUT("Glasses width:%.2f\r\n", (xMax-xMin));
+    //OUTPUT("Glasses width:%.2f\r\n", (xMax-xMin));
     return 1;
 }
