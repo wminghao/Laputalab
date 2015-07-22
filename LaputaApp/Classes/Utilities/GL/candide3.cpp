@@ -54,15 +54,12 @@ bool Candide3::readFaces(string& faceFile)
         indices.push_back(face.a);
         indices.push_back(face.b);
         indices.push_back(face.c);
-        //cout << "faces: "<<face.a << " " << face.b << " " << face.c <<endl;
     }
     
     ifs.close();
     
     //load into 
     NumIndices = (unsigned int)indices.size();
-    
-    //cout << "Total candide3 faces: " << NumIndices/3 <<endl;
     
     glGenBuffers(1, &IB);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
@@ -97,7 +94,7 @@ bool Candide3::readVertices(string& vertexFile, float glassesWidth, float zRotat
     float width = xMax - xMin;
     float ratio = (glassesWidth-DELTA_SMALLER_GLASSES)/width; //inside the width
     
-    cout <<"candide width=" << width << " glasses width="<<glassesWidth << " ratio="<<ratio<<endl;
+    OUTPUT("candide width=%f glasses width=%f ratio=%.2f", width, glassesWidth, ratio);
     
     //then seek to the beginning
     ifs.clear();
@@ -121,7 +118,6 @@ bool Candide3::readVertices(string& vertexFile, float glassesWidth, float zRotat
         Vertex v(vert, texture, normal);
         
         vertices.push_back(v);
-        //cout << "vert: "<<vert.x << " " << vert.y << " " << vert.z << " texture: "<<texture.x<<" "<<texture.y<<endl;
     }
     
     ifs.close();
@@ -130,7 +126,7 @@ bool Candide3::readVertices(string& vertexFile, float glassesWidth, float zRotat
     //TODO
     //adjustShape(NULL, 0, shapeFactor, 1.0, 1.0, 1.0);
     
-    cout << "Total vertices: " << vertices.size() <<endl;
+    OUTPUT( "Total vertices: %ld", vertices.size());
     
     glGenBuffers(1, &VB);
     glBindBuffer(GL_ARRAY_BUFFER, VB);
@@ -174,13 +170,11 @@ float Candide3::setCandide3Vertices(vector<myvec3>* vec, float zRotateInDegree)
         if( vert.z < zMin ) {
             zMin = vert.z;
         }
-        //cout << "candide3 vert "<<i<<" : "<<vertices[i].m_pos.x << " " << vertices[i].m_pos.y << " " << vertices[i].m_pos.z<<endl;
     }
     float width = (xMax - xMin);
-    cout<<"New xMax="<<xMax<<" xMin="<<xMin << " candide3 width = " << (xMax-xMin)<<endl;
-    cout<<"New yMax="<<yMax<<" yMin="<<yMin << " candide3 height = " << (yMax-yMin)<<endl;
-    cout<<"New zMax="<<zMax<<" zMin="<<zMin << " candide3 depth = " << (zMax-zMin)<<endl;
-    
+    OUTPUT("New xMax=%f xMin=%f candide3 width = %f", xMax, xMin, (xMax-xMin));
+    OUTPUT("New yMax=%f yMin=%f candide3 height = %f", yMax, yMin, (yMax-yMin));
+    OUTPUT("New zMax=%f zMin=%f candide3 depth = %f", zMax, zMin, (zMax-zMin));
     
     for (size_t i = 0; i < total ; i++){
         //map directly into texture
@@ -192,7 +186,6 @@ float Candide3::setCandide3Vertices(vector<myvec3>* vec, float zRotateInDegree)
             vertices[i].m_tex.x = (vertices[i].m_pos.x/width+1)/2;
             vertices[i].m_tex.y = (vertices[i].m_pos.y/width+1)/2;
         }
-        //cout << "candide3 vert_tex "<<i<<" : "<<vertices[i].m_tex.x << " " << vertices[i].m_tex.y<<endl;
     }
     
     glGenBuffers(1, &VB);
@@ -246,7 +239,6 @@ void Candide3::adjustShape(const char**shapeUnitFile, int totalShapeUnits, const
         vertices[i].m_pos.x *= xScale;
         vertices[i].m_pos.y *= yScale;
         vertices[i].m_pos.z *= zScale;
-        //cout << "vert "<<i<<" : "<<vertices[i].m_pos.x << " " << vertices[i].m_pos.y << " " << vertices[i].m_pos.z<<endl;
     }
     
     return;
