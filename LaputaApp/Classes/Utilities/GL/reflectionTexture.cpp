@@ -163,6 +163,7 @@ bool ReflectionTexture::load()
       OUTPUT("Warning: cannot read image. reflectiontexure.");
     }
     
+    DestroyMagickWand(wand);
     MagickWandTerminus();
     
     return true;

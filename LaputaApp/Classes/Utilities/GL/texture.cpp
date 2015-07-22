@@ -71,7 +71,7 @@ bool Texture::load()
       */
       OUTPUT("Warning: cannot read image. texture\n");
     }
-    
+    DestroyMagickWand(wand);
     MagickWandTerminus();
     
     return true;

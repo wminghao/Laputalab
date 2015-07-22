@@ -107,6 +107,7 @@ bool Mesh::reloadMesh( const std::string& Filename, float zRotateInDegree )
     } else {
         OUTPUT("Error parsing '%s': '%s'\n", Filename.c_str(), Importer.GetErrorString());
     }
+    Importer.FreeScene();
     return ret;
 }
 
