@@ -87,7 +87,7 @@
 		89B05AD71B264B90004D4106 /* matrix.c in Sources */ = {isa = PBXBuildFile; fileRef = 89B05AC51B264B90004D4106 /* matrix.c */; };
 		89B05AD81B264B90004D4106 /* mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89B05AC71B264B90004D4106 /* mesh.cpp */; };
 		89B05AD91B264B90004D4106 /* reflectionTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89B05AC91B264B90004D4106 /* reflectionTexture.cpp */; };
-		89B05ADA1B264B90004D4106 /* ShaderUtilities.c in Sources */ = {isa = PBXBuildFile; fileRef = 89B05ACB1B264B90004D4106 /* ShaderUtilities.c */; };
+		89B05ADA1B264B90004D4106 /* ShaderUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89B05ACB1B264B90004D4106 /* ShaderUtilities.cpp */; };
 		89B05ADB1B264B90004D4106 /* texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89B05ACD1B264B90004D4106 /* texture.cpp */; };
 /* End PBXBuildFile section */
 
@@ -213,7 +213,7 @@
 		89B05AC81B264B90004D4106 /* mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mesh.h; path = ../../../LaputaApp/Classes/Utilities/GL/mesh.h; sourceTree = "<group>"; };
 		89B05AC91B264B90004D4106 /* reflectionTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = reflectionTexture.cpp; path = ../../../LaputaApp/Classes/Utilities/GL/reflectionTexture.cpp; sourceTree = "<group>"; };
 		89B05ACA1B264B90004D4106 /* reflectionTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = reflectionTexture.h; path = ../../../LaputaApp/Classes/Utilities/GL/reflectionTexture.h; sourceTree = "<group>"; };
-		89B05ACB1B264B90004D4106 /* ShaderUtilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ShaderUtilities.c; path = ../../../LaputaApp/Classes/Utilities/GL/ShaderUtilities.c; sourceTree = "<group>"; };
+		89B05ACB1B264B90004D4106 /* ShaderUtilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ShaderUtilities.cpp; path = ../../../LaputaApp/Classes/Utilities/GL/ShaderUtilities.cpp; sourceTree = "<group>"; };
 		89B05ACC1B264B90004D4106 /* ShaderUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShaderUtilities.h; path = ../../../LaputaApp/Classes/Utilities/GL/ShaderUtilities.h; sourceTree = "<group>"; };
 		89B05ACD1B264B90004D4106 /* texture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = texture.cpp; path = ../../../LaputaApp/Classes/Utilities/GL/texture.cpp; sourceTree = "<group>"; };
 		89B05ACE1B264B90004D4106 /* texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = texture.h; path = ../../../LaputaApp/Classes/Utilities/GL/texture.h; sourceTree = "<group>"; };
@@ -450,7 +450,7 @@
 				89B05AC81B264B90004D4106 /* mesh.h */,
 				89B05AC91B264B90004D4106 /* reflectionTexture.cpp */,
 				89B05ACA1B264B90004D4106 /* reflectionTexture.h */,
-				89B05ACB1B264B90004D4106 /* ShaderUtilities.c */,
+				89B05ACB1B264B90004D4106 /* ShaderUtilities.cpp */,
 				89B05ACC1B264B90004D4106 /* ShaderUtilities.h */,
 				89B05ACD1B264B90004D4106 /* texture.cpp */,
 				89B05ACE1B264B90004D4106 /* texture.h */,
@@ -524,7 +524,7 @@
 				89B05AD01B264B90004D4106 /* candide3.cpp in Sources */,
 				25C3436618BD721D00B0AD8C /* main.cpp in Sources */,
 				89B05AD81B264B90004D4106 /* mesh.cpp in Sources */,
-				89B05ADA1B264B90004D4106 /* ShaderUtilities.c in Sources */,
+				89B05ADA1B264B90004D4106 /* ShaderUtilities.cpp in Sources */,
 				89B05AD51B264B90004D4106 /* glasses.cpp in Sources */,
 				25C3437A18C6DB7400B0AD8C /* utilities.cpp in Sources */,
 				89B05AD71B264B90004D4106 /* matrix.c in Sources */,
