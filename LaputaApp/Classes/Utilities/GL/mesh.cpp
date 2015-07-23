@@ -147,6 +147,7 @@ bool Mesh::LoadMesh(const std::string& Filename, const char*candide3FacePath, co
         _candide3.readVertices(candide3VertP, getWidth(), zRotateInDegree);
     }
     
+    Importer.FreeScene();
     return ret;
 }
 
