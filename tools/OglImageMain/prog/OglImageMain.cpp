@@ -166,7 +166,7 @@ static bool saveBuffer(void* buffer, string& fileToSave, int srcWidth, int srcHe
         return true;
     } else {
         char buf[200];
-        sprintf(buf, "OOM: srcWidth = %d, srcHeight=%d\r\n", srcWidth, srcHeight);
+        sprintf(buf, "OOM: srcWidth = %d, srcHeight=%d", srcWidth, srcHeight);
         errReason = buf;
         return false;
     }
@@ -224,7 +224,7 @@ int ProcessFile( string& iFilePath, string& oFilePath, string& gName, string & e
 
     if( srcSize.width * srcSize.height > MAX_WIDTH_X_HEIGHT ) {
         char err[300];
-        sprintf(err, "OOM: Input size too big. width=%d, height=%d\r\n", srcSize.width, srcSize.height);
+        sprintf(err, "OOM: Input size too big. width=%d, height=%d", srcSize.width, srcSize.height);
         errReason = err;
         return -1;
     }
@@ -240,7 +240,7 @@ int ProcessFile( string& iFilePath, string& oFilePath, string& gName, string & e
         aspectRatio = ASPECT_RATIO_1_1;
         OUTPUT("image asepect ratio: 1/1\r\n");
     } else {
-        errReason = "image asepect ratio: unknown\r\n";
+        errReason = "image asepect ratio: unknown!";
         return -1;
     }
     
@@ -257,13 +257,13 @@ int ProcessFile( string& iFilePath, string& oFilePath, string& gName, string & e
     const GLint accum = 0; //accumulation buffer
     OSMesaContext ctx = OSMesaCreateContextExt( OSMESA_RGBA, zdepth, stencil, accum, NULL);
     if(!ctx) {
-        errReason = "OSMesaCreateContextExt failed!\n";
+        errReason = "OSMesaCreateContextExt failed!";
         return -1;
     }
     void* buffer = malloc(srcWidth*srcHeight*4*sizeof(GLubyte));
     /* Bind the buffer to the context and make it current */
     if (!OSMesaMakeCurrent( ctx, buffer, GL_UNSIGNED_BYTE, srcWidth, srcHeight )) {
-        errReason="OSMesaMakeCurrent failed!\n";
+        errReason="OSMesaMakeCurrent failed!";
         return -1;
     }
     
@@ -733,37 +733,41 @@ int main()
             memcpy(&pathLen, lenBuf, 4);
             OUTPUT("------OglImageMain read data, size=%d\n", pathLen);
             
-            bool bIsSuccess = false;
-            char buf[pathLen];
-            bWorking = doRead( 0, buf, pathLen );
-            if( bWorking ) {
-                buf[pathLen]='\0';
-                char iFilePathStr[200];
-                char oFilePathStr[200];
-                char gNameStr[100];
-                sscanf(buf, "input=%[^&]&output=%[^&]&glasses=%s", iFilePathStr, oFilePathStr, gNameStr);
-                string iFilePath = iFilePathStr;
-                string oFilePath = oFilePathStr;
-                string gName = gNameStr;
-                if( iFilePath.length() && oFilePath.length() && gName.length() ) {
-                    string errReason;
-                    string result;
-                    
-                    int ret = ProcessFile( iFilePath, oFilePath, gName, errReason );
-                    if( !ret ) {
-                        result = "{ \"status\":\"success\",\"message\":\"ok\"}";
+            if( pathLen > 0 ) { 
+                bool bIsSuccess = false;
+                char buf[pathLen];
+                bWorking = doRead( 0, buf, pathLen );
+                if( bWorking ) {
+                    buf[pathLen]='\0';
+                    char iFilePathStr[200];
+                    char oFilePathStr[200];
+                    char gNameStr[100];
+                    sscanf(buf, "input=%[^&]&output=%[^&]&glasses=%s", iFilePathStr, oFilePathStr, gNameStr);
+                    string iFilePath = iFilePathStr;
+                    string oFilePath = oFilePathStr;
+                    string gName = gNameStr;
+                    if( iFilePath.length() && oFilePath.length() && gName.length() ) {
+                        string errReason;
+                        string result;
+                        
+                        int ret = ProcessFile( iFilePath, oFilePath, gName, errReason );
+                        if( !ret ) {
+                            result = "{ \"status\":\"success\",\"message\":\"ok\"}";
+                        } else {
+                            result = "{ \"status\":\"error\",\"message\":\"" + errReason + "\"}";
+                            OUTPUT("OglImageMain Processing failed. input=%s, glasses=%s, errReason=%s", iFilePathStr, gNameStr, errReason.c_str());
+                        }
+                        
+                        unsigned int bufLen = result.length();
+                        doWrite( 1, (char*)&bufLen, 4);
+                        doWrite( 1, result.c_str(), bufLen);                
+                        OUTPUT("Len:%d, buf:%s", bufLen, result.c_str());
                     } else {
-                        result = "{ \"status\":\"error\",\"message\":\"" + errReason + "\"}";
-                        OUTPUT("OglImageMain Processing failed. input=%s, glasses=%s, errReason=%s", iFilePathStr, gNameStr, errReason.c_str());
+                        OUTPUT("Parsing error");
                     }
-                    
-                    unsigned int bufLen = result.length();
-                    doWrite( 1, (char*)&bufLen, 4);
-                    doWrite( 1, result.c_str(), bufLen);                
-                    OUTPUT("Len:%d, buf:%s", bufLen, result.c_str());
-                } else {
-                    OUTPUT("Parsing error");
                 }
+            } else {
+                break;
             }
         }
     }
