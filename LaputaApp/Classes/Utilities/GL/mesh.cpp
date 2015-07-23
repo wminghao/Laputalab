@@ -107,6 +107,8 @@ bool Mesh::reloadMesh( const std::string& Filename, float zRotateInDegree )
     } else {
         OUTPUT("Error parsing '%s': '%s'\n", Filename.c_str(), Importer.GetErrorString());
     }
+    //fake memory leak with pScene not released?
+    //http://sourceforge.net/p/assimp/discussion/817654/thread/1ef7668d/
     Importer.FreeScene();
     return ret;
 }
@@ -146,7 +148,8 @@ bool Mesh::LoadMesh(const std::string& Filename, const char*candide3FacePath, co
         string candide3VertP = candide3VertPath;
         _candide3.readVertices(candide3VertP, getWidth(), zRotateInDegree);
     }
-    
+    //fake memory leak with pScene not released?
+    //http://sourceforge.net/p/assimp/discussion/817654/thread/1ef7668d/
     Importer.FreeScene();
     return ret;
 }
