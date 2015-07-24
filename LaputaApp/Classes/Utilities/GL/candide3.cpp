@@ -164,11 +164,11 @@ float Candide3::setCandide3Vertices(vector<myvec3>* vec, float zRotateInDegree)
         if( vertices[i].m_pos.y < yMin ) {
             yMin = vertices[i].m_pos.y;
         }
-        if( vert.z > zMax ) {
-            zMax = vert.z;
+        if( vertices[i].m_pos.z > zMax ) {
+            zMax = vertices[i].m_pos.z;
         }
-        if( vert.z < zMin ) {
-            zMin = vert.z;
+        if( vertices[i].m_pos.z < zMin ) {
+            zMin = vertices[i].m_pos.z;
         }
     }
     float width = (xMax - xMin);

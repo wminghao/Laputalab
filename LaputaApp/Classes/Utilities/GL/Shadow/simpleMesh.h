@@ -1,24 +1,15 @@
-/*
+//
+//  simpleMesh.h
+//  VET
+//
+//  Created by Howard Wang on 15-7-24.
+//  Copyright (c) 2015年 Laputalab. All rights reserved.
+//
 
-	Copyright 2011 Etay Meiri
+#ifndef __VET__simpleMesh__
+#define __VET__simpleMesh__
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-#ifndef MESH_H
-#define	MESH_H
-
+#include <stdio.h>
 #include <map>
 #include <vector>
 #include "platform.h"
@@ -37,12 +28,12 @@
 
 #include "candide3.h"
 
-class Mesh
+class SimpleMesh
 {
 public:
-    Mesh();
-
-    ~Mesh();
+    SimpleMesh();
+    
+    ~SimpleMesh();
     
     void setAttrUni(GLint texCountLocation,
                     GLint diffuseColorLocation,
@@ -61,8 +52,6 @@ public:
         m_positionLocation = positionLocation;
         m_texCoordLocation = texCoordLocation;
         m_normalLocation = normalLocation;
-        
-        _candide3.setAttrUni(texCountLocation, textureImageLocation, positionLocation, texCoordLocation, normalLocation);
     }
     bool LoadMesh(const std::string& Filename, const char*candide3FacePath, const char* candide3VertPath, float zRotateInDegree,
                   bool bUploadCandide3Vertices, vector<myvec3>* candide3Vec);
@@ -72,7 +61,7 @@ public:
     void Render(GLuint textureObj);
     
     float getWidth() { return xMax-xMin;}
-
+    
 private:
     bool InitFromScene(const aiScene* pScene, const std::string& Filename, float zRotateInDegree);
     void InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDegree);
@@ -83,21 +72,21 @@ private:
     
 #define INVALID_OGL_VALUE 0xFFFFFFFF
 #define INVALID_MATERIAL 0xFFFFFFFF
-
+    
     struct MeshEntry {
         MeshEntry();
-
+        
         ~MeshEntry();
-
+        
         void Init(const std::vector<Vertex>& Vertices,
                   const std::vector<unsigned int>& Indices);
-
+        
         GLuint VB;
         GLuint IB;
         unsigned int NumIndices;
         unsigned int MaterialIndex;
     };
-
+    
     std::vector<MeshEntry> m_Entries;
     std::vector<Material*> m_Materials;
     
@@ -124,9 +113,7 @@ private:
     GLuint vao;
 #endif //DESKTOP_GL
     
-    Candide3 _candide3;
     float _candide3WidthRatio;  //width ratio from candide3 to glasses
 };
 
-#endif	/* MESH_H */
-
+#endif /* defined(__VET__simpleMesh__) */

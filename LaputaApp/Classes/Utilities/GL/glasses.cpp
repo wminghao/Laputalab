@@ -404,6 +404,5 @@ void Glasses::readPixels(unsigned char* pixels)
     } else {
         OUTPUT("readPixels:framebufferStatus=%d\r\n", framebufferStatus);
     }
-
 }
 #endif //DESKTOP_GL
