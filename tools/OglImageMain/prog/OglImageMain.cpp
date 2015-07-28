@@ -218,18 +218,25 @@ int ProcessFile( string& iFilePath, string& oFilePath, string& gName, string & e
     OUTPUT("input size w=%d, h=%d\r\n", frame_orig.size().width, frame_orig.size().height);
     
     //double the size
-    resize(frame_orig, frame, Size(), AA_FACTOR, AA_FACTOR, INTER_CUBIC);
     Size srcSize = frame_orig.size();
-    frame_orig.release();
-
+    
     if( srcSize.width * srcSize.height > MAX_WIDTH_X_HEIGHT ) {
         char err[300];
         sprintf(err, "OOM: Input size too big. width=%d, height=%d", srcSize.width, srcSize.height);
         errReason = err;
         return -1;
+    } else if( !srcSize.width || !srcSize.height ) {
+        char err[300];
+        sprintf(err, "Error: Input size wrong. width=%d, height=%d", srcSize.width, srcSize.height);
+        errReason = err;
+        return -1;
     }
 
+    resize(frame_orig, frame, Size(), AA_FACTOR, AA_FACTOR, INTER_CUBIC);
+    frame_orig.release();
+
     ASPECT_RATIO aspectRatio = ASPECT_RATIO_4_3;
+    float zRotateInDegree = 0;
     if( srcSize.width * 3 == srcSize.height * 4 ) {
         aspectRatio = ASPECT_RATIO_4_3;
         OUTPUT("image asepect ratio: 4/3\r\n");
@@ -239,6 +246,14 @@ int ProcessFile( string& iFilePath, string& oFilePath, string& gName, string & e
     } else if(srcSize.width == srcSize.height) {
         aspectRatio = ASPECT_RATIO_1_1;
         OUTPUT("image asepect ratio: 1/1\r\n");
+    } else if( srcSize.width * 4 == srcSize.height * 3 ) {
+        aspectRatio = ASPECT_RATIO_4_3;
+        zRotateInDegree = 90;
+        OUTPUT("image asepect ratio: 3/4\r\n");
+    } else if( srcSize.width * 16 == srcSize.height * 9 ) {
+        aspectRatio = ASPECT_RATIO_16_9;
+        zRotateInDegree = 90;
+        OUTPUT("image asepect ratio: 9/16\r\n");
     } else {
         errReason = "image asepect ratio: unknown!";
         return -1;
@@ -340,7 +355,7 @@ int ProcessFile( string& iFilePath, string& oFilePath, string& gName, string & e
                  glassesFile.c_str(),
                  faceFile.c_str(),
                  vertexFile.c_str(),
-                 0, aspectRatio,
+                 zRotateInDegree, aspectRatio,
                  true, &verticesAdjusted ); //read adjusted coordinates directly from opengl.
     ////////////////
     
