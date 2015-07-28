@@ -102,6 +102,7 @@ bool Candide3::readVertices(string& vertexFile, float glassesWidth, float zRotat
     while (ifs >> vert.x >> vert.y >> vert.z){
         //map directly into texture
         if( zRotateInDegree == 90 ) {
+            //TODO
             //aspect ratio is 16/9 for 90 mode
             texture.x = (1-(vert.y+1)/2)*9/16;
             texture.y = (vert.x+1)/2;
