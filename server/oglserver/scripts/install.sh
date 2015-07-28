@@ -11,7 +11,7 @@ sudo cp oglserver.sh /etc/init.d/
 sudo cp oglservernanny.sh /etc/init.d/
 sudo /etc/init.d/oglservernanny.sh stop
 cd /Laputalab/tools/OglImageMain
-scons
+scons type=debug
 rm /usr/bin/OglImageMain
 sudo cp /Laputalab/tools/OglImageMain/build/Linux-x86_64/prog/OglImageMain /usr/bin/
 sudo chown root:root /usr/bin/OglImageMain

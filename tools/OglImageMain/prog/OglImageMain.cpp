@@ -236,6 +236,7 @@ int ProcessFile( string& iFilePath, string& oFilePath, string& gName, string & e
     frame_orig.release();
 
     ASPECT_RATIO aspectRatio = ASPECT_RATIO_4_3;
+    float zRotateInDegree = 0;
     if( srcSize.width * 3 == srcSize.height * 4 ) {
         aspectRatio = ASPECT_RATIO_4_3;
         OUTPUT("image asepect ratio: 4/3\r\n");
@@ -245,6 +246,14 @@ int ProcessFile( string& iFilePath, string& oFilePath, string& gName, string & e
     } else if(srcSize.width == srcSize.height) {
         aspectRatio = ASPECT_RATIO_1_1;
         OUTPUT("image asepect ratio: 1/1\r\n");
+    } else if( srcSize.width * 4 == srcSize.height * 3 ) {
+        aspectRatio = ASPECT_RATIO_4_3;
+        zRotateInDegree = 90;
+        OUTPUT("image asepect ratio: 3/4\r\n");
+    } else if( srcSize.width * 16 == srcSize.height * 9 ) {
+        aspectRatio = ASPECT_RATIO_16_9;
+        zRotateInDegree = 90;
+        OUTPUT("image asepect ratio: 9/16\r\n");
     } else {
         errReason = "image asepect ratio: unknown!";
         return -1;
@@ -346,7 +355,7 @@ int ProcessFile( string& iFilePath, string& oFilePath, string& gName, string & e
                  glassesFile.c_str(),
                  faceFile.c_str(),
                  vertexFile.c_str(),
-                 0, aspectRatio,
+                 zRotateInDegree, aspectRatio,
                  true, &verticesAdjusted ); //read adjusted coordinates directly from opengl.
     ////////////////
     
