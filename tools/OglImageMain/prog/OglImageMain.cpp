@@ -147,7 +147,7 @@ static bool saveBuffer(void* buffer, string& fileToSave, int srcWidth, int srcHe
 
         for( int i = 0; i < srcHeight; i++) {
             for( int j = 0; j < srcWidth; j++ ) {
-                src = (uint8*)buffer + ( (srcHeight-i)*srcWidth + j )*4;
+                src = (uint8*)buffer + ( (srcHeight-1-i)*srcWidth + j )*4;
                 dst = pImage_flipped_x + (i * srcWidth + j) * 4;
                 *dst = *(src+2);
                 *(dst+1) = *(src+1);
@@ -256,8 +256,9 @@ int ProcessFile( string& iFilePath, string& oFilePath, string& gName, string & e
         zRotateInDegree = 90;
         OUTPUT("image asepect ratio: 9/16\r\n");
     } else {
-        errReason = "image asepect ratio: unknown!";
-        return -1;
+        //errReason = "image asepect ratio: unknown!";
+        //return -1;
+        OUTPUT("image asepect ratio: unknown!");
     }
     
     //manually resize to achive aa

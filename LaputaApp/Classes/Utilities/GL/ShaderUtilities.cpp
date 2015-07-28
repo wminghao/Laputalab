@@ -79,7 +79,7 @@ GLint glueCompileShader(GLenum target, GLsizei count, const GLchar **sources, GL
 	{
 		GLchar *log = (GLchar *)malloc(logLength);
 		glGetShaderInfoLog(*shader, logLength, &logLength, log);
-		LogInfo("Shader compile log:\n%s", log);
+		//LogInfo("Shader compile log:\n%s", log);
 		free(log);
 	}
 #endif
@@ -112,7 +112,7 @@ GLint glueLinkProgram(GLuint program)
 	{
 		GLchar *log = (GLchar *)malloc(logLength);
 		glGetProgramInfoLog(program, logLength, &logLength, log);
-		LogInfo("Program link log:\n%s", log);
+		//LogInfo("Program link log:\n%s", log);
 		free(log);
 	}
 #endif
