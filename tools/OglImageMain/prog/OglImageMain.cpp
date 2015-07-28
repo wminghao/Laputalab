@@ -57,6 +57,7 @@ void handlesig( int signum )
     }
     free( bt_syms );
     LOG( "---------------------------------------------");
+    exit(-1);
 }
 
 
@@ -294,23 +295,7 @@ int ProcessFile( string& iFilePath, string& oFilePath, string& gName, string & e
     ////////////////
     
     //------------Initialization Begin---------------
-    int curWidth;
-    switch( aspectRatio ) {
-    case ASPECT_RATIO_16_9: {
-        curWidth = 360/2-0.5;
-        break;
-    }
-    case ASPECT_RATIO_4_3: {
-        curWidth = 480/2-0.5;
-        break;
-    }
-    case ASPECT_RATIO_1_1: 
-    default: {
-        curWidth = 640/2-0.5;
-        break;
-    }
-    }
-    Mat cam_int = (Mat_<float>(3,3) << 650.66, 0, 319.50, 0, 650.94, curWidth, 0, 0, 1);
+    Mat cam_int = (Mat_<float>(3,3) << srcWidth, 0, srcWidth/2, 0, srcWidth, srcHeight/2, 0, 0, 1);
     glm::mat4 projectionMat4 = IntrinsicToProjection(&cam_int, srcWidth, srcHeight);
     
     //Scales
