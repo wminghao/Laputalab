@@ -24,14 +24,6 @@ using namespace cv;
 
 const int AA_FACTOR = 4;
 
-//Model file
-const string pathPrefix = "/Laputalab/tools/3dModelImgGen/";
-const string shaderFilePrefix = pathPrefix + "3dShaders/";
-const string glassesFilePrefix = pathPrefix + "3dmodels/";
-const string candide3VertexFile = glassesFilePrefix + "Candide3/vertexlist_113.wfm";
-const string candide3FaceFile = glassesFilePrefix + "Candide3/facelist_184.wfm";
-const string outputFilePrefix = glassesFilePrefix + "result/";
-const string backgroundFilePrefix = pathPrefix + "background/";
 const char* fragName = "outFrag";
 
 Mat P2PMat(float P[]){
@@ -161,11 +153,28 @@ int main(int argc, char* argv[])
     string outputFile;
     string glassesFile;
     float yRotateInDeg;
-    if( argc == 5 ) {
-        inputFile = backgroundFilePrefix+argv[1];
-        outputFile = outputFilePrefix+argv[3]+"/"+argv[2];
+    string glassesVsh;
+    string glassesFsh;    
+    string candide3VertexFile;
+    string candide3FaceFile;
+    if( argc == 6 ) {
+        //Model file
+        string pathPrefix = argv[5];
+        string shaderFilePrefix = pathPrefix + "3dShaders/";
+        string glassesFilePrefix = pathPrefix + "3dmodels/";
+        candide3VertexFile = glassesFilePrefix + "Candide3/vertexlist_113.wfm";
+        candide3FaceFile = glassesFilePrefix + "Candide3/facelist_184.wfm";
+        inputFile = pathPrefix + "background/"+argv[1];
+        outputFile = glassesFilePrefix + "result/"+argv[3]+"/"+argv[2];
         glassesFile = glassesFilePrefix+argv[3]+"/"+argv[3]+".obj";
         yRotateInDeg = (float)atoi(argv[4]);
+        if( OPENGL_2_1 ) {
+            glassesVsh = shaderFilePrefix + "3dGlassesVertexShaderGL2.1.vsh";
+            glassesFsh = shaderFilePrefix + "3dGlassesFragmentShaderGL2.1.fsh";
+        } else {
+            glassesVsh = shaderFilePrefix + "3dGlassesVertexShaderGL.vsh";
+            glassesFsh = shaderFilePrefix + "3dGlassesFragmentShaderGL.fsh";
+        }
     } else {
         return 0;
     }
@@ -215,15 +224,6 @@ int main(int argc, char* argv[])
         return 0;
     }
     
-    string glassesVsh;
-    string glassesFsh;    
-    if( OPENGL_2_1 ) {
-        glassesVsh = shaderFilePrefix + "3dGlassesVertexShaderGL2.1.vsh";
-        glassesFsh = shaderFilePrefix + "3dGlassesFragmentShaderGL2.1.fsh";
-    } else {
-        glassesVsh = shaderFilePrefix + "3dGlassesVertexShaderGL.vsh";
-        glassesFsh = shaderFilePrefix + "3dGlassesFragmentShaderGL.fsh";
-    }
     ////////////////
     
     //------------Initialization Begin---------------

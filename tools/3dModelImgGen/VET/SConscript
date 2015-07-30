@@ -27,7 +27,7 @@ glUtilitiesObj = env.Object(GLCodePath + 'glUtilities.cpp', CCFLAGS=VETCflags )
 matrixObj = env.Object(GLCodePath + 'matrix.c', CCFLAGS=VETCflags )
 meshObj = env.Object(GLCodePath + 'mesh.cpp', CCFLAGS=VETCflags )
 reflectionTextureObj = env.Object(GLCodePath + 'reflectionTexture.cpp', CCFLAGS=VETCflags )
-ShaderUtilitiesObj = env.Object(GLCodePath + 'ShaderUtilities.c', CCFLAGS=VETCflags )
+ShaderUtilitiesObj = env.Object(GLCodePath + 'ShaderUtilities.cpp', CCFLAGS=VETCflags )
 textureObj = env.Object(GLCodePath + 'texture.cpp', CCFLAGS=VETCflags )
 mainWindowlessObj = env.Object(MainCodePath + 'mainWindowless.cpp', CCFLAGS=VETCflags )
 
