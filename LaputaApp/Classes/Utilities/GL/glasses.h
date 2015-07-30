@@ -79,6 +79,7 @@ public:
     
 private:
     void deinit();
+    
 private:
     /*mesh*/
     Mesh* _pMesh;

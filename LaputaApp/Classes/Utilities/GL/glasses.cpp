@@ -36,31 +36,6 @@ void Glasses::setMatrices(mat4& projectMat, mat4& rotTransMat) {
                          vec3(0,0,0), // and looks at the origin
                          vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
                         );
-    
-    /*
-    glm::mat4 curMVP = _Projection * _View * _World;
-    //Test
-    glm::vec4 coord = {-10, 0, 50, 1};
-    
-    glm::vec4 resTemp = curMVP * coord;
-    glm::vec3 res = {resTemp.x/resTemp.w, resTemp.y/resTemp.w, resTemp.y/resTemp.w};
-    
-    glm::vec4 coord2 = { -6.45, -55.44, -21.75, 1};
-    resTemp = curMVP * coord2;
-    glm::vec3 res2 = {resTemp.x/resTemp.w, resTemp.y/resTemp.w, resTemp.y/resTemp.w};
-    
-    glm::vec3 lightDir = vec3(0, 0, 0) - vec3(_World * coord2);
-    glm::vec3 lightDirWorld = normalize(lightDir);
-    
-    glm::vec3 normal ={ 0.04, 0.11, 0.99 };
-    glm::vec3 normalWord = normalize( _NormalMatrix * normal);
-    
-    float dotNL = dot(normalWord, lightDirWorld);
-    
-    glm::vec4 coord3 = { 15, -10, 6, 1};
-    resTemp = curMVP * coord3;
-    glm::vec3 res3 = {resTemp.x/resTemp.w, resTemp.y/resTemp.w, resTemp.y/resTemp.w};
-    */
 }
 
 #if defined(THREED_MODEL_ONLY)
@@ -192,9 +167,7 @@ bool Glasses::init(const char* vertLFilePath,
         ////////////////////////
         //Load model with ASSIMP
         ////////////////////////
-        _pMesh->LoadMesh(glassesFilePath, candide3FacePath, candide3VertPath, zRotateInDegree, bUploadCandide3Vertices, candide3Vec);
-
-        ret = true;
+        ret = _pMesh->LoadMesh(glassesFilePath, candide3FacePath, candide3VertPath, zRotateInDegree, bUploadCandide3Vertices, candide3Vec);
     }
     
     free(vertLSrc);
