@@ -109,9 +109,9 @@ bool Candide3::readVertices(string& vertexFile, float glassesWidth, float zRotat
     while (ifs >> vert.x >> vert.y >> vert.z){
         //map directly into texture
         if( zRotateInDegree == 90 ) {
-            //TODO
-            //aspect ratio is 16/9 for 90 mode
-            texture.x = (1-(vert.y+1)/2)*9/16;
+            //TODO Should we take into account aspect ratio after rotation?
+            //aspect ratio is 16/9 or 4/3 for 90 mode
+            texture.x = (1-(vert.y+1)/2); //*9/16
             texture.y = (vert.x+1)/2;
         } else {
             texture.x = (vert.x+1)/2;
@@ -130,8 +130,7 @@ bool Candide3::readVertices(string& vertexFile, float glassesWidth, float zRotat
     
     ifs.close();
     
-    //adjust the shape
-    //TODO
+    //adjust the shape based on Xingze's head, disabled now. TODO
     //adjustShape(NULL, 0, shapeFactor, 1.0, 1.0, 1.0);
     
     OUTPUT( "Total vertices: %ld", vertices.size());

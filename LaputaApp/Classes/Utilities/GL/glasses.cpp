@@ -63,6 +63,24 @@ void Glasses::setMatrices(mat4& projectMat, mat4& rotTransMat) {
     */
 }
 
+#if defined(THREED_MODEL_ONLY)
+void Glasses::setMatricesWithYRotation(mat4& projectMat, mat4& rotTransMat, float yRotateInDeg) {
+    _Projection = projectMat;
+    
+    float scaleFactor = 7.0f;
+    mat4 Model_scale = scale(mat4(1.0f), vec3(scaleFactor,scaleFactor,scaleFactor));
+    mat4 Model_rotateX = rotate(mat4(1.0f), radians(10.0f), vec3(1,0,0)); //rotate x of 10 degree to align to nose
+    mat4 Model_rotateY = rotate(mat4(1.0f), radians(yRotateInDeg), vec3(0,1,0)); //rotate y
+    
+    _World = rotTransMat * Model_rotateX * Model_rotateY * Model_scale;
+    _NormalMatrix = transpose(inverse(mat3(_World))); //remove translation and scaling
+    _View       = lookAt(vec3(0,0,0.01), // Camera is at (0, 0, 0.01), in World Space
+                         vec3(0,0,0), // and looks at the origin
+                         vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+                         );
+}
+#endif
+
 bool Glasses::init(const char* vertLFilePath,
                    const char* fragLFilePath,
                    const char *fragColorLName,
@@ -175,52 +193,6 @@ bool Glasses::init(const char* vertLFilePath,
         //Load model with ASSIMP
         ////////////////////////
         _pMesh->LoadMesh(glassesFilePath, candide3FacePath, candide3VertPath, zRotateInDegree, bUploadCandide3Vertices, candide3Vec);
-        
-        ////////////////////////
-        //Set the matrices
-        ////////////////////////
-        float ratioW = 0;
-        float ratioH = 0;
-        if( ratio == ASPECT_RATIO_4_3 ) {
-            ratioW = 12;
-            ratioH = 9;
-        } else if( ratio == ASPECT_RATIO_16_9 ){
-            ratioW = 16;
-            ratioH = 9;
-        } else {
-            //assume it's 1:1
-            ratioW = 12;
-            ratioH = 12;
-        }
-        
-        // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-        mat4 Projection = perspective(radians(45.0f), ratioW/ratioH, 0.1f, 100.0f); //for portrait mode, front/back camera, is: 16:9
-        // Or, for an ortho camera :
-        //mat4 Projection = ortho(-ratioW/2,ratioW/2,-ratioH/2,ratioH/2,0.0f,100.0f); // In world coordinates, x/y =16/9 ratio, far-near is big enough
-        
-        // Camera matrix
-        mat4 View       = lookAt(vec3(0,0,10), // Camera is at (0, 0, 10), in World Space
-                                 vec3(0,0,0), // and looks at the origin
-                                 vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-                                 );
-        
-        //mat4 Model      = mat4(1.0f);
-        mat4 Model_translation = translate(mat4(1.0f), vec3(0,0,0));
-        
-        mat4 Model_rotateZ = rotate(mat4(1.0f), radians(zRotateInDegree), vec3(0,0,1)); //rotate z of 90 degree
-        mat4 Model_rotateX = rotate(mat4(1.0f), radians(10.0f), vec3(1,0,0)); //rotate x of 10 degree
-        
-        // Model matrix : an identity matrix (model will be at the origin)
-        float scaleFactor = ((zRotateInDegree == 90)?ratioH * 0.7:ratioW * 1/3)/_pMesh->getWidth(); //put the object width the same as portaint mode 9:16
-        mat4 Model_scale = scale(mat4(1.0f), vec3(scaleFactor,scaleFactor,scaleFactor));
-        
-        _World = Model_translation * Model_rotateZ * Model_rotateX * Model_scale;
-        _NormalMatrix = transpose(inverse(mat3(_World))); //rotation and scaling, w/o
-        _View = View;
-        
-        // Our ModelViewProjection : multiplication of our 3 matrices
-        // Remember, matrix multiplication is the other way around
-        _Projection = Projection;
 
         ret = true;
     }
@@ -328,7 +300,35 @@ bool Glasses::render(GLuint dstTextureName, GLuint candide3Texture, bool shouldR
             glUseProgram( _programID );
             
         #if !defined(DESKTOP_GL)
-            //TODO below is the test code to transformation
+            ////////////////////////////////////////////
+            //TODO TEST CODE for Mobile to Set the matrices
+            ////////////////////////////////////////////
+            float ratioW = 0;
+            float ratioH = 0;
+            if( ratio == ASPECT_RATIO_4_3 ) {
+                ratioW = 12;
+                ratioH = 9;
+            } else if( ratio == ASPECT_RATIO_16_9 ){
+                ratioW = 16;
+                ratioH = 9;
+            } else {
+                //assume it's 1:1
+                ratioW = 12;
+                ratioH = 12;
+            }
+            
+            // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+            _Projection = perspective(radians(45.0f), ratioW/ratioH, 0.1f, 100.0f); //for portrait mode, front/back camera, is: 16:9
+            // Or, for an ortho camera :
+            //mat4 Projection = ortho(-ratioW/2,ratioW/2,-ratioH/2,ratioH/2,0.0f,100.0f); // In world coordinates, x/y =16/9 ratio, far-near is big enough
+            
+            // Camera matrix
+            _View = lookAt(vec3(0,0,0.01), // Camera is at (0, 0, 0.01), in World Space
+                                     vec3(0,0,0), // and looks at the origin
+                                     vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+                                     );
+            
+            //below is the test code to transformation
             static float angleInDegree = 0.0f;
             static int sign = -1;
             if(angleInDegree >= 60) {
@@ -353,6 +353,7 @@ bool Glasses::render(GLuint dstTextureName, GLuint candide3Texture, bool shouldR
             } else {
                 _World = Model_rotateZ * Model_rotateX * Model_scale;
             }
+            _NormalMatrix = transpose(inverse(mat3(_World))); //rotation and scaling, w/o
         #endif //!DESKTOP_GL
             
             mat4 curMVP = _Projection * _View * _World;

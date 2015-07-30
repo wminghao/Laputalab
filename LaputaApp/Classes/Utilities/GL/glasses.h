@@ -69,9 +69,14 @@ public:
     
     void setMatrices(mat4& projectMat, mat4& rotTransMat);
     
+#if defined(THREED_MODEL_ONLY)
+    void setMatricesWithYRotation(mat4& projectMat, mat4& rotTransMat, float yRotateInDeg);
+#endif
+    
 #if defined(DESKTOP_GL )
     void readPixels(unsigned char* pixels);
 #endif //DESKTOP_GL
+    
 private:
     void deinit();
 private:
