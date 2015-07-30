@@ -74,12 +74,13 @@ public:
     float getWidth() { return xMax-xMin;}
 
 private:
-    bool InitFromScene(const aiScene* pScene, const std::string& Filename, float zRotateInDegree, float widthRatio);
-    void InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDegree, float widthRatio);
+    bool InitFromScene(const aiScene* pScene, const std::string& Filename, float zRotateInDegree);
+    void InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDegree);
     bool InitMaterials(const aiScene* pScene, const std::string& Filename);
     void Clear();
     
     int getMeshWidthInfo(const aiScene* pScene, const std::string& Filename);
+    float getVecWidth(vector<myvec3>* vec);
     
 #define INVALID_OGL_VALUE 0xFFFFFFFF
 #define INVALID_MATERIAL 0xFFFFFFFF

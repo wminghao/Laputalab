@@ -10,6 +10,7 @@
 
 #include <wand/magick_wand.h>
 #include <wand/magick-image.h>
+#include "Output.h"
 
 
 ReflectionTexture::ReflectionTexture(GLint texCountLocation,
@@ -157,11 +158,12 @@ bool ReflectionTexture::load()
         description=MagickGetException(wand,&severity);
         FormatLocaleString(error_string,250,"%s %s %lu %s\n",GetMagickModule(),description);
         MagickRelinquishMemory(description);
-        printf("Warning: cannot read image. error=%s\n", error_string);
+        OUTPUT("Warning: cannot read image. error=%s\n", error_string);
       */
-      printf("Warning: cannot read image. reflectiontexure.");
+      OUTPUT("Warning: cannot read image. reflectiontexure.");
     }
     
+    DestroyMagickWand(wand);
     MagickWandTerminus();
     
     return true;

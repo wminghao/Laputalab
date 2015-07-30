@@ -45,6 +45,7 @@ enum {
 typedef enum {
     ASPECT_RATIO_4_3,
     ASPECT_RATIO_16_9,
+    ASPECT_RATIO_1_1
 }ASPECT_RATIO;
 
 
@@ -66,13 +67,19 @@ public:
     
     bool render(GLuint dstTextureName, GLuint candide3Texture, bool shouldRotate);
     
-    void setMatrices(mat4& projectMat, mat4& rotTransMat, float yRotateInDeg);
+    void setMatrices(mat4& projectMat, mat4& rotTransMat);
+    
+#if defined(THREED_MODEL_ONLY)
+    void setMatricesWithYRotation(mat4& projectMat, mat4& rotTransMat, float yRotateInDeg);
+#endif
     
 #if defined(DESKTOP_GL )
     void readPixels(unsigned char* pixels);
 #endif //DESKTOP_GL
+    
 private:
     void deinit();
+    
 private:
     /*mesh*/
     Mesh* _pMesh;
@@ -95,6 +102,8 @@ private:
     int _zRotationInDegree;
     
     bool _enableAA; //enable anti-aliasing or not
+    
+    ASPECT_RATIO _aspectRatio;
     
 #if defined(DESKTOP_GL)
     //input framebuffer

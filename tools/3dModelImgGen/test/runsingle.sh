@@ -1,10 +1,5 @@
 #!/bin/bash
-cd $4
-if [ ! -d "result" ];
-then
-   mkdir result
-fi
-cd result
+cd $4/result
 if [ ! -d "$1" ];
 then
    mkdir $1

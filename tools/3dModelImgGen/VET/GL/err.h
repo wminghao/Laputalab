@@ -13,11 +13,12 @@
 #include <assert.h>
 #include <string.h>
 #include "platform.h"
+#include "Output.h"
 
 inline void getGLErr(const char* prefix){
     int err = glGetError();
     if( err != GL_NO_ERROR ) {
-        printf("%s err=%d\r\n", prefix, err);
+        OUTPUT("%s err=%d\r\n", prefix, err);
     }
 }
 /*
@@ -38,7 +39,7 @@ inline void readParam(const char* prefix)
     glGetRenderbufferParameteriv(GL_RENDERBUFFER,GL_RENDERBUFFER_INTERNAL_FORMAT,&fmt);
     glGetRenderbufferParameteriv(GL_RENDERBUFFER,GL_RENDERBUFFER_SAMPLES,&sam);
     glBindRenderbuffer(GL_RENDERBUFFER,0);
-    printf("%s: color %dx%d, fmt=%d, samples=%d\n",prefix, wid,hei,fmt,sam);
+    OUTPUT("%s: color %dx%d, fmt=%d, samples=%d\n",prefix, wid,hei,fmt,sam);
     
     glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE,&objectType);
     assert(objectType == GL_RENDERBUFFER);
@@ -51,18 +52,18 @@ inline void readParam(const char* prefix)
     glGetRenderbufferParameteriv(GL_RENDERBUFFER,GL_RENDERBUFFER_INTERNAL_FORMAT,&fmt);
     glGetRenderbufferParameteriv(GL_RENDERBUFFER,GL_RENDERBUFFER_SAMPLES,&sam);
     glBindRenderbuffer(GL_RENDERBUFFER,0);
-    printf("%s: depth %dx%d, fmt=%d, samples=%d\n",prefix, wid,hei,fmt,sam);
+    OUTPUT("%s: depth %dx%d, fmt=%d, samples=%d\n",prefix, wid,hei,fmt,sam);
 }
 
 inline void readFrameBuffers(const char* str)
 {
     GLuint frameBufferObject = 0;
     glGetIntegerv(GL_FRAMEBUFFER_BINDING, (GLint*)&frameBufferObject);
-    printf("%s GL_FRAMEBUFFER_BINDING=%d\r\n",str, frameBufferObject);
+    OUTPUT("%s GL_FRAMEBUFFER_BINDING=%d\r\n",str, frameBufferObject);
     glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, (GLint*)&frameBufferObject);
-    printf("%s GL_DRAW_FRAMEBUFFER_BINDING=%d\r\n",str, frameBufferObject);
+    OUTPUT("%s GL_DRAW_FRAMEBUFFER_BINDING=%d\r\n",str, frameBufferObject);
     glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, (GLint*)&frameBufferObject);
-    printf("%s GL_READ_FRAMEBUFFER_BINDING=%d\r\n",str, frameBufferObject);
+    OUTPUT("%s GL_READ_FRAMEBUFFER_BINDING=%d\r\n",str, frameBufferObject);
 }
 
 inline void getReadBuffers()
@@ -71,7 +72,7 @@ inline void getReadBuffers()
     memset(data, 0, 40);
     glGetIntegerv( GL_READ_BUFFER, data );
     for(int i = 0; i< 10; i++) {
-        printf("GL_COLOR_ATTACHMENT0=%d, data[%d]=%d\r\n", GL_COLOR_ATTACHMENT0, i, data[i]);
+        OUTPUT("GL_COLOR_ATTACHMENT0=%d, data[%d]=%d\r\n", GL_COLOR_ATTACHMENT0, i, data[i]);
     }
 }
 #endif //DESKTOP_GL

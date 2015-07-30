@@ -1,7 +1,13 @@
 #!/bin/bash
 pwd=`pwd`
-modeldir='/shared/3dmodels'
-cd $modeldir/result
+#TODO change the directory to your own.
+modeldir='/Laputalab/tools/3dModelImgGen/3dmodels'
+cd $modeldir
+if [ ! -d "result" ];
+then
+   mkdir result
+fi
+cd result
 rm $1.tar.gz 
 rm -rf $1
 cd $pwd
