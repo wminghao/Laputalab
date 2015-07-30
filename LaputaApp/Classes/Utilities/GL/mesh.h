@@ -80,6 +80,7 @@ private:
     void Clear();
     
     int getMeshWidthInfo(const aiScene* pScene, const std::string& Filename);
+    float getVecWidth(vector<myvec3>* vec);
     
 #define INVALID_OGL_VALUE 0xFFFFFFFF
 #define INVALID_MATERIAL 0xFFFFFFFF

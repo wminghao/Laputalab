@@ -250,7 +250,7 @@ int main(int argc, char* argv[])
                  fragName,
                  glassesFile.c_str(),
                  faceFile.c_str(),
-		 vertexFile.c_str(),
+                 vertexFile.c_str(),
                  0, aspectRatio,
                  false, NULL ); //read adjusted coordinates directly from opengl.
     ////////////////

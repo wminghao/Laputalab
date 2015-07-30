@@ -113,6 +113,23 @@ bool Mesh::reloadMesh( const std::string& Filename, float zRotateInDegree )
     return ret;
 }
 
+float Mesh::getVecWidth(vector<myvec3>* vec)
+{
+    float xMin = 0;
+    float xMax = 0;
+    size_t total = vec->size();
+    for (size_t i = 0; i < total ; i++){
+        myvec3 vert = (*vec)[i];
+        if( vert.x > xMax ) {
+            xMax = vert.x;
+        }
+        if( vert.x < xMin ) {
+            xMin = vert.x;
+        }
+    }
+    return (xMax - xMin);
+}
+
 bool Mesh::LoadMesh(const std::string& Filename, const char*candide3FacePath, const char* candide3VertPath, float zRotateInDegree,
                     bool bUploadCandide3Vertices, vector<myvec3>* candide3Vec)
 {
@@ -126,7 +143,7 @@ bool Mesh::LoadMesh(const std::string& Filename, const char*candide3FacePath, co
     const aiScene* pScene = Importer.ReadFile(Filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
     if (pScene) {
         if( bUploadCandide3Vertices ) {
-            float candide3Width = _candide3.setCandide3Vertices(candide3Vec, zRotateInDegree);
+            float candide3Width = Mesh::getVecWidth(candide3Vec);
             getMeshWidthInfo(pScene, Filename);
             _candide3WidthRatio = (candide3Width * DELTA_BIGGER_THAN_CANDIDE3)/getWidth(); //glasses is a little bigger than candid3
         } else {
@@ -142,8 +159,9 @@ bool Mesh::LoadMesh(const std::string& Filename, const char*candide3FacePath, co
     ////////////////////////
     string candide3FaceP = candide3FacePath;
     _candide3.readFaces(candide3FaceP);
-    if( !bUploadCandide3Vertices ) {
-        
+    if( bUploadCandide3Vertices ) {
+        _candide3.setCandide3Vertices(candide3Vec, zRotateInDegree);
+    } else {
         string candide3VertP = candide3VertPath;
         _candide3.readVertices(candide3VertP, getWidth(), zRotateInDegree);
     }
