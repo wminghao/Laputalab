@@ -3,8 +3,7 @@ import os
 
 GLCodePath   =  'GL/'
 MainCodePath =  './'
-GlmCodePath =  os.getcwd()+'../../../../../../LaputaApp/thirdpartylib/glm/'
-PlatformPath =  os.getcwd()+'../../../../../../LaputaApp/'
+GlmCodePath =  '../thirdpartylib/glm/'
 ImageMagickPath = '/usr/include/ImageMagick/'
 
 VETCflags = CCFLAGS
@@ -15,7 +14,6 @@ VETCPPPath = []
 VETCPPPath.append( GLCodePath )
 VETCPPPath.append( MainCodePath )
 VETCPPPath.append( GlmCodePath )
-VETCPPPath.append( PlatformPath )
 VETCPPPath.append( ImageMagickPath )
 
 #objects
