@@ -103,6 +103,8 @@ private:
     
     bool _enableAA; //enable anti-aliasing or not
     
+    ASPECT_RATIO _aspectRatio;
+    
 #if defined(DESKTOP_GL)
     //input framebuffer
     GLuint _inputBufferHandle; //input buffer

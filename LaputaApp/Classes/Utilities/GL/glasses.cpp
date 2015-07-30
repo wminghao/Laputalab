@@ -71,6 +71,7 @@ bool Glasses::init(const char* vertLFilePath,
     char* fragLSrc = readAllocFile(fragLFilePath);
     
     _zRotationInDegree = zRotateInDegree;
+    _aspectRatio = ratio;
     
     /////////////////////
     // offscreen buffer
@@ -278,10 +279,10 @@ bool Glasses::render(GLuint dstTextureName, GLuint candide3Texture, bool shouldR
             ////////////////////////////////////////////
             float ratioW = 0;
             float ratioH = 0;
-            if( ratio == ASPECT_RATIO_4_3 ) {
+            if( _aspectRatio == ASPECT_RATIO_4_3 ) {
                 ratioW = 12;
                 ratioH = 9;
-            } else if( ratio == ASPECT_RATIO_16_9 ){
+            } else if( _aspectRatio == ASPECT_RATIO_16_9 ){
                 ratioW = 16;
                 ratioH = 9;
             } else {
@@ -310,9 +311,7 @@ bool Glasses::render(GLuint dstTextureName, GLuint candide3Texture, bool shouldR
                 sign = 1;
             }
             angleInDegree += sign;
-            
-            float ratioW = 12;
-            float ratioH = 9;
+
             mat4 Model_rotateX = rotate(mat4(1.0f), radians(10.0f), vec3(1,0,0)); //rotate x of 10 degree
             mat4 Model_rotateY = rotate(mat4(1.0f), radians(angleInDegree), vec3(0,1,0)); //rotate x of 10 degree
             mat4 Model_rotateZ = rotate(mat4(1.0f), radians((float)_zRotationInDegree), vec3(0,0,1)); //rotate z of 90 degree
