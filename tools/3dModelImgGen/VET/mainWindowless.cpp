@@ -24,15 +24,6 @@ using namespace cv;
 
 const int AA_FACTOR = 4;
 
-//Model file
-const string pathPrefix = "/Laputalab/";
-string vertexFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/vertexlist_113.wfm";
-string faceFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/facelist_184.wfm";
-const string shaderFilePrefix = pathPrefix + "demo/LaputaDesktop3/VET/3dGlasses/";
-const string glassesFilePrefix = "/shared/3dmodels/";
-const string outputFilePrefix = glassesFilePrefix + "result/";
-
-const string whiteFilePrefix = pathPrefix + "tools/3dModelImgGen/background/";
 const char* fragName = "outFrag";
 
 Mat P2PMat(float P[]){
@@ -150,7 +141,7 @@ static void drawOpenGLGlasses(GLuint& dstTexture, Mat& frameOrig, Glasses& glass
     glBindTexture(GL_TEXTURE_2D, 0);
     
     //set new matrix
-    glasses.setMatrices(projectionMat, rotTransMat, yRotateInDeg);
+    glasses.setMatricesWithYRotation(projectionMat, rotTransMat, yRotateInDeg);
     
     //draw glasses
     glasses.render(dstTexture, dstTexture, false);
@@ -162,11 +153,28 @@ int main(int argc, char* argv[])
     string outputFile;
     string glassesFile;
     float yRotateInDeg;
-    if( argc == 5 ) {
-        inputFile = whiteFilePrefix+argv[1];
-        outputFile = outputFilePrefix+argv[3]+"/"+argv[2];
+    string glassesVsh;
+    string glassesFsh;    
+    string candide3VertexFile;
+    string candide3FaceFile;
+    if( argc == 6 ) {
+        //Model file
+        string pathPrefix = argv[5];
+        string shaderFilePrefix = pathPrefix + "3dShaders/";
+        string glassesFilePrefix = pathPrefix + "3dmodels/";
+        candide3VertexFile = glassesFilePrefix + "Candide3/vertexlist_113.wfm";
+        candide3FaceFile = glassesFilePrefix + "Candide3/facelist_184.wfm";
+        inputFile = pathPrefix + "background/"+argv[1];
+        outputFile = glassesFilePrefix + "result/"+argv[3]+"/"+argv[2];
         glassesFile = glassesFilePrefix+argv[3]+"/"+argv[3]+".obj";
         yRotateInDeg = (float)atoi(argv[4]);
+        if( OPENGL_2_1 ) {
+            glassesVsh = shaderFilePrefix + "3dGlassesVertexShaderGL2.1.vsh";
+            glassesFsh = shaderFilePrefix + "3dGlassesFragmentShaderGL2.1.fsh";
+        } else {
+            glassesVsh = shaderFilePrefix + "3dGlassesVertexShaderGL.vsh";
+            glassesFsh = shaderFilePrefix + "3dGlassesFragmentShaderGL.fsh";
+        }
     } else {
         return 0;
     }
@@ -191,7 +199,6 @@ int main(int argc, char* argv[])
         printf("image asepect ratio: 16/9\r\n");
     } else {
         printf("image asepect ratio: unknown\r\n");
-        //TODO
     }
     
     //manually resize to achive aa
@@ -217,15 +224,6 @@ int main(int argc, char* argv[])
         return 0;
     }
     
-    string glassesVsh;
-    string glassesFsh;    
-    if( OPENGL_2_1 ) {
-        glassesVsh = shaderFilePrefix + "3dGlassesVertexShaderGL2.1.vsh";
-        glassesFsh = shaderFilePrefix + "3dGlassesFragmentShaderGL2.1.fsh";
-    } else {
-        glassesVsh = shaderFilePrefix + "3dGlassesVertexShaderGL.vsh";
-        glassesFsh = shaderFilePrefix + "3dGlassesFragmentShaderGL.fsh";
-    }
     ////////////////
     
     //------------Initialization Begin---------------
@@ -249,8 +247,8 @@ int main(int argc, char* argv[])
                  glassesFsh.c_str(),
                  fragName,
                  glassesFile.c_str(),
-                 faceFile.c_str(),
-                 vertexFile.c_str(),
+                 candide3FaceFile.c_str(),
+                 candide3VertexFile.c_str(),
                  0, aspectRatio,
                  false, NULL ); //read adjusted coordinates directly from opengl.
     ////////////////

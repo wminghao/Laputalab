@@ -8,7 +8,7 @@
 
 #include <stdio.h>
 #include "texture.h"
-
+#include "Output.h"
 #include <wand/magick_wand.h>
 #include <wand/magick-image.h>
 
@@ -50,7 +50,7 @@ bool Texture::load()
             glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //no mipmap
             glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); //no mipmap
             if( width%2 || height%2 ) {
-                printf("Warning: width or height not multiple of 2. m_textureObj=%d, width=%ld, height=%ld\n", m_textureObj, width, height);
+                OUTPUT("Warning: width or height not multiple of 2. m_textureObj=%d, width=%ld, height=%ld\n", m_textureObj, width, height);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
             }
@@ -67,11 +67,11 @@ bool Texture::load()
         description=MagickGetException(wand,&severity);
         FormatLocaleString(error_string,250,"%s %s %lu %s\n",GetMagickModule(),description);
         MagickRelinquishMemory(description);
-        printf("Warning: cannot read image. error=%s\n", error_string);
+        OUTPUT("Warning: cannot read image. error=%s\n", error_string);
       */
-      printf("Warning: cannot read image. texture\n");
+      OUTPUT("Warning: cannot read image. texture\n");
     }
-    
+    DestroyMagickWand(wand);
     MagickWandTerminus();
     
     return true;

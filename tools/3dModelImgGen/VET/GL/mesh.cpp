@@ -25,6 +25,7 @@
 #include "reflectionTexture.h"
 #include "color.h"
 #include "err.h"
+#include "Output.h"
 
 const float DELTA_IN_FRONT_OF_CANDIDE3 = 3.0; //delta face behind the glasses
 
@@ -102,11 +103,31 @@ bool Mesh::reloadMesh( const std::string& Filename, float zRotateInDegree )
     
     const aiScene* pScene = Importer.ReadFile(Filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
     if (pScene) {
-        ret = InitFromScene(pScene, Filename, zRotateInDegree, _candide3WidthRatio);
+        ret = InitFromScene(pScene, Filename, zRotateInDegree);
     } else {
-        printf("Error parsing '%s': '%s'\n", Filename.c_str(), Importer.GetErrorString());
+        OUTPUT("Error parsing '%s': '%s'\n", Filename.c_str(), Importer.GetErrorString());
     }
+    //fake memory leak with pScene not released?
+    //http://sourceforge.net/p/assimp/discussion/817654/thread/1ef7668d/
+    Importer.FreeScene();
     return ret;
+}
+
+float Mesh::getVecWidth(vector<myvec3>* vec)
+{
+    float xMin = 0;
+    float xMax = 0;
+    size_t total = vec->size();
+    for (size_t i = 0; i < total ; i++){
+        myvec3 vert = (*vec)[i];
+        if( vert.x > xMax ) {
+            xMax = vert.x;
+        }
+        if( vert.x < xMin ) {
+            xMin = vert.x;
+        }
+    }
+    return (xMax - xMin);
 }
 
 bool Mesh::LoadMesh(const std::string& Filename, const char*candide3FacePath, const char* candide3VertPath, float zRotateInDegree,
@@ -118,20 +139,19 @@ bool Mesh::LoadMesh(const std::string& Filename, const char*candide3FacePath, co
     bool ret = false;
     Assimp::Importer Importer;
     
-    float widthRatio; //width ratio from candide3 to glasses
+    //width ratio from candide3 to glasses
     const aiScene* pScene = Importer.ReadFile(Filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
     if (pScene) {
         if( bUploadCandide3Vertices ) {
-            float candide3Width = _candide3.setCandide3Vertices(candide3Vec, zRotateInDegree);
+            float candide3Width = Mesh::getVecWidth(candide3Vec);
             getMeshWidthInfo(pScene, Filename);
-            widthRatio = (candide3Width * DELTA_BIGGER_THAN_CANDIDE3)/getWidth(); //glasses is a little bigger than candid3
+            _candide3WidthRatio = (candide3Width * DELTA_BIGGER_THAN_CANDIDE3)/getWidth(); //glasses is a little bigger than candid3
         } else {
-            widthRatio = 1;
+            _candide3WidthRatio = 1;
         }
-        _candide3WidthRatio = widthRatio;
-        ret = InitFromScene(pScene, Filename, zRotateInDegree, widthRatio);
+        ret = InitFromScene(pScene, Filename, zRotateInDegree);
     } else {
-        printf("Error parsing '%s': '%s'\n", Filename.c_str(), Importer.GetErrorString());
+        OUTPUT("Error parsing '%s': '%s'\n", Filename.c_str(), Importer.GetErrorString());
     }
     
     ////////////////////////
@@ -139,16 +159,19 @@ bool Mesh::LoadMesh(const std::string& Filename, const char*candide3FacePath, co
     ////////////////////////
     string candide3FaceP = candide3FacePath;
     _candide3.readFaces(candide3FaceP);
-    if( !bUploadCandide3Vertices ) {
-        
+    if( bUploadCandide3Vertices ) {
+        _candide3.setCandide3Vertices(candide3Vec, zRotateInDegree);
+    } else {
         string candide3VertP = candide3VertPath;
         _candide3.readVertices(candide3VertP, getWidth(), zRotateInDegree);
     }
-    
+    //fake memory leak with pScene not released?
+    //http://sourceforge.net/p/assimp/discussion/817654/thread/1ef7668d/
+    Importer.FreeScene();
     return ret;
 }
 
-bool Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename, float zRotateInDegree, float widthRatio)
+bool Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename, float zRotateInDegree)
 {  
     m_Entries.resize(pScene->mNumMeshes);
     m_Materials.resize(pScene->mNumMaterials);
@@ -156,32 +179,37 @@ bool Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename, flo
     // Initialize the meshes in the scene one by one
     for (unsigned int i = 0 ; i < m_Entries.size() ; i++) {
         const aiMesh* paiMesh = pScene->mMeshes[i];
-        InitMesh(i, paiMesh, zRotateInDegree, widthRatio);
+        InitMesh(i, paiMesh, zRotateInDegree);
     }
     
 #if defined(DESKTOP_GL)
     glGenVertexArrays(1, &vao);
 #endif //DESKTOP_GL
-    printf("Max vertex coord:%.2f, %.2f, %.2f\n",
+    /*
+    OUTPUT("Max vertex coord:%.2f, %.2f, %.2f\n",
            xMax, yMax, zMax);
     
-    printf("Min vertex coord:%.2f, %.2f, %.2f\n",
+    OUTPUT("Min vertex coord:%.2f, %.2f, %.2f\n",
            xMin, yMin, zMin);
+    */
     return InitMaterials(pScene, Filename);
 }
 
-void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDegree, float widthRatio)
+void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDegree)
 {
     m_Entries[Index].MaterialIndex = paiMesh->mMaterialIndex;
     
     std::vector<Vertex> Vertices;
     std::vector<unsigned int> Indices;
+    
+    float widthRatio = _candide3WidthRatio;
 
     const aiVector3D Zero3D(0.0f, 0.0f, 0.0f);
-
-    /*printf("Mesh Index=%d, Material Index='%d', vertices=%d, mNumFaces=%d\n", Index,
+    
+    /*
+     OUTPUT("Mesh Index=%d, Material Index='%d', vertices=%d, mNumFaces=%d\n", Index,
            paiMesh->mMaterialIndex, paiMesh->mNumVertices, paiMesh->mNumFaces);
-    */
+     */
 
     int yFloatUp = 8;
     if( zRotateInDegree == 90 ) {
@@ -202,8 +230,8 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDe
                  Vector2f(pTexCoord->x, pTexCoord->y),
                  Vector3f(pNormal->x, pNormal->y, pNormal->z));
         
-        //printf("Mesh vertice x=%.2f, y=%.2f, z=%.2f\r\n", v.m_pos.x, v.m_pos.y, v.m_pos.z);
-        //printf("Mesh normal x=%.2f, y=%.2f, z=%.2f\r\n", pNormal->x, pNormal->y, pNormal->z);
+        //OUTPUT("Mesh vertice x=%.2f, y=%.2f, z=%.2f\r\n", v.m_pos.x, v.m_pos.y, v.m_pos.z);
+        //OUTPUT("Mesh normal x=%.2f, y=%.2f, z=%.2f\r\n", pNormal->x, pNormal->y, pNormal->z);
         
         if( pPos->x * widthRatio > xMax ) {
             xMax = pPos->x * widthRatio;
@@ -235,6 +263,7 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDe
         Indices.push_back(Face.mIndices[1]);
         Indices.push_back(Face.mIndices[2]);
     }
+
     m_Entries[Index].Init(Vertices, Indices);
 }
 
@@ -311,13 +340,12 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
                 }
 
                 if (!m_Materials[i]->load()) {
-                    printf("Error loading texture '%s'\n", FullPath.c_str());
+                    OUTPUT("Error loading texture '%s'\n", FullPath.c_str());
                     delete m_Materials[i];
                     m_Materials[i] = NULL;
                     Ret = false;
                 } else {
-		  /*
-                    printf("Loaded texture index:%d, name %s file: %s coord:%.2f, %.2f, %.2f, %.2f: %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f, %.2f, %d\n",
+                    /*OUTPUT("Loaded texture index:%d, name %s file: %s coord:%.2f, %.2f, %.2f, %.2f: %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f, %.2f, %d\n",
                            i, name.C_Str(), Path.data,
                            diffuseColor.x, diffuseColor.y, diffuseColor.z, diffuseColor.w,
                            ambientColor.x, ambientColor.y, ambientColor.z, ambientColor.w,
@@ -325,8 +353,8 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
                            emissive.r, emissive.g, emissive.b, emissive.a,
                            transparent.r, transparent.g, transparent.b, transparent.a,
                            shininess, max);
-		  */
-		}
+                     */
+                }
             }
         } else {
             m_Materials[i] = new Color(m_texCountLocation,
@@ -335,8 +363,8 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
                                        m_textureImageLocation,
                                        diffuseColor,
                                        ambientColor);
-	    /*
-            printf("Loaded color index:%d, name %s coord:%.2f, %.2f, %.2f, %.2f: %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f, %.2f, %d\n",
+            /*
+            OUTPUT("Loaded color index:%d, name %s coord:%.2f, %.2f, %.2f, %.2f: %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f, %.2f, %d\n",
                    i, name.C_Str(),
                    diffuseColor.x, diffuseColor.y, diffuseColor.z, diffuseColor.w,
                    ambientColor.x, ambientColor.y, ambientColor.z, ambientColor.w,
@@ -344,7 +372,7 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
                    emissive.r, emissive.g, emissive.b, emissive.a,
                    transparent.r, transparent.g, transparent.b, transparent.a,
                    shininess, max);
-	    */
+            */
         }
     }
 
@@ -369,7 +397,7 @@ void Mesh::Render(GLuint textureObj)
 #endif //DESKTOP_GL
     _candide3.render(textureObj);
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-
+    
     //then render visible glasses object
     unsigned int totalMeshes = (unsigned int)m_Entries.size();
     for (unsigned int i = 0 ; i <  totalMeshes; i++) {
@@ -379,26 +407,25 @@ void Mesh::Render(GLuint textureObj)
         glVertexAttribPointer(m_normalLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)20); //3*4
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Entries[i].IB);
-
-        //starting from GL_TEXTURE1 to avoid conflict with GL_TEXTURE0 in the base texture.
-        const unsigned int materialIndex = m_Entries[i].MaterialIndex;
         
-	/*
+        /*
         //use depth-bias to make the lens away from the frame to avoid z-fighting
         const float polygonOffsetFactor = 32.0f;
         const float polygonOffsetUnits = 32.0f;
         glDepthFunc(GL_LEQUAL);
-	*/
-
+        */
+        
+        //starting from GL_TEXTURE1 to avoid conflict with GL_TEXTURE0 in the base texture.
+        const unsigned int materialIndex = m_Entries[i].MaterialIndex;
         if( materialIndex < m_Materials.size() && m_Materials[materialIndex] ){
-	  /*
+            /*
             if( dynamic_cast<ReflectionTexture*>(m_Materials[materialIndex]) ) {
-	        glEnable(GL_POLYGON_OFFSET_FILL);
+                glEnable(GL_POLYGON_OFFSET_FILL);
                 glPolygonOffset(polygonOffsetFactor, polygonOffsetUnits);
             } else {
                 glDisable(GL_POLYGON_OFFSET_FILL);
             }
-	  */
+            */
             m_Materials[materialIndex]->bind(1);
         }
         glDrawElements(GL_TRIANGLES, m_Entries[i].NumIndices, GL_UNSIGNED_INT, 0);
@@ -481,6 +508,6 @@ int Mesh::getMeshWidthInfo(const aiScene* pScene, const std::string& Filename)
             }
         }
     }
-    printf("Glasses width:%.2f\r\n", (xMax-xMin));
+    //OUTPUT("Glasses width:%.2f\r\n", (xMax-xMin));
     return 1;
 }
