@@ -289,6 +289,7 @@ bool SimpleMesh::InitMaterials(const aiScene* pScene, const std::string& Filenam
         
         Vector4f diffuseColor(diffuse.r, diffuse.g, diffuse.b, diffuse.a);
         Vector4f ambientColor(ambient.r, ambient.g, ambient.b, ambient.a);
+        Vector4f specularColor(specular.r, specular.g, specular.b, specular.a);
         if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
             aiString Path;
             
@@ -299,9 +300,11 @@ bool SimpleMesh::InitMaterials(const aiScene* pScene, const std::string& Filenam
                     m_Materials[i] = new ReflectionTexture(m_texCountLocation,
                                                            m_diffuseColorLocation,
                                                            m_ambientColorLocation,
+                                                           m_specularColorLocation,
                                                            m_textureImageLocation,
                                                            diffuseColor,
                                                            ambientColor,
+                                                           specularColor,
                                                            FullPath.c_str(),
                                                            m_envMapLocation,
                                                            reflectionFullPath.c_str()
@@ -310,9 +313,11 @@ bool SimpleMesh::InitMaterials(const aiScene* pScene, const std::string& Filenam
                     m_Materials[i] = new Texture(m_texCountLocation,
                                                  m_diffuseColorLocation,
                                                  m_ambientColorLocation,
+                                                 m_specularColorLocation,
                                                  m_textureImageLocation,
                                                  diffuseColor,
                                                  ambientColor,
+                                                 specularColor,
                                                  FullPath.c_str());
                 }
                 
@@ -322,34 +327,33 @@ bool SimpleMesh::InitMaterials(const aiScene* pScene, const std::string& Filenam
                     m_Materials[i] = NULL;
                     Ret = false;
                 } else {
-                    /*OUTPUT("Loaded texture index:%d, name %s file: %s coord:%.2f, %.2f, %.2f, %.2f: %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f, %.2f, %d\n",
-                     i, name.C_Str(), Path.data,
-                     diffuseColor.x, diffuseColor.y, diffuseColor.z, diffuseColor.w,
-                     ambientColor.x, ambientColor.y, ambientColor.z, ambientColor.w,
-                     specular.r, specular.g, specular.b, specular.a,
-                     emissive.r, emissive.g, emissive.b, emissive.a,
-                     transparent.r, transparent.g, transparent.b, transparent.a,
-                     shininess, max);
-                     */
+                    OUTPUT("Loaded texture index:%d, name %s file: %s diffuse:%.2f, %.2f, %.2f, %.2f. ambient: %.2f, %.2f, %.2f, %.2f. specular %.2f, %.2f, %.2f, %.2f. emissive: %.2f, %.2f, %.2f, %.2f. transparent: %.2f, %.2f, %.2f, %.2f. shininess: %.2f, max: %d\n",
+                           i, name.C_Str(), Path.data,
+                           diffuseColor.x, diffuseColor.y, diffuseColor.z, diffuseColor.w,
+                           ambientColor.x, ambientColor.y, ambientColor.z, ambientColor.w,
+                           specular.r, specular.g, specular.b, specular.a,
+                           emissive.r, emissive.g, emissive.b, emissive.a,
+                           transparent.r, transparent.g, transparent.b, transparent.a,
+                           shininess, max);
                 }
             }
         } else {
             m_Materials[i] = new Color(m_texCountLocation,
                                        m_diffuseColorLocation,
                                        m_ambientColorLocation,
+                                       m_specularColorLocation,
                                        m_textureImageLocation,
                                        diffuseColor,
-                                       ambientColor);
-            /*
-             OUTPUT("Loaded color index:%d, name %s coord:%.2f, %.2f, %.2f, %.2f: %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f,  %.2f, %.2f, %.2f, %.2f, %.2f, %d\n",
-             i, name.C_Str(),
-             diffuseColor.x, diffuseColor.y, diffuseColor.z, diffuseColor.w,
-             ambientColor.x, ambientColor.y, ambientColor.z, ambientColor.w,
-             specular.r, specular.g, specular.b, specular.a,
-             emissive.r, emissive.g, emissive.b, emissive.a,
-             transparent.r, transparent.g, transparent.b, transparent.a,
-             shininess, max);
-             */
+                                       ambientColor,
+                                       specularColor);
+            OUTPUT("Loaded color index:%d, name %s diffuse:%.2f, %.2f, %.2f, %.2f. ambient: %.2f, %.2f, %.2f, %.2f. specular %.2f, %.2f, %.2f, %.2f. emissive: %.2f, %.2f, %.2f, %.2f. transparent: %.2f, %.2f, %.2f, %.2f. shininess: %.2f, max: %d\n",
+                   i, name.C_Str(),
+                   diffuseColor.x, diffuseColor.y, diffuseColor.z, diffuseColor.w,
+                   ambientColor.x, ambientColor.y, ambientColor.z, ambientColor.w,
+                   specular.r, specular.g, specular.b, specular.a,
+                   emissive.r, emissive.g, emissive.b, emissive.a,
+                   transparent.r, transparent.g, transparent.b, transparent.a,
+                   shininess, max);
         }
     }
     

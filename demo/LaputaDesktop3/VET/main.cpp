@@ -23,7 +23,7 @@ using namespace cv;
 
 #define REALTIME 1
 #define GLASSON 0
-#define SHOWTWOWIN 1
+#define SHOWTWOWIN 0
 #define OPENGL_2_1 1
 #define ENABLE_AA 1
 

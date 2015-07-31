@@ -38,6 +38,7 @@ public:
     void setAttrUni(GLint texCountLocation,
                     GLint diffuseColorLocation,
                     GLint ambientColorLocation,
+                    GLint specularColorLocation,
                     GLint textureImageLocation,
                     GLint envMapLocation,
                     GLint positionLocation,
@@ -47,6 +48,7 @@ public:
         m_texCountLocation = texCountLocation;
         m_diffuseColorLocation = diffuseColorLocation;
         m_ambientColorLocation = ambientColorLocation;
+        m_specularColorLocation = specularColorLocation;
         m_textureImageLocation = textureImageLocation;
         m_envMapLocation = envMapLocation;
         m_positionLocation = positionLocation;
@@ -94,6 +96,7 @@ private:
     GLint m_texCountLocation;
     GLint m_diffuseColorLocation;
     GLint m_ambientColorLocation;
+    GLint m_specularColorLocation;
     GLint m_textureImageLocation;
     GLint m_envMapLocation;
     GLint m_positionLocation;
