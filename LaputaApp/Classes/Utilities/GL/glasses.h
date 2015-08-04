@@ -62,7 +62,8 @@ public:
               const char* candide3FacePath,
               const char* candide3VertPath,
               float zRotateInDegree, ASPECT_RATIO ratio,
-              bool bUploadCandide3Vertices, vector<myvec3>* candide3Vec);
+              bool bUploadCandide3Vertices, vector<myvec3>* candide3Vec,
+              bool bShouldScaleToFaceWidth, float faceWidth);
     
     bool reloadGlasses(const char* glassesFilePath);
     
@@ -105,6 +106,9 @@ private:
     bool _enableAA; //enable anti-aliasing or not
     
     ASPECT_RATIO _aspectRatio;
+    
+    bool _bShouldScaleToFaceWidth;
+    float _faceWidth;
     
 #if defined(DESKTOP_GL)
     //input framebuffer

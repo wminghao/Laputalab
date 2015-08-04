@@ -30,7 +30,13 @@ void Glasses::setMatrices(mat4& projectMat, mat4& rotTransMat) {
     _Projection = projectMat;
     
     mat4 Model_rotateX = rotate(mat4(1.0f), radians(10.0f), vec3(1,0,0)); //rotate x of 10 degree to align to nose
-    _World = rotTransMat * Model_rotateX;
+    if( _bShouldScaleToFaceWidth ) {
+        float scaleFactor = _faceWidth/_pMesh->getWidth();
+        mat4 Model_scale = scale(mat4(1.0f), vec3(scaleFactor,scaleFactor,scaleFactor));
+        _World = rotTransMat * Model_rotateX * Model_scale;
+    } else {
+        _World = rotTransMat * Model_rotateX;
+    }
     _NormalMatrix = transpose(inverse(mat3(_World))); //remove translation and scaling
     _View       = lookAt(vec3(0,0,0.01), // Camera is at (0, 0, 0.01), in World Space
                          vec3(0,0,0), // and looks at the origin
@@ -63,7 +69,8 @@ bool Glasses::init(const char* vertLFilePath,
                    const char* candide3FacePath,
                    const char* candide3VertPath,
                    float zRotateInDegree, ASPECT_RATIO ratio,
-                   bool bUploadCandide3Vertices, vector<myvec3>* candide3Vec)
+                   bool bUploadCandide3Vertices, vector<myvec3>* candide3Vec,
+                   bool bShouldScaleToFaceWidth, float faceWidth)
 {
     bool ret = false;
     
@@ -72,6 +79,8 @@ bool Glasses::init(const char* vertLFilePath,
     
     _zRotationInDegree = zRotateInDegree;
     _aspectRatio = ratio;
+    _bShouldScaleToFaceWidth = bShouldScaleToFaceWidth;
+    _faceWidth = faceWidth;
     
     /////////////////////
     // offscreen buffer
