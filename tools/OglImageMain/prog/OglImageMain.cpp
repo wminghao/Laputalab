@@ -125,7 +125,7 @@ glm::mat4 externalToRotTrans(float* P_arr)
 
 glm::mat4 IntrinsicToOrthoProjection(int W, int H)
 {
-    return ortho(-W/2, W/2, -H/2, H/2);
+    return glm::ortho((float)-W/2, (float)W/2, (float)-H/2, (float)H/2, 0.0f, (float)DIST);
 }
 
 static bool saveBuffer(void* buffer, string& fileToSave, int srcWidth, int srcHeight, string& errReason) {
