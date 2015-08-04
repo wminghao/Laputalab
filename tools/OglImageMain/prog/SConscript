@@ -55,6 +55,6 @@ env.Program( OglImageMainProg,
 	       loggerObj,
 	       utilitiesObj,
 	       mainObj],	
-	     LIBS=['GL', 'OSMesa', 'pthread', 'rt', 'dl', 'm', 'assimp', 'MagickWand', 'opencv_calib3d', 'opencv_contrib', 'opencv_core', 'opencv_features2d', 'opencv_flann','opencv_gpu', 'opencv_highgui', 'opencv_imgproc','opencv_legacy', 'opencv_ml', 'opencv_nonfree', 'opencv_objdetect', 'opencv_ocl', 'opencv_photo', 'opencv_stitching', 'opencv_superres', 'opencv_ts', 'opencv_video', 'opencv_videostab'],
-	     LIBPATH = ['/usr/lib', '/usr/local/lib'],
+	     LIBS=['GL', 'OSMesa', 'pthread', 'rt', 'dl', 'm', 'assimp', 'MagickWand', 'OglImageAPI', 'opencv_calib3d', 'opencv_contrib', 'opencv_core', 'opencv_features2d', 'opencv_flann','opencv_gpu', 'opencv_highgui', 'opencv_imgproc','opencv_legacy', 'opencv_ml', 'opencv_nonfree', 'opencv_objdetect', 'opencv_ocl', 'opencv_photo', 'opencv_stitching', 'opencv_superres', 'opencv_ts', 'opencv_video', 'opencv_videostab'],
+	     LIBPATH = ['/usr/lib', '/usr/local/lib', '.'],
 	     CCFLAGS = OGLIMAGEMAINCflags)

@@ -781,15 +781,15 @@ Mat P2PMat(float P[]){
     res.at<float>(0,0) = cos(P[1]*PI)*cos(P[2]*PI);
     res.at<float>(0,1) = cos(p0*PI)*sin(P[2]*PI) + sin(p0*PI)*sin(P[1]*PI)*cos(P[2]*PI);
     res.at<float>(0,2) = sin(p0*PI)*sin(P[2]*PI) - cos(p0*PI)*sin(P[1]*PI)*cos(P[2]*PI);
-    res.at<float>(0,3) = P[3]*V_WIDTH;
+    res.at<float>(0,3) = P[3];
     res.at<float>(1,0) = -cos(P[1]*PI)*sin(P[2]*PI);
     res.at<float>(1,1) = cos(p0*PI)*cos(P[2]*PI) - sin(p0*PI)*sin(P[1]*PI)*sin(P[2]*PI);
     res.at<float>(1,2) = sin(p0*PI)*cos(P[2]*PI) + cos(p0*PI)*sin(P[1]*PI)*sin(P[2]*PI);
-    res.at<float>(1,3) = -P[4]*V_HEIGHT;
+    res.at<float>(1,3) = -P[4];
     res.at<float>(2,0) = sin(P[1]*PI);
     res.at<float>(2,1) = -sin(p0*PI)*cos(P[1]*PI);
     res.at<float>(2,2) = cos(p0*PI)*cos(P[1]*PI);
-    res.at<float>(2,3) = -P[5]*DIST;
+    res.at<float>(2,3) = -P[5];
 
     return res;
 }
