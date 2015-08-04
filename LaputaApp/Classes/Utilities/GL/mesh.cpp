@@ -27,7 +27,7 @@
 #include "err.h"
 #include "Output.h"
 
-const float DELTA_IN_FRONT_OF_CANDIDE3 = 3.0; //delta face behind the glasses
+const float DELTA_IN_FRONT_OF_CANDIDE3 = 6.0; //delta face behind the glasses
 
 #if defined(DESKTOP_GL)
 const float DELTA_BIGGER_THAN_CANDIDE3 = 1.03; //delta face width smaller than glasses
@@ -103,7 +103,7 @@ bool Mesh::reloadMesh( const std::string& Filename, float zRotateInDegree )
     
     const aiScene* pScene = Importer.ReadFile(Filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
     if (pScene) {
-        ret = InitFromScene(pScene, Filename, zRotateInDegree);
+        ret = InitFromScene(pScene, Filename);
     } else {
         OUTPUT("Error parsing '%s': '%s'\n", Filename.c_str(), Importer.GetErrorString());
     }
@@ -149,7 +149,7 @@ bool Mesh::LoadMesh(const std::string& Filename, const char*candide3FacePath, co
         } else {
             _candide3WidthRatio = 1;
         }
-        ret = InitFromScene(pScene, Filename, zRotateInDegree);
+        ret = InitFromScene(pScene, Filename);
     } else {
         OUTPUT("Error parsing '%s': '%s'\n", Filename.c_str(), Importer.GetErrorString());
     }
@@ -171,7 +171,7 @@ bool Mesh::LoadMesh(const std::string& Filename, const char*candide3FacePath, co
     return ret;
 }
 
-bool Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename, float zRotateInDegree)
+bool Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename)
 {  
     m_Entries.resize(pScene->mNumMeshes);
     m_Materials.resize(pScene->mNumMaterials);
@@ -179,23 +179,21 @@ bool Mesh::InitFromScene(const aiScene* pScene, const std::string& Filename, flo
     // Initialize the meshes in the scene one by one
     for (unsigned int i = 0 ; i < m_Entries.size() ; i++) {
         const aiMesh* paiMesh = pScene->mMeshes[i];
-        InitMesh(i, paiMesh, zRotateInDegree);
+        InitMesh(i, paiMesh);
     }
     
 #if defined(DESKTOP_GL)
     glGenVertexArrays(1, &vao);
 #endif //DESKTOP_GL
-    /*
     OUTPUT("Max vertex coord:%.2f, %.2f, %.2f\n",
            xMax, yMax, zMax);
     
     OUTPUT("Min vertex coord:%.2f, %.2f, %.2f\n",
            xMin, yMin, zMin);
-    */
     return InitMaterials(pScene, Filename);
 }
 
-void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDegree)
+void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh)
 {
     m_Entries[Index].MaterialIndex = paiMesh->mMaterialIndex;
     
@@ -210,11 +208,6 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDe
      OUTPUT("Mesh Index=%d, Material Index='%d', vertices=%d, mNumFaces=%d\n", Index,
            paiMesh->mMaterialIndex, paiMesh->mNumVertices, paiMesh->mNumFaces);
      */
-
-    int yFloatUp = 8;
-    if( zRotateInDegree == 90 ) {
-        yFloatUp = 15;
-    }
     
     float deltaInFrontOfCandide3 = 0;
     if( widthRatio > 0) {
@@ -226,7 +219,7 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDe
         const aiVector3D* pNormal   = &(paiMesh->mNormals[i]);
         const aiVector3D* pTexCoord = paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
 
-        Vertex v(Vector3f(pPos->x * widthRatio, (pPos->y+yFloatUp) * widthRatio, (pPos->z + deltaInFrontOfCandide3) * widthRatio),
+        Vertex v(Vector3f(pPos->x * widthRatio, pPos->y * widthRatio, (pPos->z + deltaInFrontOfCandide3) * widthRatio),
                  Vector2f(pTexCoord->x, pTexCoord->y),
                  Vector3f(pNormal->x, pNormal->y, pNormal->z));
         
@@ -236,8 +229,8 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDe
         if( pPos->x * widthRatio > xMax ) {
             xMax = pPos->x * widthRatio;
         }
-        if( (pPos->y+yFloatUp) * widthRatio > yMax ) {
-            yMax = (pPos->y+yFloatUp)* widthRatio;
+        if( pPos->y * widthRatio > yMax ) {
+            yMax = pPos->y* widthRatio;
         }
         if( pPos->z * widthRatio > zMax ) {
             zMax = pPos->z * widthRatio;
@@ -246,8 +239,8 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDe
         if( pPos->x * widthRatio < xMin ) {
             xMin = pPos->x * widthRatio;
         }
-        if( (pPos->y+yFloatUp) * widthRatio< yMin ) {
-            yMin = (pPos->y+yFloatUp) * widthRatio;
+        if( pPos->y * widthRatio< yMin ) {
+            yMin = pPos->y * widthRatio;
         }
         if( pPos->z * widthRatio < zMin ) {
             zMin = pPos->z * widthRatio;

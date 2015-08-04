@@ -76,8 +76,8 @@ public:
     float getWidth() { return xMax-xMin;}
 
 private:
-    bool InitFromScene(const aiScene* pScene, const std::string& Filename, float zRotateInDegree);
-    void InitMesh(unsigned int Index, const aiMesh* paiMesh, float zRotateInDegree);
+    bool InitFromScene(const aiScene* pScene, const std::string& Filename);
+    void InitMesh(unsigned int Index, const aiMesh* paiMesh);
     bool InitMaterials(const aiScene* pScene, const std::string& Filename);
     void Clear();
     
