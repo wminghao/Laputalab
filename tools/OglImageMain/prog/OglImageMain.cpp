@@ -296,6 +296,23 @@ int ProcessFile( string& iFilePath, string& oFilePath, string& gName, string & e
     };
     
     ////////////////
+    OglImageAPI lm;
+    float faceWidthVal = 0.0f;
+    if( !lm.ProcessImage( inputFile,
+                          P,
+                          &faceWidthVal,
+                          errReason )) {
+        /*
+        for( int i = 0; i < 6; i++) {
+            cout << "P[" << i << "]=" << P[i] << endl;
+        }
+        cout << "face width="<<faceWidthVal<<endl;
+        */
+    } else {
+        return -1;
+    }
+
+    ////////////////
     //opengl objects
     ////////////////
     // add error checking here
@@ -309,21 +326,8 @@ int ProcessFile( string& iFilePath, string& oFilePath, string& gName, string & e
                  faceFile.c_str(),
                  vertexFile.c_str(),
                  zRotateInDegree, aspectRatio,
-                 false, NULL);
-    ////////////////
-    OglImageAPI lm;
-    float faceWidthVal = 0.0f;
-    if( !lm.ProcessImage( inputFile,
-                          P,
-                          &faceWidthVal,
-                          errReason )) {
-        for( int i = 0; i < 6; i++) {
-            cout << "P[" << i << "]=" << P[i] << endl;
-        }
-        cout << "face width="<<faceWidthVal<<endl;
-    } else {
-        return -1;
-    }
+                 false, NULL,
+                 true, faceWidthVal);
     glm::mat4 rotTransMat4 = externalToRotTrans(P);
     drawOpenGLGlasses(dstTexture, frame, glasses, projectionMat4, rotTransMat4);
     frame.release();
