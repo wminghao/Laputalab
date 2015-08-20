@@ -41,8 +41,11 @@ void main()
     float lightAmbientCoefficient = 0.33;
     
     //calculate attenuation
-    float lightAttenuationFactor = 0.000001; //almost no effect,don't know why?
+    float lightAttenuationFactor = 0.0000025; //almost no effect,don't know why?
     float attenuation = 1.0/(1.0 + lightAttenuationFactor * pow(distanceToLight, 2));
+    
+    //ratio of environment vs. surface.
+    float surfaceColorToEnvRatio = 0.7;
     
     //gamma correction, does not seem to work, maybe unecessary?
     vec3 gamma = vec3(1.0/2.2);
@@ -58,7 +61,7 @@ void main()
         vec4 envColor = textureCube( envMap, reflection);
         
         //attenuate the src color plus environment color
-        gl_FragColor = 0.5 * vec4(attenuation * (diffuse+spec), surfaceColor.a) + 0.5 * vec4(diffuseCoefficent * envColor.rgb, envColor.a);
+        gl_FragColor = surfaceColorToEnvRatio * vec4(attenuation * (diffuse+spec), surfaceColor.a) + (1-surfaceColorToEnvRatio) * vec4(diffuseCoefficent * envColor.rgb, envColor.a);
     } else if( texCount == 1 ) {
         surfaceColor = texture2D(textureImage, texCoordFrag);
         diffuse = diffuseCoefficent * surfaceColor.rgb;
