@@ -30,7 +30,7 @@ using namespace cv;
 //Facial Model Source File
 string vertexFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/vertexlist_113.wfm";
 string faceFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/facelist_184.wfm";
-const string glassesFile[] = { pathPrefix + "LaputaApp/Resources/3dmodels/RanGlasses2/RanGlasses2.obj",
+const string glassesFile[] = { pathPrefix + "LaputaApp/Resources/3dmodels/orangeglasses2/orangeglasses2.obj",
                                pathPrefix + "LaputaApp/Resources/3dmodels/purpleglasses2/purpleglasses2.obj",
                                pathPrefix + "LaputaApp/Resources/3dmodels/blackglasses2/blackglasses2.obj"};
 const char* fragName = "outFrag";
