@@ -1,11 +1,3 @@
-newmtl RanGlass:logo1SG
-illum 4
-Kd 0.50 0.50 0.50
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-Ni 1.00
-Ks 0.50 0.50 0.50
-Ns 0.06
 newmtl RanGlass:phongE1SG
 illum 4
 Kd 0.17 0.31 0.54
@@ -34,14 +26,6 @@ Ns 0.06
 newmtl RanGlass:phongE4SG
 illum 4
 Kd 0.31 0.31 0.53
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-Ni 1.00
-Ks 0.50 0.50 0.50
-Ns 0.06
-newmtl RanGlass:phongE5SG
-illum 4
-Kd 0.50 0.50 0.50
 Ka 0.00 0.00 0.00
 Tf 1.00 1.00 1.00
 Ni 1.00
