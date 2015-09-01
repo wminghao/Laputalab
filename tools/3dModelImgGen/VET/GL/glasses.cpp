@@ -42,12 +42,13 @@ void Glasses::setMatrices(mat4& projectMat, mat4& rotTransMat) {
 void Glasses::setMatricesWithYRotation(mat4& projectMat, mat4& rotTransMat, float yRotateInDeg) {
     _Projection = projectMat;
     
-    float scaleFactor = 7.0f;
+    float scaleFactor = 12.0f;
     mat4 Model_scale = scale(mat4(1.0f), vec3(scaleFactor,scaleFactor,scaleFactor));
     mat4 Model_rotateX = rotate(mat4(1.0f), radians(10.0f), vec3(1,0,0)); //rotate x of 10 degree to align to nose
     mat4 Model_rotateY = rotate(mat4(1.0f), radians(yRotateInDeg), vec3(0,1,0)); //rotate y
-    
-    _World = rotTransMat * Model_rotateX * Model_rotateY * Model_scale;
+    mat4 Model_translation = translate(mat4(1.0f), vec3(0.0f, -5.0f, 0.0f)); //shift downward
+
+    _World = rotTransMat * Model_rotateX * Model_rotateY * Model_scale * Model_translation;
     _NormalMatrix = transpose(inverse(mat3(_World))); //remove translation and scaling
     _View       = lookAt(vec3(0,0,0.01), // Camera is at (0, 0, 0.01), in World Space
                          vec3(0,0,0), // and looks at the origin
