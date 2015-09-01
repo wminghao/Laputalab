@@ -313,70 +313,99 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
         Vector4f diffuseColor(diffuse.r, diffuse.g, diffuse.b, diffuse.a);
         Vector4f ambientColor(ambient.r, ambient.g, ambient.b, ambient.a);
         Vector4f specularColor(specular.r, specular.g, specular.b, specular.a);
-        if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
-            aiString Path;
-
-            if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
-                std::string FullPath = Dir + "/" + Path.data;
-                if( !strcmp(Path.data, "ramp1-nurbsToPoly1.png") ) {
-                    std::string reflectionFullPath = Dir + "/Brooklyn_Bridge_Planks_1k.hdr";
-                    m_Materials[i] = new ReflectionTexture(m_texCountLocation,
-                                                           m_diffuseColorLocation,
-                                                           m_ambientColorLocation,
-                                                           m_specularColorLocation,
-                                                           m_textureImageLocation,
-                                                           diffuseColor,
-                                                           ambientColor,
-                                                           specularColor,
-                                                           FullPath.c_str(),
-                                                           m_envMapLocation,
-                                                           reflectionFullPath.c_str()
-                                                           );
-                } else {
-                    m_Materials[i] = new Texture(m_texCountLocation,
-                                             m_diffuseColorLocation,
-                                             m_ambientColorLocation,
-                                             m_specularColorLocation,
-                                             m_textureImageLocation,
-                                             diffuseColor,
-                                             ambientColor,
-                                             specularColor,
-                                             FullPath.c_str());
-                }
-
-                if (!m_Materials[i]->load()) {
-                    OUTPUT("Error loading texture '%s'\n", FullPath.c_str());
-                    delete m_Materials[i];
-                    m_Materials[i] = NULL;
-                    Ret = false;
-                } else {
-                    OUTPUT("Loaded texture index:%d, name %s file: %s diffuse:%.2f, %.2f, %.2f, %.2f. ambient: %.2f, %.2f, %.2f, %.2f. specular %.2f, %.2f, %.2f, %.2f. emissive: %.2f, %.2f, %.2f, %.2f. transparent: %.2f, %.2f, %.2f, %.2f. shininess: %.2f, max: %d\n",
-                           i, name.C_Str(), Path.data,
-                           diffuseColor.x, diffuseColor.y, diffuseColor.z, diffuseColor.w,
-                           ambientColor.x, ambientColor.y, ambientColor.z, ambientColor.w,
-                           specular.r, specular.g, specular.b, specular.a,
-                           emissive.r, emissive.g, emissive.b, emissive.a,
-                           transparent.r, transparent.g, transparent.b, transparent.a,
-                           shininess, max);
-                }
+        
+        if( Filename.find("render_ex")!=std::string::npos ) {
+            std::string FullPath = Dir + "/grainy.jpg";
+            m_Materials[i] = new Texture(m_texCountLocation,
+                                         m_diffuseColorLocation,
+                                         m_ambientColorLocation,
+                                         m_specularColorLocation,
+                                         m_textureImageLocation,
+                                         diffuseColor,
+                                         ambientColor,
+                                         specularColor,
+                                         FullPath.c_str());
+            if (!m_Materials[i]->load()) {
+                OUTPUT("Error loading texture '%s'\n", FullPath.c_str());
+                delete m_Materials[i];
+                m_Materials[i] = NULL;
+                Ret = false;
+            } else {
+                OUTPUT("Loaded texture index:%d, name %s file: %s diffuse:%.2f, %.2f, %.2f, %.2f. ambient: %.2f, %.2f, %.2f, %.2f. specular %.2f, %.2f, %.2f, %.2f. emissive: %.2f, %.2f, %.2f, %.2f. transparent: %.2f, %.2f, %.2f, %.2f. shininess: %.2f, max: %d\n",
+                       i, name.C_Str(), FullPath.c_str(),
+                       diffuseColor.x, diffuseColor.y, diffuseColor.z, diffuseColor.w,
+                       ambientColor.x, ambientColor.y, ambientColor.z, ambientColor.w,
+                       specular.r, specular.g, specular.b, specular.a,
+                       emissive.r, emissive.g, emissive.b, emissive.a,
+                       transparent.r, transparent.g, transparent.b, transparent.a,
+                       shininess, max);
             }
         } else {
-            m_Materials[i] = new Color(m_texCountLocation,
-                                       m_diffuseColorLocation,
-                                       m_ambientColorLocation,
-                                       m_specularColorLocation,
-                                       m_textureImageLocation,
-                                       diffuseColor,
-                                       ambientColor,
-                                       specularColor);
-            OUTPUT("Loaded color index:%d, name %s diffuse:%.2f, %.2f, %.2f, %.2f. ambient: %.2f, %.2f, %.2f, %.2f. specular %.2f, %.2f, %.2f, %.2f. emissive: %.2f, %.2f, %.2f, %.2f. transparent: %.2f, %.2f, %.2f, %.2f. shininess: %.2f, max: %d\n",
-                   i, name.C_Str(),
-                   diffuseColor.x, diffuseColor.y, diffuseColor.z, diffuseColor.w,
-                   ambientColor.x, ambientColor.y, ambientColor.z, ambientColor.w,
-                   specular.r, specular.g, specular.b, specular.a,
-                   emissive.r, emissive.g, emissive.b, emissive.a,
-                   transparent.r, transparent.g, transparent.b, transparent.a,
-                   shininess, max);
+            if (pMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
+                aiString Path;
+
+                if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
+                    std::string FullPath = Dir + "/" + Path.data;
+                    if( !strcmp(Path.data, "ramp1-nurbsToPoly1.png") ) {
+                        std::string reflectionFullPath = Dir + "/Brooklyn_Bridge_Planks_1k.hdr";
+                        m_Materials[i] = new ReflectionTexture(m_texCountLocation,
+                                                               m_diffuseColorLocation,
+                                                               m_ambientColorLocation,
+                                                               m_specularColorLocation,
+                                                               m_textureImageLocation,
+                                                               diffuseColor,
+                                                               ambientColor,
+                                                               specularColor,
+                                                               FullPath.c_str(),
+                                                               m_envMapLocation,
+                                                               reflectionFullPath.c_str()
+                                                               );
+                    } else {
+                        m_Materials[i] = new Texture(m_texCountLocation,
+                                                 m_diffuseColorLocation,
+                                                 m_ambientColorLocation,
+                                                 m_specularColorLocation,
+                                                 m_textureImageLocation,
+                                                 diffuseColor,
+                                                 ambientColor,
+                                                 specularColor,
+                                                 FullPath.c_str());
+                    }
+
+                    if (!m_Materials[i]->load()) {
+                        OUTPUT("Error loading texture '%s'\n", FullPath.c_str());
+                        delete m_Materials[i];
+                        m_Materials[i] = NULL;
+                        Ret = false;
+                    } else {
+                        OUTPUT("Loaded texture index:%d, name %s file: %s diffuse:%.2f, %.2f, %.2f, %.2f. ambient: %.2f, %.2f, %.2f, %.2f. specular %.2f, %.2f, %.2f, %.2f. emissive: %.2f, %.2f, %.2f, %.2f. transparent: %.2f, %.2f, %.2f, %.2f. shininess: %.2f, max: %d\n",
+                               i, name.C_Str(), Path.data,
+                               diffuseColor.x, diffuseColor.y, diffuseColor.z, diffuseColor.w,
+                               ambientColor.x, ambientColor.y, ambientColor.z, ambientColor.w,
+                               specular.r, specular.g, specular.b, specular.a,
+                               emissive.r, emissive.g, emissive.b, emissive.a,
+                               transparent.r, transparent.g, transparent.b, transparent.a,
+                               shininess, max);
+                    }
+                }
+            } else {
+                m_Materials[i] = new Color(m_texCountLocation,
+                                           m_diffuseColorLocation,
+                                           m_ambientColorLocation,
+                                           m_specularColorLocation,
+                                           m_textureImageLocation,
+                                           diffuseColor,
+                                           ambientColor,
+                                           specularColor);
+                OUTPUT("Loaded color index:%d, name %s diffuse:%.2f, %.2f, %.2f, %.2f. ambient: %.2f, %.2f, %.2f, %.2f. specular %.2f, %.2f, %.2f, %.2f. emissive: %.2f, %.2f, %.2f, %.2f. transparent: %.2f, %.2f, %.2f, %.2f. shininess: %.2f, max: %d\n",
+                       i, name.C_Str(),
+                       diffuseColor.x, diffuseColor.y, diffuseColor.z, diffuseColor.w,
+                       ambientColor.x, ambientColor.y, ambientColor.z, ambientColor.w,
+                       specular.r, specular.g, specular.b, specular.a,
+                       emissive.r, emissive.g, emissive.b, emissive.a,
+                       transparent.r, transparent.g, transparent.b, transparent.a,
+                       shininess, max);
+            }
         }
     }
 
