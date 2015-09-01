@@ -93,7 +93,7 @@ static void saveBuffer(void* buffer, string& fileToSave, int srcWidth, int srcHe
     if( pImage_flipped_x ) {
         for( int i = 0; i < srcHeight; i++) {
             for( int j = 0; j < srcWidth; j++ ) {
-                src = (uint8*)buffer + ( (srcHeight-i)*srcWidth + j )*4;
+                src = (uint8*)buffer + ( (srcHeight-1-i)*srcWidth + j )*4;
                 dst = pImage_flipped_x + (i * srcWidth + j) * 4;
                 *dst = *(src+2);
                 *(dst+1) = *(src+1);
