@@ -84,6 +84,8 @@ bool Candide3::readVertices(string& vertexFile, float glassesWidth, float zRotat
     Vector3f vert;
     Vector2f texture;
     Vector3f normal;
+    Vector3f binormal;
+    Vector3f tangent;
     
     float xMin = 0;
     float xMax = 0;
@@ -123,7 +125,7 @@ bool Candide3::readVertices(string& vertexFile, float glassesWidth, float zRotat
         //vert.z = -DELTA_BEHIND_GLASSES;
         vert.z = vert.z*ratio - DELTA_BEHIND_GLASSES;
         
-        Vertex v(vert, texture, normal);
+        Vertex v(vert, texture, normal, binormal, tangent);
         
         vertices.push_back(v);
     }

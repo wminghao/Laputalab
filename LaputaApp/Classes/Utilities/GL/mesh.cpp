@@ -140,7 +140,7 @@ bool Mesh::LoadMesh(const std::string& Filename, const char*candide3FacePath, co
     Assimp::Importer Importer;
     
     //width ratio from candide3 to glasses
-    const aiScene* pScene = Importer.ReadFile(Filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs);
+    const aiScene* pScene = Importer.ReadFile(Filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
     if (pScene) {
         if( bUploadCandide3Vertices ) {
             float candide3Width = Mesh::getVecWidth(candide3Vec);
@@ -217,11 +217,15 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh)
     for (unsigned int i = 0 ; i < paiMesh->mNumVertices ; i++) {
         const aiVector3D* pPos      = &(paiMesh->mVertices[i]);
         const aiVector3D* pNormal   = &(paiMesh->mNormals[i]);
+        const aiVector3D* pBinormal   = paiMesh->HasTangentsAndBitangents()?&(paiMesh->mBitangents[i]) : &Zero3D;
+        const aiVector3D* pTangent   = paiMesh->HasTangentsAndBitangents()?&(paiMesh->mTangents[i]) : &Zero3D;
         const aiVector3D* pTexCoord = paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
 
         Vertex v(Vector3f(pPos->x * widthRatio, pPos->y * widthRatio, (pPos->z + deltaInFrontOfCandide3) * widthRatio),
                  Vector2f(pTexCoord->x, pTexCoord->y),
-                 Vector3f(pNormal->x, pNormal->y, pNormal->z));
+                 Vector3f(pNormal->x, pNormal->y, pNormal->z),
+                 Vector3f(pBinormal->x, pBinormal->y, pBinormal->z),
+                 Vector3f(pTangent->x, pTangent->y, pTangent->z));
         
         //OUTPUT("Mesh vertice x=%.2f, y=%.2f, z=%.2f\r\n", v.m_pos.x, v.m_pos.y, v.m_pos.z);
         //OUTPUT("Mesh normal x=%.2f, y=%.2f, z=%.2f\r\n", pNormal->x, pNormal->y, pNormal->z);

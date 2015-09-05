@@ -13,12 +13,6 @@
 		8954176A1B4D9C910058B5C9 /* jpge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 895417631B4D9C910058B5C9 /* jpge.cpp */; };
 		8954176D1B4D9C910058B5C9 /* timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 895417671B4D9C910058B5C9 /* timer.cpp */; };
 		895417781B508A830058B5C9 /* libGLEW.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 895417771B508A830058B5C9 /* libGLEW.a */; };
-		8954178A1B61B16D0058B5C9 /* shadow_map_fbo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 895417841B61B16D0058B5C9 /* shadow_map_fbo.cpp */; };
-		8954178B1B61B16D0058B5C9 /* shadow_map_technique.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 895417861B61B16D0058B5C9 /* shadow_map_technique.cpp */; };
-		8954178E1B61B34E0058B5C9 /* technique.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8954178C1B61B34E0058B5C9 /* technique.cpp */; };
-		895417931B61B7B50058B5C9 /* lighting_technique.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8954178F1B61B7B50058B5C9 /* lighting_technique.cpp */; };
-		895417971B61C40F0058B5C9 /* shadow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 895417951B61C40F0058B5C9 /* shadow.cpp */; };
-		8954179A1B62E9480058B5C9 /* simpleMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 895417981B62E9480058B5C9 /* simpleMesh.cpp */; };
 		8968D3521B19825400FAFBDC /* libMagick++-6.Q16.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 899A5F541B19796800A080FF /* libMagick++-6.Q16.a */; };
 		8968D3531B19825400FAFBDC /* libMagickCore-6.Q16.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 899A5F581B19796800A080FF /* libMagickCore-6.Q16.a */; };
 		8968D3541B19825400FAFBDC /* libMagickWand-6.Q16.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 899A5F5C1B19796800A080FF /* libMagickWand-6.Q16.a */; };
@@ -126,22 +120,6 @@
 		895417761B4DCD400058B5C9 /* 3dGlassesVertexShaderGL2.1.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = 3dGlassesVertexShaderGL2.1.vsh; path = 3dGlasses/3dGlassesVertexShaderGL2.1.vsh; sourceTree = "<group>"; };
 		895417771B508A830058B5C9 /* libGLEW.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGLEW.a; path = ../../../../../opt/local/lib/libGLEW.a; sourceTree = "<group>"; };
 		895417821B6016110058B5C9 /* Output.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Output.h; sourceTree = "<group>"; };
-		895417841B61B16D0058B5C9 /* shadow_map_fbo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = shadow_map_fbo.cpp; path = ../../../LaputaApp/Classes/Utilities/GL/Shadow/shadow_map_fbo.cpp; sourceTree = "<group>"; };
-		895417851B61B16D0058B5C9 /* shadow_map_fbo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = shadow_map_fbo.h; path = ../../../LaputaApp/Classes/Utilities/GL/Shadow/shadow_map_fbo.h; sourceTree = "<group>"; };
-		895417861B61B16D0058B5C9 /* shadow_map_technique.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = shadow_map_technique.cpp; path = ../../../LaputaApp/Classes/Utilities/GL/Shadow/shadow_map_technique.cpp; sourceTree = "<group>"; };
-		895417871B61B16D0058B5C9 /* shadow_map_technique.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = shadow_map_technique.h; path = ../../../LaputaApp/Classes/Utilities/GL/Shadow/shadow_map_technique.h; sourceTree = "<group>"; };
-		895417881B61B16D0058B5C9 /* shadow_map.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = shadow_map.fs; path = ../../../LaputaApp/Classes/Utilities/GL/Shadow/shadow_map.fs; sourceTree = "<group>"; };
-		895417891B61B16D0058B5C9 /* shadow_map.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = shadow_map.vs; path = ../../../LaputaApp/Classes/Utilities/GL/Shadow/shadow_map.vs; sourceTree = "<group>"; };
-		8954178C1B61B34E0058B5C9 /* technique.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = technique.cpp; path = ../../../LaputaApp/Classes/Utilities/GL/Shadow/technique.cpp; sourceTree = "<group>"; };
-		8954178D1B61B34E0058B5C9 /* technique.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = technique.h; path = ../../../LaputaApp/Classes/Utilities/GL/Shadow/technique.h; sourceTree = "<group>"; };
-		8954178F1B61B7B50058B5C9 /* lighting_technique.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = lighting_technique.cpp; path = ../../../LaputaApp/Classes/Utilities/GL/Shadow/lighting_technique.cpp; sourceTree = "<group>"; };
-		895417901B61B7B50058B5C9 /* lighting_technique.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lighting_technique.h; path = ../../../LaputaApp/Classes/Utilities/GL/Shadow/lighting_technique.h; sourceTree = "<group>"; };
-		895417911B61B7B50058B5C9 /* lighting.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = lighting.fs; path = ../../../LaputaApp/Classes/Utilities/GL/Shadow/lighting.fs; sourceTree = "<group>"; };
-		895417921B61B7B50058B5C9 /* lighting.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = lighting.vs; path = ../../../LaputaApp/Classes/Utilities/GL/Shadow/lighting.vs; sourceTree = "<group>"; };
-		895417951B61C40F0058B5C9 /* shadow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = shadow.cpp; path = ../../../LaputaApp/Classes/Utilities/GL/Shadow/shadow.cpp; sourceTree = "<group>"; };
-		895417961B61C40F0058B5C9 /* shadow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = shadow.h; path = ../../../LaputaApp/Classes/Utilities/GL/Shadow/shadow.h; sourceTree = "<group>"; };
-		895417981B62E9480058B5C9 /* simpleMesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = simpleMesh.cpp; path = ../../../LaputaApp/Classes/Utilities/GL/Shadow/simpleMesh.cpp; sourceTree = "<group>"; };
-		895417991B62E9480058B5C9 /* simpleMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = simpleMesh.h; path = ../../../LaputaApp/Classes/Utilities/GL/Shadow/simpleMesh.h; sourceTree = "<group>"; };
 		899A5EA81B18F10100A080FF /* libopencv_calib3d.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.10.dylib; path = ../../../../../usr/local/lib/libopencv_calib3d.2.4.10.dylib; sourceTree = "<group>"; };
 		899A5EA91B18F10100A080FF /* libopencv_calib3d.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.10.dylib; path = ../../../../../usr/local/lib/libopencv_calib3d.2.4.10.dylib; sourceTree = "<group>"; };
 		899A5EAA1B18F10100A080FF /* libopencv_calib3d.2.4.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libopencv_calib3d.2.4.10.dylib; path = ../../../../../usr/local/lib/libopencv_calib3d.2.4.10.dylib; sourceTree = "<group>"; };
@@ -450,33 +428,9 @@
 			name = jpegcompressor;
 			sourceTree = "<group>";
 		};
-		895417831B61B1500058B5C9 /* Shadow */ = {
-			isa = PBXGroup;
-			children = (
-				8954178F1B61B7B50058B5C9 /* lighting_technique.cpp */,
-				895417901B61B7B50058B5C9 /* lighting_technique.h */,
-				895417911B61B7B50058B5C9 /* lighting.fs */,
-				895417921B61B7B50058B5C9 /* lighting.vs */,
-				8954178C1B61B34E0058B5C9 /* technique.cpp */,
-				8954178D1B61B34E0058B5C9 /* technique.h */,
-				895417841B61B16D0058B5C9 /* shadow_map_fbo.cpp */,
-				895417851B61B16D0058B5C9 /* shadow_map_fbo.h */,
-				895417861B61B16D0058B5C9 /* shadow_map_technique.cpp */,
-				895417871B61B16D0058B5C9 /* shadow_map_technique.h */,
-				895417881B61B16D0058B5C9 /* shadow_map.fs */,
-				895417891B61B16D0058B5C9 /* shadow_map.vs */,
-				895417951B61C40F0058B5C9 /* shadow.cpp */,
-				895417961B61C40F0058B5C9 /* shadow.h */,
-				895417981B62E9480058B5C9 /* simpleMesh.cpp */,
-				895417991B62E9480058B5C9 /* simpleMesh.h */,
-			);
-			name = Shadow;
-			sourceTree = "<group>";
-		};
 		899A5F1C1B19769000A080FF /* GL */ = {
 			isa = PBXGroup;
 			children = (
-				895417831B61B1500058B5C9 /* Shadow */,
 				895417741B4DC3180058B5C9 /* platform.h */,
 				89B05AB51B264B90004D4106 /* candide3.cpp */,
 				89B05AB61B264B90004D4106 /* candide3.h */,
@@ -569,22 +523,16 @@
 			files = (
 				89B05AD01B264B90004D4106 /* candide3.cpp in Sources */,
 				25C3436618BD721D00B0AD8C /* main.cpp in Sources */,
-				895417931B61B7B50058B5C9 /* lighting_technique.cpp in Sources */,
 				89B05AD81B264B90004D4106 /* mesh.cpp in Sources */,
 				89B05ADA1B264B90004D4106 /* ShaderUtilities.cpp in Sources */,
-				895417971B61C40F0058B5C9 /* shadow.cpp in Sources */,
-				8954179A1B62E9480058B5C9 /* simpleMesh.cpp in Sources */,
 				89B05AD51B264B90004D4106 /* glasses.cpp in Sources */,
 				25C3437A18C6DB7400B0AD8C /* utilities.cpp in Sources */,
 				89B05AD71B264B90004D4106 /* matrix.c in Sources */,
-				8954178B1B61B16D0058B5C9 /* shadow_map_technique.cpp in Sources */,
-				8954178E1B61B34E0058B5C9 /* technique.cpp in Sources */,
 				89B05ADB1B264B90004D4106 /* texture.cpp in Sources */,
 				8954176A1B4D9C910058B5C9 /* jpge.cpp in Sources */,
 				89B05AD91B264B90004D4106 /* reflectionTexture.cpp in Sources */,
 				89B05AD21B264B90004D4106 /* color.cpp in Sources */,
 				89B05AD11B264B90004D4106 /* candide3Texture.cpp in Sources */,
-				8954178A1B61B16D0058B5C9 /* shadow_map_fbo.cpp in Sources */,
 				25350AD41910358100DB3E08 /* objloader.cpp in Sources */,
 				89B05AD61B264B90004D4106 /* glUtilities.cpp in Sources */,
 				8954176D1B4D9C910058B5C9 /* timer.cpp in Sources */,
