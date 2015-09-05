@@ -14,6 +14,12 @@ invariant varying vec3 surfacePosWorld;
 invariant varying vec3 surfaceToLightWorld;
 invariant varying vec3 surfaceToCameraWorld;
 
+//tangent for normal mapping
+attribute vec3 binormal;
+attribute vec3 tangent;
+invariant varying vec3 surfaceToLightTangent;
+invariant varying vec3 surfaceToCameraTangent;
+
 invariant gl_Position;
 
 void main(){
@@ -31,4 +37,11 @@ void main(){
     vec3 lightPositionWorld = vec3(10, 10, 0);
     surfaceToLightWorld = lightPositionWorld - surfacePosWorld;
     surfaceToCameraWorld = cameraPositionWorld - surfacePosWorld;
+    
+    //tangent space
+    mat3 tangentMat = mat3( tangent,
+                            binormal,
+                            normal);
+    surfaceToLightTangent =surfaceToLightWorld * tangentMat;
+    surfaceToCameraTangent =surfaceToCameraWorld * tangentMat;
 }

@@ -13,6 +13,11 @@ invariant varying vec3 surfacePosWorld;
 invariant varying vec3 surfaceToLightWorld;
 invariant varying vec3 surfaceToCameraWorld;
 
+//tangent map
+uniform sampler2D bumpImage;
+invariant varying vec3 surfaceToLightTangent;
+invariant varying vec3 surfaceToCameraTangent;
+
 void main()
 {
     vec3 diffuse;
@@ -21,18 +26,18 @@ void main()
     vec4 surfaceColor;
     
     //normalize the vector and calculate the distance
-    vec3 surfaceToLight = normalize( surfaceToLightWorld );
-    vec3 surfaceToCamera = normalize( surfaceToCameraWorld );
-    float distanceToLight = length( surfaceToLightWorld );
+    vec3 surfaceToLightWorldNormalized = normalize( surfaceToLightWorld );
+    vec3 surfaceToCameraWorldNormalized = normalize( surfaceToCameraWorld );
+    float distanceToLight = length( surfaceToLightWorldNormalized );
     
     //calcuate lighting diffuseCoefficent(brightness)
-    float normalDotL = dot(normalWorld, surfaceToLight);
+    float normalDotL = dot(normalWorld, surfaceToLightWorldNormalized);
     float diffuseCoefficent = max(normalDotL, 0.0);
     
     //calculate the specularCoefficient, shininess is alway 0, means max shininess = 1.
     float specularCoefficent = 0.0;
     if( diffuseCoefficent > 0 ) {
-        specularCoefficent = pow(max(0.0, dot(surfaceToCamera, reflect(-surfaceToLight, normalWorld))), 1);
+        specularCoefficent = pow(max(0.0, dot(surfaceToCameraWorldNormalized, reflect(-surfaceToLightWorldNormalized, normalWorld))), 1);
     }
     
     //light ambient coefficient
@@ -56,7 +61,7 @@ void main()
         spec = specularCoefficent * specularColor.rgb;
         
         //calculate reflection, based on the untransformed normal.
-        vec3 reflection = (2.0 * normalize(normalWorld) * normalDotL) - surfaceToLight;
+        vec3 reflection = (2.0 * normalize(normalWorld) * normalDotL) - surfaceToLightWorldNormalized;
         vec4 envColor = textureCube( envMap, reflection);
         
         //attenuate the src color plus environment color
@@ -75,7 +80,31 @@ void main()
         //candide3 simple mask, do not display
         gl_FragColor = texture2D(textureImage, texCoordFrag);
         //outFrag = vec4(0, 1, 0, 1); //green
-    } else {
+    } else if( texCount == 4 ) {
+        //per fragment normal, don't use normal
+        surfaceColor = texture2D(textureImage, texCoordFrag);
+        vec3 normalBump = texture2D( bumpImage, texCoordFrag).xyz;
+        normalBump = normalize( normalBump * 2.0 - 1.0);
+        
+        vec3 surfaceToLightTangentNormalized = normalize(surfaceToLightTangent);
+        vec3 surfaceToCameraTangentNormalized = normalize(surfaceToCameraTangent);
+        
+        float nDotL = dot(normalBump, surfaceToLightTangentNormalized);
+        vec3 reflection = ( 2.0 * normalBump * nDotL) - surfaceToLightTangentNormalized;
+        float rDotL = max(0.0, dot(reflection, surfaceToCameraTangentNormalized));
+        
+        //recalculate diffuseCoefficent, & specularCoefficent
+        diffuseCoefficent = nDotL;
+        diffuse = diffuseCoefficent * surfaceColor.rgb;
+        amb = lightAmbientCoefficient * surfaceColor.rgb;
+        specularCoefficent = 0.0;
+        if( diffuseCoefficent > 0 ) {
+            specularCoefficent = pow(rDotL, 1);
+        }
+        spec = specularCoefficent * specularColor.rgb;
+        linearColor = attenuation * (diffuse+spec) + amb;
+        gl_FragColor = vec4(linearColor, surfaceColor.a);
+    } else { //if( texCount == 0 ) {
         //normal color
         surfaceColor = diffuseColor;
         diffuse = diffuseCoefficent * surfaceColor.rgb;
