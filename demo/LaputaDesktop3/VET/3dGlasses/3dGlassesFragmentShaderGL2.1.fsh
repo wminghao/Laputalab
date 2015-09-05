@@ -9,7 +9,9 @@ uniform samplerCube envMap;
 
 invariant varying vec2 texCoordFrag;
 invariant varying vec3 normalWorld;
-invariant varying vec3 surfacePos;
+invariant varying vec3 surfacePosWorld;
+invariant varying vec3 surfaceToLightWorld;
+invariant varying vec3 surfaceToCameraWorld;
 
 void main()
 {
@@ -18,14 +20,10 @@ void main()
     vec3 spec;
     vec4 surfaceColor;
     
-    //It's point light. color=white, different light for different angle.
-    //calculate the vector from the light source to the vertex position.
-    // object is initially located at z = -600 position
-    vec3 cameraPosition = vec3(0, 0, 0.01);
-    vec3 lightPosition = vec3(10, 10, 0);
-    vec3 surfaceToLight = normalize( lightPosition - surfacePos );
-    vec3 surfaceToCamera = normalize( cameraPosition - surfacePos );
-    float distanceToLight = length( lightPosition - surfacePos );
+    //normalize the vector and calculate the distance
+    vec3 surfaceToLight = normalize( surfaceToLightWorld );
+    vec3 surfaceToCamera = normalize( surfaceToCameraWorld );
+    float distanceToLight = length( surfaceToLightWorld );
     
     //calcuate lighting diffuseCoefficent(brightness)
     float normalDotL = dot(normalWorld, surfaceToLight);
@@ -52,6 +50,7 @@ void main()
     vec3 linearColor;
     
     if( texCount == 2 ) {
+        //environment mapping color
         surfaceColor = texture2D(textureImage, texCoordFrag);
         diffuse = diffuseCoefficent * surfaceColor.rgb;
         spec = specularCoefficent * specularColor.rgb;
@@ -63,6 +62,7 @@ void main()
         //attenuate the src color plus environment color
         gl_FragColor = surfaceColorToEnvRatio * vec4(attenuation * (diffuse+spec), surfaceColor.a) + (1-surfaceColorToEnvRatio) * vec4(diffuseCoefficent * envColor.rgb, envColor.a);
     } else if( texCount == 1 ) {
+        //texture color
         surfaceColor = texture2D(textureImage, texCoordFrag);
         diffuse = diffuseCoefficent * surfaceColor.rgb;
         amb =  lightAmbientCoefficient * surfaceColor.rgb; //light's ambient coefficient=0.33
@@ -76,6 +76,7 @@ void main()
         gl_FragColor = texture2D(textureImage, texCoordFrag);
         //outFrag = vec4(0, 1, 0, 1); //green
     } else {
+        //normal color
         surfaceColor = diffuseColor;
         diffuse = diffuseCoefficent * surfaceColor.rgb;
         amb = lightAmbientCoefficient * ambientColor.rgb;

@@ -10,7 +10,10 @@ uniform mat3 NormalMatrix;
 
 invariant varying vec2 texCoordFrag;
 invariant varying vec3 normalWorld;
-invariant varying vec3 surfacePos;
+invariant varying vec3 surfacePosWorld;
+invariant varying vec3 surfaceToLightWorld;
+invariant varying vec3 surfaceToCameraWorld;
+
 invariant gl_Position;
 
 void main(){
@@ -19,5 +22,13 @@ void main(){
 
     normalWorld = normalize(NormalMatrix * normal);
 
-    surfacePos = vec3(World * vec4(position, 1));
+    surfacePosWorld = vec3(World * vec4(position, 1));
+    
+    //It's point light. color=white, different light for different angle.
+    //calculate the vector from the light source & camera source to the vertex position.
+    // object is initially located at z = -600 position
+    vec3 cameraPositionWorld = vec3(0, 0, 0.01);
+    vec3 lightPositionWorld = vec3(10, 10, 0);
+    surfaceToLightWorld = lightPositionWorld - surfacePosWorld;
+    surfaceToCameraWorld = cameraPositionWorld - surfacePosWorld;
 }
