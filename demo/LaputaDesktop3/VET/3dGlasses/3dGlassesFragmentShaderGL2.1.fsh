@@ -94,7 +94,7 @@ void main()
         float rDotL = max(0.0, dot(reflection, surfaceToCameraTangentNormalized));
         
         //recalculate diffuseCoefficent, & specularCoefficent
-        diffuse = nDotL * surfaceColor.rgb;
+        diffuse = max(0.0, nDotL) * surfaceColor.rgb;
         amb = lightAmbientCoefficient * surfaceColor.rgb;
         spec = pow(rDotL, 1) * specularColor.rgb;
         linearColor = attenuation * (diffuse+spec) + amb;

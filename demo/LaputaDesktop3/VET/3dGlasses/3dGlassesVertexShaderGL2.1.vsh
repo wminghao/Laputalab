@@ -39,9 +39,9 @@ void main(){
     surfaceToCameraWorld = cameraPositionWorld - surfacePosWorld;
     
     //tangent space
-    mat3 tangentMat = mat3( tangent,
-                            binormal,
-                            normal);
+    mat3 tangentMat = transpose(mat3( tangent,
+                                      binormal,
+                                      normal));
     surfaceToLightTangent = surfaceToLightWorld * tangentMat;
     surfaceToCameraTangent = surfaceToCameraWorld * tangentMat;
 }

@@ -53,11 +53,11 @@ bool BumpTexture::load()
         //b/c the input image can be odd width or odd height, mipmap will complain.
         //it's better not to use odd width/height image for performance reasons.
         unsigned char * pixels = (unsigned char*)malloc(sizeof(unsigned char) * width * height * 4);
-        if( MagickTrue == MagickGetImagePixels(wand, 0, 0, width, height, "RGBA", CharPixel, pixels)) {
+        if( MagickTrue == MagickGetImagePixels(wand, 0, 0, width, height, "RGB", CharPixel, pixels)) {
             glGenTextures(1, &m_bumpObj);
             
             glBindTexture(GL_TEXTURE_2D, m_bumpObj);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, (GLsizei)width, (GLsizei)height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (GLsizei)width, (GLsizei)height, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
             glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //no mipmap
             glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); //no mipmap
             if( width%2 || height%2 ) {
