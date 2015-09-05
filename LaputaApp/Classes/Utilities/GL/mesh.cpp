@@ -339,8 +339,8 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
                 m_Materials[i] = NULL;
                 Ret = false;
             } else {
-                OUTPUT("Loaded bump texture index:%d, name %s file: %s diffuse:%.2f, %.2f, %.2f, %.2f. ambient: %.2f, %.2f, %.2f, %.2f. specular %.2f, %.2f, %.2f, %.2f. emissive: %.2f, %.2f, %.2f, %.2f. transparent: %.2f, %.2f, %.2f, %.2f. shininess: %.2f, max: %d\n",
-                       i, name.C_Str(), texturePath.c_str(),
+                OUTPUT("Loaded bump texture index:%d, name %s file: %s file: %s diffuse:%.2f, %.2f, %.2f, %.2f. ambient: %.2f, %.2f, %.2f, %.2f. specular %.2f, %.2f, %.2f, %.2f. emissive: %.2f, %.2f, %.2f, %.2f. transparent: %.2f, %.2f, %.2f, %.2f. shininess: %.2f, max: %d\n",
+                       i, name.C_Str(), texturePath.c_str(), bumpPath.c_str(),
                        diffuseColor.x, diffuseColor.y, diffuseColor.z, diffuseColor.w,
                        ambientColor.x, ambientColor.y, ambientColor.z, ambientColor.w,
                        specular.r, specular.g, specular.b, specular.a,

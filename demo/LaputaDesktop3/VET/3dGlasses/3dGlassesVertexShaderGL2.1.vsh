@@ -42,6 +42,6 @@ void main(){
     mat3 tangentMat = mat3( tangent,
                             binormal,
                             normal);
-    surfaceToLightTangent =surfaceToLightWorld * tangentMat;
-    surfaceToCameraTangent =surfaceToCameraWorld * tangentMat;
+    surfaceToLightTangent = surfaceToLightWorld * tangentMat;
+    surfaceToCameraTangent = surfaceToCameraWorld * tangentMat;
 }

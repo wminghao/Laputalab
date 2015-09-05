@@ -82,7 +82,7 @@ void main()
         //outFrag = vec4(0, 1, 0, 1); //green
     } else if( texCount == 4 ) {
         //per fragment normal, don't use normal
-        surfaceColor = texture2D(textureImage, texCoordFrag);
+        surfaceColor = texture2D( textureImage, texCoordFrag );
         vec3 normalBump = texture2D( bumpImage, texCoordFrag).xyz;
         normalBump = normalize( normalBump * 2.0 - 1.0);
         
@@ -94,16 +94,12 @@ void main()
         float rDotL = max(0.0, dot(reflection, surfaceToCameraTangentNormalized));
         
         //recalculate diffuseCoefficent, & specularCoefficent
-        diffuseCoefficent = nDotL;
-        diffuse = diffuseCoefficent * surfaceColor.rgb;
+        diffuse = nDotL * surfaceColor.rgb;
         amb = lightAmbientCoefficient * surfaceColor.rgb;
-        specularCoefficent = 0.0;
-        if( diffuseCoefficent > 0 ) {
-            specularCoefficent = pow(rDotL, 1);
-        }
-        spec = specularCoefficent * specularColor.rgb;
+        spec = pow(rDotL, 1) * specularColor.rgb;
         linearColor = attenuation * (diffuse+spec) + amb;
         gl_FragColor = vec4(linearColor, surfaceColor.a);
+        
     } else { //if( texCount == 0 ) {
         //normal color
         surfaceColor = diffuseColor;
