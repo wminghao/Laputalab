@@ -49,20 +49,26 @@ public:
                     GLint ambientColorLocation,
                     GLint specularColorLocation,
                     GLint textureImageLocation,
+                    GLint bumpImageLocation,
                     GLint envMapLocation,
                     GLint positionLocation,
                     GLint texCoordLocation,
-                    GLint normalLocation) {
+                    GLint normalLocation,
+                    GLint binormalLocation,
+                    GLint tangentLocation) {
         //map to different uniforms and attributes
         m_texCountLocation = texCountLocation;
         m_diffuseColorLocation = diffuseColorLocation;
         m_ambientColorLocation = ambientColorLocation;
         m_specularColorLocation = specularColorLocation;
         m_textureImageLocation = textureImageLocation;
+        m_bumpImageLocation = bumpImageLocation;
         m_envMapLocation = envMapLocation;
         m_positionLocation = positionLocation;
         m_texCoordLocation = texCoordLocation;
         m_normalLocation = normalLocation;
+        m_binormalLocation = binormalLocation;
+        m_tangentLocation = tangentLocation;
         
         _candide3.setAttrUni(texCountLocation, textureImageLocation, positionLocation, texCoordLocation, normalLocation);
     }
@@ -110,10 +116,13 @@ private:
     GLint m_ambientColorLocation;
     GLint m_specularColorLocation;
     GLint m_textureImageLocation;
+    GLint m_bumpImageLocation;
     GLint m_envMapLocation;
     GLint m_positionLocation;
     GLint m_texCoordLocation;
     GLint m_normalLocation;
+    GLint m_binormalLocation;
+    GLint m_tangentLocation;
     
     //calculate Max and Min
     float xMax;

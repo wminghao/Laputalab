@@ -27,6 +27,8 @@ enum {
     ATTRIB_POSITION, // "position" in vertext shader
     ATTRIB_TEXCOORD, // "TexCoord" in vertext shader
     ATTRIB_NORMAL, // "normal" in vertext shader
+    ATTRIB_BINORMAL, // "binormal" in vertext shader
+    ATTRIB_TANGENT, // "tangent" in vertext shader
     NUM_ATTRIBUTES
 };
 
@@ -39,6 +41,7 @@ enum {
     UNIFORM_AMBIENTCOLOR,
     UNIFORM_SPECULARCOLOR,
     UNIFORM_TEXTUREIMAGE,
+    UNIFORM_BUMPIMAGE,
     UNIFORM_ENVMAP,
     NUM_UNIFORMS
 };

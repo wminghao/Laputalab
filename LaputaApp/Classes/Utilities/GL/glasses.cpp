@@ -141,11 +141,15 @@ bool Glasses::init(const char* vertLFilePath,
         ATTRIB_POSITION, // "position" in vertext shader
         ATTRIB_TEXCOORD, // "TexCoord" in vertext shader
         ATTRIB_NORMAL, // "normal" in vertext shader,
+        ATTRIB_BINORMAL, // "binormal" in vertext shader,
+        ATTRIB_TANGENT, // "tangent" in vertext shader,
     };
     GLchar *attribName[NUM_ATTRIBUTES] = {
         (GLchar *)"position",
         (GLchar *)"texCoord",
         (GLchar *)"normal",
+        (GLchar *)"binormal",
+        (GLchar *)"tangent",
     };
     GLint uniformLocation[NUM_UNIFORMS];
     GLchar *uniformName[NUM_UNIFORMS] = {
@@ -157,6 +161,7 @@ bool Glasses::init(const char* vertLFilePath,
         (GLchar *)"ambientColor",
         (GLchar *)"specularColor",
         (GLchar *)"textureImage",
+        (GLchar *)"bumpImage",
         (GLchar *)"envMap",
     };
     
@@ -173,8 +178,9 @@ bool Glasses::init(const char* vertLFilePath,
         
         _pMesh->setAttrUni(uniformLocation[UNIFORM_TEXCOUNT],
                            uniformLocation[UNIFORM_DIFFUSECOLOR], uniformLocation[UNIFORM_AMBIENTCOLOR], uniformLocation[UNIFORM_SPECULARCOLOR],
-                           uniformLocation[UNIFORM_TEXTUREIMAGE], uniformLocation[UNIFORM_ENVMAP],
-                           attribLocation[ATTRIB_POSITION], attribLocation[ATTRIB_TEXCOORD], attribLocation[ATTRIB_NORMAL]);
+                           uniformLocation[UNIFORM_TEXTUREIMAGE], uniformLocation[UNIFORM_BUMPIMAGE], uniformLocation[UNIFORM_ENVMAP],
+                           attribLocation[ATTRIB_POSITION], attribLocation[ATTRIB_TEXCOORD],
+                           attribLocation[ATTRIB_NORMAL], attribLocation[ATTRIB_BINORMAL], attribLocation[ATTRIB_TANGENT] );
         
         ////////////////////////
         //Load model with ASSIMP
