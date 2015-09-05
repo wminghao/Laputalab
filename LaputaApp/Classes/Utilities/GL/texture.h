@@ -33,7 +33,8 @@ public:
     
     void bind(GLint textureId);
 protected:
-    std::string m_fileName;
+    std::string m_textureFile;
+    GLint m_textureImageLocation;
     GLuint m_textureObj; //object id generated
 };
 

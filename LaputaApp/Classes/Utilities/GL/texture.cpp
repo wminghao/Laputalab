@@ -23,10 +23,10 @@ Texture::Texture(GLint texCountLocation,
                  const Vector4f& specularColor,
                  const std::string& FileName):Material(texCountLocation,
                                                        diffuseColorLocation, ambientColorLocation, specularColorLocation,
-                                                       textureImageLocation,
                                                        diffuseColor, ambientColor, specularColor)
 {
-    m_fileName      = FileName;
+    m_textureFile      = FileName;
+    m_textureImageLocation = textureImageLocation;
 }
 
 bool Texture::load()
@@ -36,7 +36,7 @@ bool Texture::load()
     
     // Read the image - all you need to do is change "logo:" to some other
     // filename to have this resize and, if necessary, convert a different file
-    if( MagickReadImage(wand, m_fileName.c_str()) != MagickFalse) {
+    if( MagickReadImage(wand, m_textureFile.c_str()) != MagickFalse) {
         // Get the image's width and height
         size_t width,height;
         width = MagickGetImageWidth(wand);

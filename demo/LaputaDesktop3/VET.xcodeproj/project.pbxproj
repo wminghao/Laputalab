@@ -10,6 +10,7 @@
 		25350AD41910358100DB3E08 /* objloader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 25350AD21910358100DB3E08 /* objloader.cpp */; };
 		25C3436618BD721D00B0AD8C /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 25C3436518BD721D00B0AD8C /* main.cpp */; };
 		25C3437A18C6DB7400B0AD8C /* utilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 25C3437818C6DB7400B0AD8C /* utilities.cpp */; };
+		892C2F261B9A75EA00B67414 /* bumpTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 892C2F241B9A75EA00B67414 /* bumpTexture.cpp */; };
 		8954176A1B4D9C910058B5C9 /* jpge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 895417631B4D9C910058B5C9 /* jpge.cpp */; };
 		8954176D1B4D9C910058B5C9 /* timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 895417671B4D9C910058B5C9 /* timer.cpp */; };
 		895417781B508A830058B5C9 /* libGLEW.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 895417771B508A830058B5C9 /* libGLEW.a */; };
@@ -111,6 +112,8 @@
 		25C3437718C6C9A500B0AD8C /* main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
 		25C3437818C6DB7400B0AD8C /* utilities.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = utilities.cpp; sourceTree = "<group>"; };
 		25C3437918C6DB7400B0AD8C /* utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utilities.h; sourceTree = "<group>"; };
+		892C2F241B9A75EA00B67414 /* bumpTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bumpTexture.cpp; path = ../../../LaputaApp/Classes/Utilities/GL/bumpTexture.cpp; sourceTree = "<group>"; };
+		892C2F251B9A75EA00B67414 /* bumpTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bumpTexture.h; path = ../../../LaputaApp/Classes/Utilities/GL/bumpTexture.h; sourceTree = "<group>"; };
 		895417631B4D9C910058B5C9 /* jpge.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = jpge.cpp; path = "thirdparty/jpeg-compressor_v104_r1/jpge.cpp"; sourceTree = SOURCE_ROOT; };
 		895417641B4D9C910058B5C9 /* jpge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = jpge.h; path = "thirdparty/jpeg-compressor_v104_r1/jpge.h"; sourceTree = SOURCE_ROOT; };
 		895417671B4D9C910058B5C9 /* timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = timer.cpp; path = "thirdparty/jpeg-compressor_v104_r1/timer.cpp"; sourceTree = SOURCE_ROOT; };
@@ -455,6 +458,8 @@
 				89B05ACD1B264B90004D4106 /* texture.cpp */,
 				89B05ACE1B264B90004D4106 /* texture.h */,
 				89B05ACF1B264B90004D4106 /* unit.h */,
+				892C2F241B9A75EA00B67414 /* bumpTexture.cpp */,
+				892C2F251B9A75EA00B67414 /* bumpTexture.h */,
 			);
 			name = GL;
 			sourceTree = "<group>";
@@ -526,6 +531,7 @@
 				89B05AD81B264B90004D4106 /* mesh.cpp in Sources */,
 				89B05ADA1B264B90004D4106 /* ShaderUtilities.cpp in Sources */,
 				89B05AD51B264B90004D4106 /* glasses.cpp in Sources */,
+				892C2F261B9A75EA00B67414 /* bumpTexture.cpp in Sources */,
 				25C3437A18C6DB7400B0AD8C /* utilities.cpp in Sources */,
 				89B05AD71B264B90004D4106 /* matrix.c in Sources */,
 				89B05ADB1B264B90004D4106 /* texture.cpp in Sources */,

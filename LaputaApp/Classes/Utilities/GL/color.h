@@ -20,12 +20,10 @@ public:
           GLint diffuseColorLocation,
           GLint ambientColorLocation,
           GLint specularColorLocation,
-          GLint textureImageLocation,
           const Vector4f& diffuseColor,
           const Vector4f& ambientColor,
           const Vector4f& specularColor):Material(texCountLocation,
                                                  diffuseColorLocation, ambientColorLocation, specularColorLocation,
-                                                 textureImageLocation,
                                                  diffuseColor, ambientColor, specularColor)
     {
     }

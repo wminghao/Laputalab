@@ -23,6 +23,7 @@
 //include texture
 #include "texture.h"
 #include "reflectionTexture.h"
+#include "bumpTexture.h"
 #include "color.h"
 #include "err.h"
 #include "Output.h"
@@ -319,24 +320,27 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
         Vector4f specularColor(specular.r, specular.g, specular.b, specular.a);
         
         if( Filename.find("render_ex")!=std::string::npos ) {
-            std::string FullPath = Dir + "/grainy.jpg";
-            m_Materials[i] = new Texture(m_texCountLocation,
-                                         m_diffuseColorLocation,
-                                         m_ambientColorLocation,
-                                         m_specularColorLocation,
-                                         m_textureImageLocation,
-                                         diffuseColor,
-                                         ambientColor,
-                                         specularColor,
-                                         FullPath.c_str());
+            std::string texturePath = Dir + "/grainy.jpg";
+            std::string bumpPath = Dir + "/startup.hdr";
+            m_Materials[i] = new BumpTexture(m_texCountLocation,
+                                             m_diffuseColorLocation,
+                                             m_ambientColorLocation,
+                                             m_specularColorLocation,
+                                             m_textureImageLocation,
+                                             m_bumpImageLocation,
+                                             diffuseColor,
+                                             ambientColor,
+                                             specularColor,
+                                             texturePath.c_str(),
+                                             bumpPath.c_str());
             if (!m_Materials[i]->load()) {
-                OUTPUT("Error loading texture '%s'\n", FullPath.c_str());
+                OUTPUT("Error loading texture '%s'\n", texturePath.c_str());
                 delete m_Materials[i];
                 m_Materials[i] = NULL;
                 Ret = false;
             } else {
-                OUTPUT("Loaded texture index:%d, name %s file: %s diffuse:%.2f, %.2f, %.2f, %.2f. ambient: %.2f, %.2f, %.2f, %.2f. specular %.2f, %.2f, %.2f, %.2f. emissive: %.2f, %.2f, %.2f, %.2f. transparent: %.2f, %.2f, %.2f, %.2f. shininess: %.2f, max: %d\n",
-                       i, name.C_Str(), FullPath.c_str(),
+                OUTPUT("Loaded bump texture index:%d, name %s file: %s diffuse:%.2f, %.2f, %.2f, %.2f. ambient: %.2f, %.2f, %.2f, %.2f. specular %.2f, %.2f, %.2f, %.2f. emissive: %.2f, %.2f, %.2f, %.2f. transparent: %.2f, %.2f, %.2f, %.2f. shininess: %.2f, max: %d\n",
+                       i, name.C_Str(), texturePath.c_str(),
                        diffuseColor.x, diffuseColor.y, diffuseColor.z, diffuseColor.w,
                        ambientColor.x, ambientColor.y, ambientColor.z, ambientColor.w,
                        specular.r, specular.g, specular.b, specular.a,
@@ -397,7 +401,6 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
                                            m_diffuseColorLocation,
                                            m_ambientColorLocation,
                                            m_specularColorLocation,
-                                           m_textureImageLocation,
                                            diffuseColor,
                                            ambientColor,
                                            specularColor);
@@ -442,6 +445,8 @@ void Mesh::Render(GLuint textureObj)
         glVertexAttribPointer(m_positionLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0); //3*4
         glVertexAttribPointer(m_texCoordLocation, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)12); //2*4
         glVertexAttribPointer(m_normalLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)20); //3*4
+        glVertexAttribPointer(m_binormalLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)32); //3*4
+        glVertexAttribPointer(m_tangentLocation, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)44); //3*4
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Entries[i].IB);
         

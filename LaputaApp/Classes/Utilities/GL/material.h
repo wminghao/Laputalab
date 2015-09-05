@@ -22,7 +22,6 @@ public:
              GLint diffuseColorLocation,
              GLint ambientColorLocation,
              GLint specularColorLocation,
-             GLint textureImageLocation,
              const Vector4f& diffuseColor,
              const Vector4f& ambientColor,
              const Vector4f& specularColor){
@@ -30,7 +29,6 @@ public:
         m_diffuseColorLocation = diffuseColorLocation;
         m_ambientColorLocation = ambientColorLocation;
         m_specularColorLocation = specularColorLocation;
-        m_textureImageLocation = textureImageLocation;
         m_diffuseColor = diffuseColor;
         m_ambientColor = ambientColor;
         m_specularColor = specularColor;
@@ -45,7 +43,6 @@ protected:
     GLint m_diffuseColorLocation;
     GLint m_ambientColorLocation;
     GLint m_specularColorLocation;
-    GLint m_textureImageLocation;
     Vector4f m_diffuseColor;
     Vector4f m_ambientColor;
     Vector4f m_specularColor;
