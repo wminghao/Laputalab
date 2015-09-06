@@ -83,7 +83,53 @@ void main()
     } else if( texCount == 4 ) {
         //per fragment normal, don't use normal
         surfaceColor = texture2D( textureImage, texCoordFrag );
-        vec3 normalBump = texture2D( bumpImage, texCoordFrag).xyz;
+        
+        ////////////////////////////////////////
+        //convert from height map to normal map
+        ////////////////////////////////////////
+        /*
+         #version 130
+         uniform sampler2D unit_wave
+         noperspective in vec2 tex_coord;
+         const vec2 size = vec2(2.0,0.0);
+         const ivec3 off = ivec3(-1,0,1);
+         
+         vec4 wave = texture(unit_wave, tex_coord);
+         float s11 = wave.x;
+         float s01 = textureOffset(unit_wave, tex_coord, off.xy).x;
+         float s21 = textureOffset(unit_wave, tex_coord, off.zy).x;
+         float s10 = textureOffset(unit_wave, tex_coord, off.yx).x;
+         float s12 = textureOffset(unit_wave, tex_coord, off.yz).x;
+         vec3 va = normalize(vec3(size.xy,s21-s01));
+         vec3 vb = normalize(vec3(size.yx,s12-s10));
+         vec4 bump = vec4( cross(va,vb), s11 );
+         */
+        const vec2 size = vec2(2.0,0.0);
+        const ivec3 off = ivec3(-1,0,1);
+        
+        float s11 = texture2D(bumpImage, texCoordFrag).x;
+        vec2 coord01 = texCoordFrag + off.xy;
+        float s01 = texture2D(bumpImage, coord01).x;
+        
+        vec2 coord21 = texCoordFrag + off.zy;
+        float s21 = texture2D(bumpImage, coord21).x;
+        
+        vec2 coord10 = texCoordFrag + off.yx;
+        float s10 = texture2D(bumpImage, coord10).x;
+        
+        vec2 coord12 = texCoordFrag + off.yz;
+        float s12 = texture2D(bumpImage, coord12).x;
+
+        vec3 va = normalize(vec3(size.xy,s21-s01));
+        vec3 vb = normalize(vec3(size.yx,s12-s10));
+        vec3 normalBump = vec4( cross(va,vb), s11 ).xyz;
+        
+        
+        ////////////////////////////////////////
+        //directly use normal map
+        ////////////////////////////////////////
+        //read normal map directly
+        //vec3 normalBump = texture2D( bumpImage, texCoordFrag).xyz;
         normalBump = normalize( normalBump * 2.0 - 1.0);
         
         vec3 surfaceToLightTangentNormalized = normalize(surfaceToLightTangent);
