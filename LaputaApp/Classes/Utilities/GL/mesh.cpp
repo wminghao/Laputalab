@@ -143,9 +143,9 @@ bool Mesh::LoadMesh(const std::string& Filename, const char*candide3FacePath, co
     //width ratio from candide3 to glasses
     const aiScene* pScene = Importer.ReadFile(Filename.c_str(), aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
     if (pScene) {
+        getMeshWidthInfo(pScene, Filename);
         if( bUploadCandide3Vertices ) {
             float candide3Width = Mesh::getVecWidth(candide3Vec);
-            getMeshWidthInfo(pScene, Filename);
             _candide3WidthRatio = (candide3Width * DELTA_BIGGER_THAN_CANDIDE3)/getWidth(); //glasses is a little bigger than candid3
         } else {
             _candide3WidthRatio = 1;
