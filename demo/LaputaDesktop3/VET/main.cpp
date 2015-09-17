@@ -30,9 +30,11 @@ using namespace cv;
 //Facial Model Source File
 string vertexFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/vertexlist_113.wfm";
 string faceFile = pathPrefix + "demo/LaputaDesktop3/VET/facemodel/facelist_184.wfm";
-const string glassesFile[] = { pathPrefix + "LaputaApp/Resources/3dmodels/test/render_ex.obj",
+const string glassesFile[] = { pathPrefix + "LaputaApp/Resources/3dmodels/redglasses2/redglasses2.obj",
                                pathPrefix + "LaputaApp/Resources/3dmodels/purpleglasses2/purpleglasses2.obj",
                                pathPrefix + "LaputaApp/Resources/3dmodels/blackglasses2/blackglasses2.obj"};
+
+//"LaputaApp/Resources/3dmodels/sunglasses/sunglasses.obj"
 const char* fragName = "outFrag";
 
 const string savedJpegFilePath = pathPrefix + "saved.jpg";
@@ -245,7 +247,7 @@ int main()
                  vertexFile.c_str(),
                  0, ASPECT_RATIO_4_3,
                  true, &verticesAdjusted,
-                 false, 0); //read adjusted coordinates directly from opengl.
+                 false, 0, 0); //read adjusted coordinates directly from opengl.
     ////////////////
     
     unsigned char map[SF_HEIGHT][SF_WIDTH];

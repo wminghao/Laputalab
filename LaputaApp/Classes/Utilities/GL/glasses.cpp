@@ -17,7 +17,6 @@ const int AA_LEVEL = 8; //4 is normal, 0 means no AA, max 8 on Mac, mesa does no
 
 Glasses::Glasses(int srcWidth, int srcHeight, bool bEnableAA):_srcWidth(srcWidth), _srcHeight(srcHeight), _enableAA(bEnableAA)
 {
-    _pMesh = new Mesh();
 }
 
 Glasses::~Glasses()
@@ -70,9 +69,12 @@ bool Glasses::init(const char* vertLFilePath,
                    const char* candide3VertPath,
                    float zRotateInDegree, ASPECT_RATIO ratio,
                    bool bUploadCandide3Vertices, vector<myvec3>* candide3Vec,
-                   bool bShouldScaleToFaceWidth, float faceWidth)
+                   bool bShouldScaleToFaceWidth, float faceWidth,
+                   float shiftYRatio)
 {
     bool ret = false;
+    
+    _pMesh = new Mesh(shiftYRatio);
     
     char* vertLSrc = readAllocFile(vertLFilePath);
     char* fragLSrc = readAllocFile(fragLFilePath);

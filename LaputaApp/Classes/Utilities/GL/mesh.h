@@ -40,7 +40,7 @@
 class Mesh
 {
 public:
-    Mesh();
+    Mesh(float shiftYRatio);
 
     ~Mesh();
     
@@ -139,6 +139,9 @@ private:
     
     Candide3 _candide3;
     float _candide3WidthRatio;  //width ratio from candide3 to glasses
+    
+    //shift y upward or downward.
+    float _shiftYRatio;
 };
 
 #endif	/* MESH_H */

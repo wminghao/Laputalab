@@ -88,6 +88,7 @@ void main()
         //convert from height map to normal map
         ////////////////////////////////////////
         /*
+         http://stackoverflow.com/questions/5281261/generating-a-normal-map-from-a-height-map
          #version 130
          uniform sampler2D unit_wave
          noperspective in vec2 tex_coord;

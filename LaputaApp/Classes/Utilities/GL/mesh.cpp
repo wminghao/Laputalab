@@ -71,7 +71,7 @@ void Mesh::MeshEntry::Init(const std::vector<Vertex>& Vertices,
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * NumIndices, &Indices[0], GL_STATIC_DRAW);
 }
 
-Mesh::Mesh()
+Mesh::Mesh(float shiftYRatio):_shiftYRatio(shiftYRatio)
 {
     xMax = 0;
     yMax = 0;
@@ -222,7 +222,11 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh)
         const aiVector3D* pTangent   = paiMesh->HasTangentsAndBitangents()?&(paiMesh->mTangents[i]) : &Zero3D;
         const aiVector3D* pTexCoord = paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
 
-        Vertex v(Vector3f(pPos->x * widthRatio, pPos->y * widthRatio, (pPos->z + deltaInFrontOfCandide3) * widthRatio),
+        ASSERT( yMax );
+        ASSERT( yMin );
+        float yPos = pPos->y +  (yMax-yMin) * _shiftYRatio;
+        
+        Vertex v(Vector3f(pPos->x * widthRatio, yPos * widthRatio, (pPos->z + deltaInFrontOfCandide3) * widthRatio),
                  Vector2f(pTexCoord->x, pTexCoord->y),
                  Vector3f(pNormal->x, pNormal->y, pNormal->z),
                  Vector3f(pBinormal->x, pBinormal->y, pBinormal->z),
@@ -230,27 +234,6 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh)
         
         //OUTPUT("Mesh vertice x=%.2f, y=%.2f, z=%.2f\r\n", v.m_pos.x, v.m_pos.y, v.m_pos.z);
         //OUTPUT("Mesh normal x=%.2f, y=%.2f, z=%.2f\r\n", pNormal->x, pNormal->y, pNormal->z);
-        
-        if( pPos->x * widthRatio > xMax ) {
-            xMax = pPos->x * widthRatio;
-        }
-        if( pPos->y * widthRatio > yMax ) {
-            yMax = pPos->y* widthRatio;
-        }
-        if( pPos->z * widthRatio > zMax ) {
-            zMax = pPos->z * widthRatio;
-        }
-        
-        if( pPos->x * widthRatio < xMin ) {
-            xMin = pPos->x * widthRatio;
-        }
-        if( pPos->y * widthRatio< yMin ) {
-            yMin = pPos->y * widthRatio;
-        }
-        if( pPos->z * widthRatio < zMin ) {
-            zMin = pPos->z * widthRatio;
-        }
-
         Vertices.push_back(v);
     }
 

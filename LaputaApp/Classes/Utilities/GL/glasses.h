@@ -66,7 +66,8 @@ public:
               const char* candide3VertPath,
               float zRotateInDegree, ASPECT_RATIO ratio,
               bool bUploadCandide3Vertices, vector<myvec3>* candide3Vec,
-              bool bShouldScaleToFaceWidth, float faceWidth);
+              bool bShouldScaleToFaceWidth, float faceWidth,
+              float shiftYRatio);
     
     bool reloadGlasses(const char* glassesFilePath);
     
