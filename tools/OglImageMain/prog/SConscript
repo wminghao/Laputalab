@@ -30,6 +30,7 @@ glUtilitiesObj = env.Object(GLCodePath + 'glUtilities.cpp', CCFLAGS=OGLIMAGEMAIN
 matrixObj = env.Object(GLCodePath + 'matrix.c', CCFLAGS=OGLIMAGEMAINCflags )
 meshObj = env.Object(GLCodePath + 'mesh.cpp', CCFLAGS=OGLIMAGEMAINCflags )
 reflectionTextureObj = env.Object(GLCodePath + 'reflectionTexture.cpp', CCFLAGS=OGLIMAGEMAINCflags )
+bumpTextureObj = env.Object(GLCodePath + 'bumpTexture.cpp', CCFLAGS=OGLIMAGEMAINCflags )
 ShaderUtilitiesObj = env.Object(GLCodePath + 'ShaderUtilities.cpp', CCFLAGS=OGLIMAGEMAINCflags )
 textureObj = env.Object(GLCodePath + 'texture.cpp', CCFLAGS=OGLIMAGEMAINCflags )
 loggerObj = env.Object(MainCodePath + 'utility/Logger.cpp', CCFLAGS=OGLIMAGEMAINCflags )
@@ -50,6 +51,7 @@ env.Program( OglImageMainProg,
 	       matrixObj,
 	       meshObj,
 	       reflectionTextureObj,
+	       bumpTextureObj,
 	       ShaderUtilitiesObj,
 	       textureObj,
 	       loggerObj,

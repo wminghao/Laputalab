@@ -327,7 +327,8 @@ int ProcessFile( string& iFilePath, string& oFilePath, string& gName, string & e
                  vertexFile.c_str(),
                  zRotateInDegree, aspectRatio,
                  false, NULL,
-                 true, faceWidthVal);
+                 true, faceWidthVal, 
+                 0.10); //Ran's glasses are all shifted up by 5%
     glm::mat4 rotTransMat4 = externalToRotTrans(P);
     drawOpenGLGlasses(dstTexture, frame, glasses, projectionMat4, rotTransMat4);
     frame.release();

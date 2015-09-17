@@ -460,6 +460,8 @@ int main(int argc,
 
     Logger::initLog("OglServerMain");    
 
+    OUTPUT("Ogl server starting");
+
     //start hashmap, launch 10 processes
     gPipeTable = new PipeTable(PROCESS_LOCATION, MAX_PROCESS_PIPES);
 
