@@ -28,7 +28,7 @@ void main()
     //normalize the vector and calculate the distance
     vec3 surfaceToLightWorldNormalized = normalize( surfaceToLightWorld );
     vec3 surfaceToCameraWorldNormalized = normalize( surfaceToCameraWorld );
-    float distanceToLight = length( surfaceToLightWorldNormalized );
+    float distanceToLight = length( surfaceToLightWorld );
     
     //calcuate lighting diffuseCoefficent(brightness)
     float normalDotL = dot(normalWorld, surfaceToLightWorldNormalized);
@@ -80,33 +80,26 @@ void main()
         //candide3 simple mask, do not display
         gl_FragColor = texture2D(textureImage, texCoordFrag);
         //outFrag = vec4(0, 1, 0, 1); //green
-    } else if( texCount == 4 ) {
+    } else if( texCount == 0 ) {
+        //normal color
+        surfaceColor = diffuseColor;
+        diffuse = diffuseCoefficent * surfaceColor.rgb;
+        amb = lightAmbientCoefficient * ambientColor.rgb;
+        spec = specularCoefficent * specularColor.rgb;
+        
+        linearColor = attenuation * (diffuse+spec) + amb;
+        gl_FragColor = vec4(linearColor, surfaceColor.a);
+        //gl_FragColor = vec4(pow(linearColor, gamma), surfaceColor.a);
+    } else { //if( texCount == 4 ) {
+        /*
         //per fragment normal, don't use normal
         surfaceColor = texture2D( textureImage, texCoordFrag );
         
         ////////////////////////////////////////
         //convert from height map to normal map
         ////////////////////////////////////////
-        /*
-         http://stackoverflow.com/questions/5281261/generating-a-normal-map-from-a-height-map
-         #version 130
-         uniform sampler2D unit_wave
-         noperspective in vec2 tex_coord;
-         const vec2 size = vec2(2.0,0.0);
-         const ivec3 off = ivec3(-1,0,1);
-         
-         vec4 wave = texture(unit_wave, tex_coord);
-         float s11 = wave.x;
-         float s01 = textureOffset(unit_wave, tex_coord, off.xy).x;
-         float s21 = textureOffset(unit_wave, tex_coord, off.zy).x;
-         float s10 = textureOffset(unit_wave, tex_coord, off.yx).x;
-         float s12 = textureOffset(unit_wave, tex_coord, off.yz).x;
-         vec3 va = normalize(vec3(size.xy,s21-s01));
-         vec3 vb = normalize(vec3(size.yx,s12-s10));
-         vec4 bump = vec4( cross(va,vb), s11 );
-         */
         const vec2 size = vec2(2.0,0.0);
-        const ivec3 off = ivec3(-1,0,1);
+        const vec3 off = vec3(-1,0,1);
         
         float s11 = texture2D(bumpImage, texCoordFrag).x;
         vec2 coord01 = texCoordFrag + off.xy;
@@ -124,8 +117,7 @@ void main()
         vec3 va = normalize(vec3(size.xy,s21-s01));
         vec3 vb = normalize(vec3(size.yx,s12-s10));
         vec3 normalBump = vec4( cross(va,vb), s11 ).xyz;
-        
-        
+                
         ////////////////////////////////////////
         //directly use normal map
         ////////////////////////////////////////
@@ -146,16 +138,6 @@ void main()
         spec = pow(rDotL, 1) * specularColor.rgb;
         linearColor = attenuation * (diffuse+spec) + amb;
         gl_FragColor = vec4(linearColor, surfaceColor.a);
-        
-    } else { //if( texCount == 0 ) {
-        //normal color
-        surfaceColor = diffuseColor;
-        diffuse = diffuseCoefficent * surfaceColor.rgb;
-        amb = lightAmbientCoefficient * ambientColor.rgb;
-        spec = specularCoefficent * specularColor.rgb;
-        
-        linearColor = attenuation * (diffuse+spec) + amb;
-        gl_FragColor = vec4(linearColor, surfaceColor.a);
-        //gl_FragColor = vec4(pow(linearColor, gamma), surfaceColor.a);
-    }
+        */
+    } 
 }
