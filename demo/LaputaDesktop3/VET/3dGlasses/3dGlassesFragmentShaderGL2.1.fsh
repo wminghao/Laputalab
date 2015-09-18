@@ -98,6 +98,7 @@ void main()
         ////////////////////////////////////////
         //convert from height map to normal map
         ////////////////////////////////////////
+        // http://stackoverflow.com/questions/5281261/generating-a-normal-map-from-a-height-map
         const vec2 size = vec2(2.0,0.0);
         const vec3 off = vec3(-1,0,1);
         
