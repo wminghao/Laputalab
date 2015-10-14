@@ -28,7 +28,8 @@
 #include "err.h"
 #include "Output.h"
 
-const float DELTA_IN_FRONT_OF_CANDIDE3 = 6.0; //delta face behind the glasses
+//this is related to the size of the glasses. 36/146(max z) for sichen's model and 6/31 for Ran's model.
+const float DELTA_IN_FRONT_OF_CANDIDE3 = 0.23; //delta face behind the glasses is 23%
 
 #if defined(DESKTOP_GL)
 const float DELTA_BIGGER_THAN_CANDIDE3 = 1.03; //delta face width smaller than glasses
@@ -212,7 +213,7 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh)
     
     float deltaInFrontOfCandide3 = 0;
     if( widthRatio > 0) {
-        deltaInFrontOfCandide3 = DELTA_IN_FRONT_OF_CANDIDE3;
+        deltaInFrontOfCandide3 = DELTA_IN_FRONT_OF_CANDIDE3 * getDepth();
     }
     
     for (unsigned int i = 0 ; i < paiMesh->mNumVertices ; i++) {
@@ -223,7 +224,7 @@ void Mesh::InitMesh(unsigned int Index, const aiMesh* paiMesh)
         const aiVector3D* pTexCoord = paiMesh->HasTextureCoords(0) ? &(paiMesh->mTextureCoords[0][i]) : &Zero3D;
 
         ASSERT( yMax );
-        ASSERT( yMin );
+        //ASSERT( yMin );
         float yPos = pPos->y +  (yMax-yMin) * _shiftYRatio;
         
         Vertex v(Vector3f(pPos->x * widthRatio, yPos * widthRatio, (pPos->z + deltaInFrontOfCandide3) * widthRatio),
@@ -337,7 +338,9 @@ bool Mesh::InitMaterials(const aiScene* pScene, const std::string& Filename)
 
                 if (pMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &Path, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS) {
                     std::string FullPath = Dir + "/" + Path.data;
-                    if( !strcmp(Path.data, "ramp1-nurbsToPoly1.png") ) {
+                    if( !strcmp(Path.data, "ramp1-nurbsToPoly1.png")
+                       ||
+                        !strcmp(Path.data, "RDK$00~1.PNG")) {
                         std::string reflectionFullPath = Dir + "/Brooklyn_Bridge_Planks_1k.hdr";
                         m_Materials[i] = new ReflectionTexture(m_texCountLocation,
                                                                m_diffuseColorLocation,

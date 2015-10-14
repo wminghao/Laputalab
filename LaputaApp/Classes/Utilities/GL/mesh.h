@@ -90,6 +90,8 @@ private:
     int getMeshWidthInfo(const aiScene* pScene, const std::string& Filename);
     float getVecWidth(vector<myvec3>* vec);
     
+    float getDepth() { return zMax-zMin;}
+    
 #define INVALID_OGL_VALUE 0xFFFFFFFF
 #define INVALID_MATERIAL 0xFFFFFFFF
 

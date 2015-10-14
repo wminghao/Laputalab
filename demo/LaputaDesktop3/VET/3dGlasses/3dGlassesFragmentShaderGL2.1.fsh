@@ -48,7 +48,7 @@ void main()
     float attenuation = 1.0/(1.0 + lightAttenuationFactor * pow(distanceToLight, 2));
     
     //ratio of environment vs. surface.
-    float surfaceColorToEnvRatio = 0.7;
+    float surfaceColorToEnvRatio = 0.8;
     
     //gamma correction, does not seem to work, maybe unecessary?
     vec3 gamma = vec3(1.0/2.2);
