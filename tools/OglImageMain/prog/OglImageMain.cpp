@@ -32,6 +32,7 @@
 
 using namespace std;
 using namespace cv;
+using namespace Utilities_Namespace;
 
 //////////////////////////////////////////////
 //I/O code
@@ -298,10 +299,12 @@ int ProcessFile( string& iFilePath, string& oFilePath, string& gName, string & e
     ////////////////
     OglImageAPI lm;
     float faceWidthVal = 0.0f;
+    float faceScaleFactor = 0.0f;
     if( !lm.ProcessImage( inputFile,
                           P,
-                          &faceWidthVal,
+                          &faceScaleFactor,
                           errReason )) {
+        faceWidthVal = 2*faceScaleFactor; //b/c scale is based on [-1,1], therefore, the width should be twice as much.
         /*
         for( int i = 0; i < 6; i++) {
             cout << "P[" << i << "]=" << P[i] << endl;
