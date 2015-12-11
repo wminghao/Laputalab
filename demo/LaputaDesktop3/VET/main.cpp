@@ -247,7 +247,7 @@ int main()
                  vertexFile.c_str(),
                  0, ASPECT_RATIO_4_3,
                  true, &verticesAdjusted,
-                 false, 0, 0); //read adjusted coordinates directly from opengl.
+                 false, 0); //read adjusted coordinates directly from opengl.
     ////////////////
     
     unsigned char map[SF_HEIGHT][SF_WIDTH];

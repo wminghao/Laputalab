@@ -70,7 +70,7 @@ bool Glasses::init(const char* vertLFilePath,
                    const char* candide3VertPath,
                    float zRotateInDegree, ASPECT_RATIO ratio,
                    bool bUploadCandide3Vertices, vector<myvec3>* candide3Vec,
-                   bool bShouldScaleToFaceWidth, float faceWidth,
+                   bool bShouldScaleToFaceWidth,
                    float shiftYRatio)
 {
     bool ret = false;
@@ -83,7 +83,6 @@ bool Glasses::init(const char* vertLFilePath,
     _zRotationInDegree = zRotateInDegree;
     _aspectRatio = ratio;
     _bShouldScaleToFaceWidth = bShouldScaleToFaceWidth;
-    _faceWidth = faceWidth;
     
     /////////////////////
     // offscreen buffer

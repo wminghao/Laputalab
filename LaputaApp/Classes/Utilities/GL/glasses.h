@@ -66,7 +66,7 @@ public:
               const char* candide3VertPath,
               float zRotateInDegree, ASPECT_RATIO ratio,
               bool bUploadCandide3Vertices, vector<myvec3>* candide3Vec,
-              bool bShouldScaleToFaceWidth, float faceWidth,
+              bool bShouldScaleToFaceWidth,
               float shiftYRatio);
     
     bool reloadGlasses(const char* glassesFilePath);
@@ -111,8 +111,7 @@ private:
     
     ASPECT_RATIO _aspectRatio;
     
-    bool _bShouldScaleToFaceWidth;
-    float _faceWidth;
+    bool _bShouldScaleToFaceWidth;//means glasses matches candide3
     
 #if defined(DESKTOP_GL)
     //input framebuffer
