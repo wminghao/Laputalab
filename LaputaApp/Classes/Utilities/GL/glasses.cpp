@@ -30,7 +30,8 @@ void Glasses::setMatrices(mat4& projectMat, mat4& rotTransMat) {
     
     mat4 Model_rotateX = rotate(mat4(1.0f), radians(10.0f), vec3(1,0,0)); //rotate x of 10 degree to align to nose
     if( _bShouldScaleToFaceWidth ) {
-        float scaleFactor = _faceWidth/_pMesh->getWidth();
+        //now the glasses must match candide3width instead
+        float scaleFactor = _pMesh->getCandide3Width()/_pMesh->getWidth();
         mat4 Model_scale = scale(mat4(1.0f), vec3(scaleFactor,scaleFactor,scaleFactor));
         _World = rotTransMat * Model_rotateX * Model_scale;
     } else {

@@ -80,6 +80,8 @@ public:
     void Render(GLuint textureObj);
     
     float getWidth() { return xMax-xMin;}
+    
+    float getCandide3Width() { return _candide3.getCandide3RawWidth();}
 
 private:
     bool InitFromScene(const aiScene* pScene, const std::string& Filename);
