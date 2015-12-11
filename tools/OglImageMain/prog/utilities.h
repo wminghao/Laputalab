@@ -32,6 +32,7 @@ const string pathPrefix = "/Laputalab/";
 using namespace std;
 using namespace cv;
 
+namespace Utilities_Namespace {
 vector<myvec3> readVertices(string inFile);
 vector<triangle> readFaces(string faceFile);
 void drawVertices_Debug(vector<myvec3> &vertices, vector<triangle> &faces);
@@ -63,5 +64,5 @@ void PMat2P(Mat PMat, float P[]);
 
 void mat4ToMat3x4(glm::mat4& pMat4, Mat* pMat3x4);
 void mat3x4ToMat4(Mat* pMat3x4, glm::mat4& pMat4);
-
+}
 #endif /* defined(__VET__utilities__) */

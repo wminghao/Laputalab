@@ -8,6 +8,7 @@
 
 #include "utilities.h"
 
+namespace Utilities_Namespace {
 void printPara(float P[])
 {
     for (int i = 0; i < NP; i++){
@@ -823,5 +824,6 @@ void mat3x4ToMat4(Mat* pMat3x4, glm::mat4& pMat4)
     }
     pMat4[0][3] =  pMat4[1][3] = pMat4[2][3] = 0;
     pMat4[3][3] = 1;
+}
 }
 
