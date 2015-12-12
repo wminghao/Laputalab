@@ -32,6 +32,8 @@ void Glasses::setMatrices(mat4& projectMat, mat4& rotTransMat) {
     if( _bShouldScaleToFaceWidth ) {
         //now the glasses must match candide3width instead
         float scaleFactor = _pMesh->getCandide3Width()/_pMesh->getWidth();
+        OUTPUT("scaleFactor=%f, _pMesh->getCandide3Width()=%f, _pMesh->getWidth()=%f\r\n", scaleFactor, _pMesh->getCandide3Width(), _pMesh->getWidth());
+
         mat4 Model_scale = scale(mat4(1.0f), vec3(scaleFactor,scaleFactor,scaleFactor));
         _World = rotTransMat * Model_rotateX * Model_scale;
     } else {

@@ -78,8 +78,8 @@ void main()
         //gl_FragColor = vec4(pow(linearColor, gamma), surfaceColor.a);
     } else if( texCount == 3 ) {
         //candide3 simple mask, do not display
-        gl_FragColor = texture2D(textureImage, texCoordFrag);
-        //outFrag = vec4(0, 1, 0, 1); //green
+	gl_FragColor = texture2D(textureImage, texCoordFrag);
+        //gl_FragColor = vec4(0, 1, 0, 1); //green
     } else if( texCount == 0 ) {
         //normal color
         surfaceColor = diffuseColor;

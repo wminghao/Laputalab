@@ -126,7 +126,10 @@ glm::mat4 externalToRotTrans(float* P_arr)
 
 glm::mat4 IntrinsicToOrthoProjection(int W, int H)
 {
-    return glm::ortho((float)-W/2, (float)W/2, (float)-H/2, (float)H/2, 0.0f, (float)DIST);
+    
+    float aspect = (float)W/(float)H;
+    return glm::ortho(-aspect, aspect, -1.0f, 1.0f, (float)-DIST, (float)DIST);
+    //return glm::ortho((float)-W/2, (float)W/2, (float)-H/2, (float)H/2, 0.0f, (float)DIST//float ratio = 1;
 }
 
 static bool saveBuffer(void* buffer, string& fileToSave, int srcWidth, int srcHeight, string& errReason) {
@@ -190,8 +193,11 @@ static void drawOpenGLGlasses(GLuint& dstTexture, Mat& frameOrig, Glasses& glass
     glBindTexture(GL_TEXTURE_2D, 0);
 
     //set new matrix
-    glasses.setMatrices(projectionMat, rotTransMat);
-
+    //glasses.setMatrices(projectionMat, rotTransMat);
+    //TEST ONLY
+    glm::mat4 bbb(1.0);
+    glasses.setMatrices(projectionMat, bbb);
+      
     //draw glasses
     glasses.render(dstTexture, dstTexture, false);
 }
@@ -289,28 +295,20 @@ int ProcessFile( string& iFilePath, string& oFilePath, string& gName, string & e
     
     //------------Initialization Begin---------------
     glm::mat4 projectionMat4 = IntrinsicToOrthoProjection(srcWidth/AA_FACTOR, srcHeight/AA_FACTOR);
-        
-    float P[NP] =      //space between glasses and candide3
-    {
-        0.0f, 0.0f, 0.0f,   //normalized rotation parameter
-        0.0f, 0.0f, 1.0f,  // normalized translation parameter
-    };
-    
+            
     ////////////////
     OglImageAPI lm;
-    float faceWidthVal = 0.0f;
-    float faceScaleFactor = 0.0f;
+    mat4 rotTransMat4;
     if( !lm.ProcessImage( inputFile,
-                          P,
-                          &faceScaleFactor,
+                          rotTransMat4,
                           errReason )) {
-        faceWidthVal = 2*faceScaleFactor; //b/c scale is based on [-1,1], therefore, the width should be twice as much.
-        /*
-        for( int i = 0; i < 6; i++) {
-            cout << "P[" << i << "]=" << P[i] << endl;
+        cout << "success"<<endl;
+        for (int j=0; j<4; j++){
+            for (int i=0; i<4; i++){
+                printf("%f ", rotTransMat4[i][j]);
+            }
+            printf("\n");
         }
-        cout << "face width="<<faceWidthVal<<endl;
-        */
     } else {
         return -1;
     }
@@ -330,9 +328,8 @@ int ProcessFile( string& iFilePath, string& oFilePath, string& gName, string & e
                  vertexFile.c_str(),
                  zRotateInDegree, aspectRatio,
                  false, NULL,
-                 true, faceWidthVal, 
+                 true,
                  0.10); //Ran's glasses are all shifted up by 5%
-    glm::mat4 rotTransMat4 = externalToRotTrans(P);
     drawOpenGLGlasses(dstTexture, frame, glasses, projectionMat4, rotTransMat4);
     frame.release();
     if( !saveBuffer(buffer, outputFile, srcWidth, srcHeight, errReason) )  {

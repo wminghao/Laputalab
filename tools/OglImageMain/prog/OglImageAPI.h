@@ -15,8 +15,13 @@
 #include <opencv2/nonfree/nonfree.hpp>
 #include <opencv2/objdetect/objdetect.hpp>
 
+//math library
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 using namespace std;
 using namespace cv;
+using namespace glm;
 
 class OglImageAPI
 {
@@ -24,8 +29,7 @@ class OglImageAPI
     OglImageAPI(); //load the model
     ~OglImageAPI(){}
     int ProcessImage(string& faceImg, 
-                     float* P,
-                     float* faceWidth,
+                     mat4& model,
                      string& errReason);
  private:
     Mat models;

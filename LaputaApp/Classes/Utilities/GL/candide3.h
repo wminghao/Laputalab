@@ -41,7 +41,7 @@ public:
     
     float setCandide3Vertices(vector<myvec3>* vec, float zRotateInDegree);
     
-    float getCandide3RawWidth() { return rawWidth_; }
+    float getCandide3RawWidth() { return _rawWidth; }
     
 private:    
    // void adjustShape(const char**shapeUnitFile, int totalShapeUnits, const float shapeUnits[], float xScale, float yScale, float zScale);
@@ -56,7 +56,7 @@ private:
     GLint m_normalLocation;
     
     //raw width
-    float rawWidth_;
+    float _rawWidth;
     
     //texture
     Candide3Texture* candide3Texture;

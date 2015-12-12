@@ -100,11 +100,9 @@ bool Candide3::readVertices(string& vertexFile, float glassesWidth, float zRotat
         }
     }
     
-    float width = xMax - xMin;
-    rawWidth_ = width;
+    _rawWidth = xMax - xMin;
     
-    float ratio = (glassesWidth-DELTA_SMALLER_GLASSES)/width; //inside the width
-    
+    float ratio = (glassesWidth-DELTA_SMALLER_GLASSES)/_rawWidth; //inside the width
     //OUTPUT("candide width=%f glasses width=%f ratio=%.2f", width, glassesWidth, ratio);
     
     //then seek to the beginning
